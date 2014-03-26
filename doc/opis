@@ -1,0 +1,16 @@
+1. Opis:
+Gra symulująca pojedynek robotów na podstawie algorytmów napisanych przez graczy.
+Gra składałaby się z następujących faz:
+- gracze piszą program w pseudojęzyku udostępnionym przez grę opisujący w jaki sposób robot powinien zachowywać się na polu walki (w jaki sposób się poruszać, co zrobić gdy zobaczy przeciwnika)
+- aplikacja prezentuje symulację, w której w czasie rzeczywistym roboty realizują napisane algorytmy
+- gra kończy się zwycięstwem jednego z graczy w momencie gdy jeden robot pokona drugiego (np. zadając mu odpowiednie obrażenia) lub remisem gdy obydwa algorytmy zakończą się lub minie ustalony czas pojedynku
+
+2. Zasięg projektu:
+Podstawowa wersja projektu wymagałaby zrealizowania następujących komponentów:
+- GUI aplikacji
+- zaprojektowanie pseudojęzyka programowania robotów i zaimplementowanie jego interpretera
+- napisanie graficznego symulatora pojedynku robotów z wykorzystaniem wybranej biblioteki lub silnika graficznego
+- utworzenie zestawu podstawowych zasobów aplikacji takich jak grafiki potrzebne do reprezentacji robotów i pola walki
+
+3. Technika wykonania.
+Jeden z języków programowania obiektowego (Java/C#/C++).
