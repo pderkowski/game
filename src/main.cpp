@@ -2,8 +2,10 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
 #include "SFML/Graphics.hpp"
 #include "Paths.hpp"
+#include "Board.hpp"
 #include "BoardView.hpp"
 #include "Game.hpp"
 
@@ -21,10 +23,12 @@ int main(__attribute__((unused)) int argc, char* argv[]) {
     sf::Sprite sprite;
     sprite.setTexture(texture);
 
-    BoardView boardView(32, 32, sprite);
+    auto board = std::make_shared<Board>(32, 32);
+
+    BoardView boardView(board, sprite);
     boardView.setOffset(sf::Vector2f(10, 10));
 
-    Game game("game", boardView);
+    Game game("game", board, boardView);
     game.start();
 
     return 0;

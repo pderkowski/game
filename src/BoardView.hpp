@@ -3,11 +3,13 @@
 #ifndef BOARDVIEW_H_
 #define BOARDVIEW_H_
 
-#include <SFML/Graphics.hpp>
+#include <memory>
+#include "SFML/Graphics.hpp"
+#include "Board.hpp"
 
 class BoardView : public sf::Drawable {
 public:
-    BoardView(int rows, int columns, const sf::Sprite& cellSprite);
+    BoardView(std::shared_ptr<Board> board, const sf::Sprite& cellSprite);
 
     void setOffset(const sf::Vector2f& offset);
 
@@ -19,7 +21,8 @@ public:
     float height() const;
 
 private:
-    int rows_, columns_;
+    std::shared_ptr<Board> board_;
+
     sf::Sprite cellSprite_;
     sf::Vector2f offset_;
 };

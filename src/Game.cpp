@@ -3,8 +3,10 @@
 #include <string>
 #include "Game.hpp"
 
-Game::Game(const std::string& name, const BoardView& boardView)
-    : boardView_(boardView), window_(sf::VideoMode(boardView.width(), boardView.height()), name)
+Game::Game(const std::string& name, std::shared_ptr<Board> board, const BoardView& boardView)
+    : board_(board),
+    boardView_(boardView),
+    window_(sf::VideoMode(boardView.width(), boardView.height()), name)
 { }
 
 void Game::start() {

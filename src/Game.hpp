@@ -5,15 +5,17 @@
 
 #include <string>
 #include "SFML/Graphics.hpp"
+#include "Board.hpp"
 #include "BoardView.hpp"
 
 class Game {
 public:
-    Game(const std::string& name, const BoardView& boardView);
+    Game(const std::string& name, std::shared_ptr<Board> board, const BoardView& boardView);
 
     void start();
 
 private:
+    std::shared_ptr<Board> board_;
     BoardView boardView_;
     sf::RenderWindow window_;
 };
