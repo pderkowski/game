@@ -4,19 +4,36 @@
 #include "Grid.hpp"
 
 Grid::Grid(int rows, int columns, const sf::Sprite& cellSprite)
-    : rows(rows), columns(columns), cellSprite(cellSprite)
+    : rows_(rows), columns_(columns), cellSprite_(cellSprite), offset_(0, 0)
 { }
 
 void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    sf::Sprite sprite(cellSprite);
+    sf::Sprite sprite(cellSprite_);
     const float xShift = sprite.getLocalBounds().width + 1;
     const float yShift = sprite.getLocalBounds().height + 1;
 
-    for (int r = 0; r < rows; ++r) {
-        for (int c = 0; c < columns; ++c) {
+    sprite.move(offset_);
+
+    for (int r = 0; r < rows_; ++r) {
+        for (int c = 0; c < columns_; ++c) {
             target.draw(sprite, states);
             sprite.move(xShift, 0);
         }
-        sprite.move(-(columns * xShift), yShift);
+        sprite.move(-(columns_ * xShift), yShift);
     }
+}
+
+void Grid::setOffset(const sf::Vector2f& offset) {
+    offset_ = offset;
+}
+
+
+float Grid::width() const {
+    const float spriteXSize = cellSprite_.getLocalBounds().width;
+    return 2 * offset_.x + (columns_ - 1) + columns_ * spriteXSize;
+}
+
+float Grid::height() const {
+    const float spriteYSize = cellSprite_.getLocalBounds().height;
+    return 2 * offset_.y + (rows_ - 1) + rows_ * spriteYSize;
 }
