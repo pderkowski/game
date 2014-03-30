@@ -3,8 +3,8 @@
 #include <string>
 #include "Game.hpp"
 
-Game::Game(const std::string& name, const Grid& board)
-    : board_(board), window_(sf::VideoMode(board.width(), board.height()), name)
+Game::Game(const std::string& name, const BoardView& boardView)
+    : boardView_(boardView), window_(sf::VideoMode(boardView.width(), boardView.height()), name)
 { }
 
 void Game::start() {
@@ -16,7 +16,7 @@ void Game::start() {
         }
 
         window_.clear();
-        window_.draw(board_);
+        window_.draw(boardView_);
         window_.display();
     }
 }

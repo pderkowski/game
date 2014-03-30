@@ -4,7 +4,7 @@
 #include <string>
 #include "SFML/Graphics.hpp"
 #include "Paths.hpp"
-#include "Grid.hpp"
+#include "BoardView.hpp"
 #include "Game.hpp"
 
 std::string resourceDirectory = "../rsc/";
@@ -21,10 +21,10 @@ int main(__attribute__((unused)) int argc, char* argv[]) {
     sf::Sprite sprite;
     sprite.setTexture(texture);
 
-    Grid grid(32, 32, sprite);
-    grid.setOffset(sf::Vector2f(10, 10));
+    BoardView boardView(32, 32, sprite);
+    boardView.setOffset(sf::Vector2f(10, 10));
 
-    Game game("game", grid);
+    Game game("game", boardView);
     game.start();
 
     return 0;

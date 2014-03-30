@@ -1,13 +1,13 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <SFML/Graphics.hpp>
-#include "Grid.hpp"
+#include "BoardView.hpp"
 
-Grid::Grid(int rows, int columns, const sf::Sprite& cellSprite)
+BoardView::BoardView(int rows, int columns, const sf::Sprite& cellSprite)
     : rows_(rows), columns_(columns), cellSprite_(cellSprite), offset_(0, 0)
 { }
 
-void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void BoardView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     sf::Sprite sprite(cellSprite_);
     const float xShift = sprite.getLocalBounds().width + 1;
     const float yShift = sprite.getLocalBounds().height + 1;
@@ -23,17 +23,17 @@ void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     }
 }
 
-void Grid::setOffset(const sf::Vector2f& offset) {
+void BoardView::setOffset(const sf::Vector2f& offset) {
     offset_ = offset;
 }
 
 
-float Grid::width() const {
+float BoardView::width() const {
     const float spriteXSize = cellSprite_.getLocalBounds().width;
     return 2 * offset_.x + (columns_ - 1) + columns_ * spriteXSize;
 }
 
-float Grid::height() const {
+float BoardView::height() const {
     const float spriteYSize = cellSprite_.getLocalBounds().height;
     return 2 * offset_.y + (rows_ - 1) + rows_ * spriteYSize;
 }

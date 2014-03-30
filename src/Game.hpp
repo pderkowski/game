@@ -5,17 +5,17 @@
 
 #include <string>
 #include "SFML/Graphics.hpp"
-#include "Grid.hpp"
+#include "BoardView.hpp"
 
 class Game {
 public:
-    Game(const std::string& name, const Grid& board);
+    Game(const std::string& name, const BoardView& boardView);
 
     void start();
 
 private:
-    Grid board_;
+    BoardView boardView_;
     sf::RenderWindow window_;
 };
 
-#endif  // GRID_H_
+#endif  // GAME_H_
