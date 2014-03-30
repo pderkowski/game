@@ -1,11 +1,30 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <string>
+#include "SFML/Graphics.hpp"
+#include "Paths.hpp"
+#include "Grid.hpp"
 
-int main() {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+std::string resourceDirectory = "../rsc/";
+
+int main(__attribute__((unused)) int argc, char* argv[]) {
+    Paths paths(argv[0]);
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Game");
+
+    sf::Texture texture;
+    auto pathToBasicTile = paths.getResourcePath("basic_tile.png").string();
+    if (!texture.loadFromFile(pathToBasicTile, sf::IntRect(10, 10, 16, 16))) {
+        printf("FAIL!\n");
+    }
+
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+
+    sf::Vector2f offset(10, 10);
+    sprite.move(offset);
+
+    Grid grid(32, 32, sprite);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -15,7 +34,7 @@ int main() {
         }
 
         window.clear();
-        window.draw(shape);
+        window.draw(grid);
         window.display();
     }
 
