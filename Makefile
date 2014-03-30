@@ -3,13 +3,15 @@ CPP=g++
 SRC_DIR=src
 EXE_DIR=bin
 LIB_DIR=lib
-EXE_NAME=robowars
+EXE_NAME=game
 
 INCLUDE_DIRS=$(shell find . -path '*/include' -type d)
 CPPFLAGS=$(foreach dir, $(INCLUDE_DIRS), -I$(dir)) -std=c++11 -MD -MP
-WARNINGS=-Wall -Wextra -pedantic -Wshadow
+WARNINGS=-Wall -Wextra -pedantic -Werror
 
-LDLIBS=-lsfml-graphics -lsfml-window -lsfml-system
+SFML_LIBS=-lsfml-graphics -lsfml-window -lsfml-system
+BOOST_LIBS=-lboost_filesystem -lboost_system
+LDLIBS=$(SFML_LIBS) $(BOOST_LIBS)
 LDFLAGS=-Wl,-R$(shell pwd)/$(LIB_DIR)
 
 SRCS=$(shell find $(SRC_DIR) -type f -name '*.cpp')
@@ -34,6 +36,9 @@ clean:
 
 distclean: clean
 	$(RM) $(EXE_DIR)
+
+run: mkdir exe
+	./$(EXE_DIR)/$(EXE_NAME)
 
 %.o: %.cpp
 	$(CPP) $(CPPFLAGS) $(WARNINGS) -c $< -o $@
