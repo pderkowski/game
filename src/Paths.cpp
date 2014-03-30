@@ -11,26 +11,26 @@ namespace fs = boost::filesystem;
 Paths::Paths(const std::string& relativePathToExec) {
     fs::path initialPath(fs::initial_path<fs::path>());
     initialPath = fs::canonical(fs::system_complete(fs::path(relativePathToExec)));
-    executablePath = initialPath;
-    basePath = executablePath.parent_path().parent_path();
-    binariesPath = basePath/"bin";
-    resourcesPath = basePath/"rsc";
+    executablePath_ = initialPath;
+    basePath_ = executablePath_.parent_path().parent_path();
+    binariesPath_ = basePath_/"bin";
+    resourcesPath_ = basePath_/"rsc";
 }
 
 fs::path Paths::getExecutablePath() {
-    return executablePath;
+    return executablePath_;
 }
 
 fs::path Paths::getBasePath() {
-    return basePath;
+    return basePath_;
 }
 
 fs::path Paths::getBinariesPath() {
-    return binariesPath;
+    return binariesPath_;
 }
 
 fs::path Paths::getResourcesPath() {
-    return resourcesPath;
+    return resourcesPath_;
 }
 
 fs::path Paths::getResourcePath(const std::string& resource) {

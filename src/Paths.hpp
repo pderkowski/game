@@ -1,5 +1,8 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#ifndef PATHS_H_
+#define PATHS_H_
+
 #include <string>
 #include "boost/filesystem.hpp"
 
@@ -13,8 +16,10 @@ public:
     boost::filesystem::path getResourcePath(const std::string& resource);
 
 private:
-    boost::filesystem::path executablePath;
-    boost::filesystem::path basePath;
-    boost::filesystem::path binariesPath;
-    boost::filesystem::path resourcesPath;
+    boost::filesystem::path executablePath_;
+    boost::filesystem::path basePath_;
+    boost::filesystem::path binariesPath_;
+    boost::filesystem::path resourcesPath_;
 };
+
+#endif  // PATHS_H_
