@@ -15,6 +15,8 @@ public:
     void start();
 
 private:
+    void handleLeftClick(const sf::Event& event);
+
     std::shared_ptr<Board> board_;
     BoardView boardView_;
     sf::RenderWindow window_;

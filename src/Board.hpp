@@ -15,6 +15,8 @@ public:
     int getRowsNo() const;
     int getColumnsNo() const;
 
+    static const int OutOfBounds = -1;
+
 private:
     int rowsNo_;
     int columnsNo_;

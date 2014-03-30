@@ -1,5 +1,6 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <cmath>
 #include "SFML/Graphics.hpp"
 #include "BoardView.hpp"
 
@@ -37,4 +38,22 @@ float BoardView::width() const {
 float BoardView::height() const {
     const float spriteYSize = cellSprite_.getLocalBounds().height;
     return 2 * offset_.y + (board_->getRowsNo() - 1) + board_->getRowsNo() * spriteYSize;
+}
+
+int BoardView::convertXCoordsToColumnNo(int x) const {
+    int column = floor((x - offset_.x) / (cellSprite_.getLocalBounds().width + 1));
+
+    if (column < 0 || column >= board_->getColumnsNo())
+        return Board::OutOfBounds;
+    else
+        return column;
+}
+
+int BoardView::convertYCoordsToRowNo(int y) const {
+    int row = floor((y - offset_.y) / (cellSprite_.getLocalBounds().height + 1));
+
+    if (row < 0 || row >= board_->getRowsNo())
+        return Board::OutOfBounds;
+    else
+        return row;
 }

@@ -20,6 +20,9 @@ public:
     float width() const;
     float height() const;
 
+    int convertXCoordsToColumnNo(int x) const;
+    int convertYCoordsToRowNo(int y) const;
+
 private:
     std::shared_ptr<Board> board_;
 
