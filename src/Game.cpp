@@ -6,7 +6,10 @@
 Game::Game(const std::string& name, std::shared_ptr<Board> board, const BoardView& boardView)
     : board_(board),
     boardView_(boardView),
-    window_(sf::VideoMode(boardView.width(), boardView.height()), name)
+    window_(
+        sf::VideoMode(boardView.width(), boardView.height()),
+        name,
+        sf::Style::Titlebar | sf::Style::Close)
 { }
 
 void Game::start() {
