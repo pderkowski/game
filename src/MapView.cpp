@@ -21,8 +21,7 @@ void MapView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     for (int r = 0; r < map_->getRowsNo(); ++r) {
         for (int c = 0; c < map_->getColumnsNo(); ++c) {
             if (map_->isVisible(r, c)) {
-                Tile t = map_->getTile(r, c);
-                sprite.setTexture(tileTextures_.at(t.getType()));
+                sprite.setTexture(tileTextures_.at(map_->tile(r, c).getType()));
                 target.draw(sprite, states);
             }
 

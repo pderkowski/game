@@ -26,6 +26,10 @@ int Map::getColumnsNo() const {
     return columnsNo_;
 }
 
-Tile Map::getTile(int row, int column) {
+const Tile& Map::tile(int row, int column) const {
+    return tiles_[row][column];
+}
+
+Tile& Map::tile(int row, int column) {
     return tiles_[row][column];
 }

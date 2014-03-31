@@ -6,11 +6,12 @@
 class Tile {
 public:
     enum Type {
-        Empty,
+        Empty = 0,  // don't assign other values
         Water,
         Plains,
         Hills,
-        Mountains
+        Mountains,
+        NumberOfTileTypes  // this has to be the last one in enum
     };
 
     Tile();

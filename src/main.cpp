@@ -17,7 +17,12 @@ int main(__attribute__((unused)) int argc, char* argv[]) {
     auto map = std::make_shared<Map>(generator.generateMap(64, 64));
 
     std::map<Tile::Type, sf::Texture> tileTextures
-        = { {Tile::Type::Empty, Resources::getTexture(paths.getResourcePath("tiles/empty.png"))} };
+        = { {Tile::Type::Empty, Resources::getTexture(paths.getResourcePath("tiles/empty.png"))},
+            {Tile::Type::Water, Resources::getTexture(paths.getResourcePath("tiles/water.png"))},
+            {Tile::Type::Hills, Resources::getTexture(paths.getResourcePath("tiles/hills.png"))},
+            {Tile::Type::Plains, Resources::getTexture(paths.getResourcePath("tiles/plains.png"))},
+            {Tile::Type::Mountains,
+                Resources::getTexture(paths.getResourcePath("tiles/mountains.png"))} };
     MapView mapView(map, tileTextures);
     mapView.setOffset(sf::Vector2f(10, 10));
 
