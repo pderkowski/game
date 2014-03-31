@@ -9,13 +9,11 @@
 #include "BoardView.hpp"
 #include "Game.hpp"
 
-std::string resourceDirectory = "../rsc/";
-
 int main(__attribute__((unused)) int argc, char* argv[]) {
     Paths paths(argv[0]);
 
     sf::Texture texture;
-    auto pathToBasicTile = paths.getResourcePath("basic_tile.png").string();
+    auto pathToBasicTile = paths.getResourcePath("empty.png").string();
     if (!texture.loadFromFile(pathToBasicTile, sf::IntRect(10, 10, 16, 16))) {
         printf("FAIL!\n");
     }
