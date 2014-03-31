@@ -1,15 +1,18 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <cmath>
+#include <map>
 #include "SFML/Graphics.hpp"
 #include "MapView.hpp"
 
-MapView::MapView(std::shared_ptr<Map> map, const sf::Sprite& cellSprite)
-    : map_(map), cellSprite_(cellSprite), offset_(0, 0)
+MapView::MapView(std::shared_ptr<Map> map, const std::map<Tile::Type, sf::Texture>& tileTextures)
+    : map_(map), tileTextures_(tileTextures), offset_(0, 0), tileWidth_(16), tileHeight_(16)
 { }
 
 void MapView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    sf::Sprite sprite(cellSprite_);
+    sf::Sprite sprite;
+    sprite.setTextureRect(sf::IntRect(0, 0, tileWidth_, tileHeight_));
+
     const float xShift = sprite.getLocalBounds().width + 1;
     const float yShift = sprite.getLocalBounds().height + 1;
 
@@ -17,8 +20,11 @@ void MapView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
     for (int r = 0; r < map_->getRowsNo(); ++r) {
         for (int c = 0; c < map_->getColumnsNo(); ++c) {
-            if (map_->isVisible(r, c))
+            if (map_->isVisible(r, c)) {
+                Tile t = map_->getTile(r, c);
+                sprite.setTexture(tileTextures_.at(t.getType()));
                 target.draw(sprite, states);
+            }
 
             sprite.move(xShift, 0);
         }
@@ -31,17 +37,15 @@ void MapView::setOffset(const sf::Vector2f& offset) {
 }
 
 float MapView::width() const {
-    const float spriteXSize = cellSprite_.getLocalBounds().width;
-    return 2 * offset_.x + (map_->getColumnsNo() - 1) + map_->getColumnsNo() * spriteXSize;
+    return 2 * offset_.x + (map_->getColumnsNo() - 1) + map_->getColumnsNo() * tileWidth_;
 }
 
 float MapView::height() const {
-    const float spriteYSize = cellSprite_.getLocalBounds().height;
-    return 2 * offset_.y + (map_->getRowsNo() - 1) + map_->getRowsNo() * spriteYSize;
+    return 2 * offset_.y + (map_->getRowsNo() - 1) + map_->getRowsNo() * tileHeight_;
 }
 
 int MapView::convertXCoordsToColumnNo(int x) const {
-    int column = floor((x - offset_.x) / (cellSprite_.getLocalBounds().width + 1));
+    int column = floor((x - offset_.x) / (tileWidth_ + 1));
 
     if (column < 0 || column >= map_->getColumnsNo())
         return Map::OutOfBounds;
@@ -50,7 +54,7 @@ int MapView::convertXCoordsToColumnNo(int x) const {
 }
 
 int MapView::convertYCoordsToRowNo(int y) const {
-    int row = floor((y - offset_.y) / (cellSprite_.getLocalBounds().height + 1));
+    int row = floor((y - offset_.y) / (tileHeight_ + 1));
 
     if (row < 0 || row >= map_->getRowsNo())
         return Map::OutOfBounds;

@@ -4,12 +4,13 @@
 #define MAPVIEW_H_
 
 #include <memory>
+#include <map>
 #include "SFML/Graphics.hpp"
 #include "Map.hpp"
 
 class MapView : public sf::Drawable {
 public:
-    MapView(std::shared_ptr<Map> map, const sf::Sprite& cellSprite);
+    MapView(std::shared_ptr<Map> map, const std::map<Tile::Type, sf::Texture>& tileTextures);
 
     void setOffset(const sf::Vector2f& offset);
 
@@ -26,8 +27,11 @@ public:
 private:
     std::shared_ptr<Map> map_;
 
-    sf::Sprite cellSprite_;
+    std::map<Tile::Type, sf::Texture> tileTextures_;
     sf::Vector2f offset_;
+
+    int tileWidth_;
+    int tileHeight_;
 };
 
 #endif  // MAPVIEW_H_

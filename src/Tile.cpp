@@ -10,10 +10,10 @@ Tile::Tile(Type type)
     : type_(type)
 { }
 
-inline Tile::Type Tile::getType() {
+Tile::Type Tile::getType() {
     return type_;
 }
 
-inline void Tile::setType(Type type) {
+void Tile::setType(Type type) {
     type_ = type;
 }

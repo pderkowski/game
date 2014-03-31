@@ -16,6 +16,8 @@ public:
     int getRowsNo() const;
     int getColumnsNo() const;
 
+    Tile getTile(int row, int column);
+
     static const int OutOfBounds = -1;
 
 private:

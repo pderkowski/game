@@ -1,6 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <string>
+#include "MapView.hpp"
 #include "Game.hpp"
 
 Game::Game(const std::string& name, std::shared_ptr<Map> map, const MapView& mapView)

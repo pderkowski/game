@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Map.hpp"
+#include "Tile.hpp"
 
 Map::Map(int rowsNo, int columnsNo)
     : rowsNo_(rowsNo), columnsNo_(columnsNo),
@@ -23,4 +24,8 @@ int Map::getRowsNo() const {
 
 int Map::getColumnsNo() const {
     return columnsNo_;
+}
+
+Tile Map::getTile(int row, int column) {
+    return tiles_[row][column];
 }
