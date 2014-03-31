@@ -4,13 +4,14 @@
 #define BOARD_H_
 
 #include <vector>
+#include "Tile.hpp"
 
 class Board {
 public:
     Board(int rowsNo, int columnsNo);
 
-    void toggleSelection(int row, int column);
-    bool isSelected(int row, int column) const;
+    void toggleVisibility(int row, int column);
+    bool isVisible(int row, int column) const;
 
     int getRowsNo() const;
     int getColumnsNo() const;
@@ -20,7 +21,8 @@ public:
 private:
     int rowsNo_;
     int columnsNo_;
-    std::vector<std::vector<bool>> tiles_;
+    std::vector<std::vector<bool>> tilesVisibility_;
+    std::vector<std::vector<Tile>> tiles_;
 };
 
 #endif  // BOARD_H_

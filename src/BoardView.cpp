@@ -17,7 +17,7 @@ void BoardView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
     for (int r = 0; r < board_->getRowsNo(); ++r) {
         for (int c = 0; c < board_->getColumnsNo(); ++c) {
-            if (board_->isSelected(r, c))
+            if (board_->isVisible(r, c))
                 target.draw(sprite, states);
 
             sprite.move(xShift, 0);

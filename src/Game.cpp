@@ -35,5 +35,5 @@ void Game::handleLeftClick(const sf::Event& event) {
     int row = boardView_.convertYCoordsToRowNo(event.mouseButton.y);
 
     if (column != Board::OutOfBounds && row != Board::OutOfBounds)
-        board_->toggleSelection(row, column);
+        board_->toggleVisibility(row, column);
 }

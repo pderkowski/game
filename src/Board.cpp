@@ -4,15 +4,17 @@
 #include "Board.hpp"
 
 Board::Board(int rowsNo, int columnsNo)
-    : rowsNo_(rowsNo), columnsNo_(columnsNo), tiles_(rowsNo, std::vector<bool>(columnsNo, true))
+    : rowsNo_(rowsNo), columnsNo_(columnsNo),
+    tilesVisibility_(rowsNo, std::vector<bool>(columnsNo, true)),
+    tiles_(rowsNo, std::vector<Tile>(columnsNo, Tile()))
 { }
 
-void Board::toggleSelection(int row, int column) {
-    tiles_[row][column] = !tiles_[row][column];
+void Board::toggleVisibility(int row, int column) {
+    tilesVisibility_[row][column] = !tilesVisibility_[row][column];
 }
 
-bool Board::isSelected(int row, int column) const {
-    return tiles_[row][column];
+bool Board::isVisible(int row, int column) const {
+    return tilesVisibility_[row][column];
 }
 
 int Board::getRowsNo() const {

@@ -23,7 +23,7 @@ int main(__attribute__((unused)) int argc, char* argv[]) {
     sf::Sprite sprite;
     sprite.setTexture(texture);
 
-    auto board = std::make_shared<Board>(32, 32);
+    auto board = std::make_shared<Board>(64, 64);
 
     BoardView boardView(board, sprite);
     boardView.setOffset(sf::Vector2f(10, 10));
