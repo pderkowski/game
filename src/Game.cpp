@@ -3,11 +3,11 @@
 #include <string>
 #include "Game.hpp"
 
-Game::Game(const std::string& name, std::shared_ptr<Board> board, const BoardView& boardView)
-    : board_(board),
-    boardView_(boardView),
+Game::Game(const std::string& name, std::shared_ptr<Map> map, const MapView& mapView)
+    : map_(map),
+    mapView_(mapView),
     window_(
-        sf::VideoMode(boardView.width(), boardView.height()),
+        sf::VideoMode(mapView.width(), mapView.height()),
         name,
         sf::Style::Titlebar | sf::Style::Close)
 { }
@@ -25,15 +25,15 @@ void Game::start() {
         }
 
         window_.clear();
-        window_.draw(boardView_);
+        window_.draw(mapView_);
         window_.display();
     }
 }
 
 void Game::handleLeftClick(const sf::Event& event) {
-    int column = boardView_.convertXCoordsToColumnNo(event.mouseButton.x);
-    int row = boardView_.convertYCoordsToRowNo(event.mouseButton.y);
+    int column = mapView_.convertXCoordsToColumnNo(event.mouseButton.x);
+    int row = mapView_.convertYCoordsToRowNo(event.mouseButton.y);
 
-    if (column != Board::OutOfBounds && row != Board::OutOfBounds)
-        board_->toggleVisibility(row, column);
+    if (column != Map::OutOfBounds && row != Map::OutOfBounds)
+        map_->toggleVisibility(row, column);
 }

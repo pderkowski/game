@@ -3,11 +3,11 @@
 #ifndef MAPGENERATOR_H_
 #define MAPGENERATOR_H_
 
-#include "Board.hpp"
+#include "Map.hpp"
 
 class MapGenerator {
 public:
-    static Board generateMap(int rows, int columns);
+    static Map generateMap(int rows, int columns);
 private:
 };
 

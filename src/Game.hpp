@@ -5,20 +5,20 @@
 
 #include <string>
 #include "SFML/Graphics.hpp"
-#include "Board.hpp"
-#include "BoardView.hpp"
+#include "Map.hpp"
+#include "MapView.hpp"
 
 class Game {
 public:
-    Game(const std::string& name, std::shared_ptr<Board> board, const BoardView& boardView);
+    Game(const std::string& name, std::shared_ptr<Map> map, const MapView& mapView);
 
     void start();
 
 private:
     void handleLeftClick(const sf::Event& event);
 
-    std::shared_ptr<Board> board_;
-    BoardView boardView_;
+    std::shared_ptr<Map> map_;
+    MapView mapView_;
     sf::RenderWindow window_;
 };
 

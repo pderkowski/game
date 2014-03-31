@@ -1,14 +1,14 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef BOARD_H_
-#define BOARD_H_
+#ifndef MAP_H_
+#define MAP_H_
 
 #include <vector>
 #include "Tile.hpp"
 
-class Board {
+class Map {
 public:
-    Board(int rowsNo, int columnsNo);
+    Map(int rowsNo, int columnsNo);
 
     void toggleVisibility(int row, int column);
     bool isVisible(int row, int column) const;
@@ -25,4 +25,4 @@ private:
     std::vector<std::vector<Tile>> tiles_;
 };
 
-#endif  // BOARD_H_
+#endif  // MAP_H_

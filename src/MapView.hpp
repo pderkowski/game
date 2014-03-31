@@ -1,19 +1,19 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef BOARDVIEW_H_
-#define BOARDVIEW_H_
+#ifndef MAPVIEW_H_
+#define MAPVIEW_H_
 
 #include <memory>
 #include "SFML/Graphics.hpp"
-#include "Board.hpp"
+#include "Map.hpp"
 
-class BoardView : public sf::Drawable {
+class MapView : public sf::Drawable {
 public:
-    BoardView(std::shared_ptr<Board> board, const sf::Sprite& cellSprite);
+    MapView(std::shared_ptr<Map> map, const sf::Sprite& cellSprite);
 
     void setOffset(const sf::Vector2f& offset);
 
-    virtual ~BoardView() { }
+    virtual ~MapView() { }
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
@@ -24,10 +24,10 @@ public:
     int convertYCoordsToRowNo(int y) const;
 
 private:
-    std::shared_ptr<Board> board_;
+    std::shared_ptr<Map> map_;
 
     sf::Sprite cellSprite_;
     sf::Vector2f offset_;
 };
 
-#endif  // BOARDVIEW_H_
+#endif  // MAPVIEW_H_

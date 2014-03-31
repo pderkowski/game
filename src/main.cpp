@@ -5,8 +5,8 @@
 #include <memory>
 #include "SFML/Graphics.hpp"
 #include "Paths.hpp"
-#include "Board.hpp"
-#include "BoardView.hpp"
+#include "Map.hpp"
+#include "MapView.hpp"
 #include "Game.hpp"
 #include "MapGenerator.hpp"
 
@@ -22,12 +22,12 @@ int main(__attribute__((unused)) int argc, char* argv[]) {
     sprite.setTexture(texture);
 
     MapGenerator generator;
-    auto board = std::make_shared<Board>(generator.generateMap(64, 64));
+    auto map = std::make_shared<Map>(generator.generateMap(64, 64));
 
-    BoardView boardView(board, sprite);
-    boardView.setOffset(sf::Vector2f(10, 10));
+    MapView mapView(map, sprite);
+    mapView.setOffset(sf::Vector2f(10, 10));
 
-    Game game("game", board, boardView);
+    Game game("game", map, mapView);
     game.start();
 
     return 0;
