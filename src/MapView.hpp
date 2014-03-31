@@ -1,7 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MAPVIEW_H_
-#define MAPVIEW_H_
+#ifndef MAPVIEW_HPP_
+#define MAPVIEW_HPP_
 
 #include <memory>
 #include <map>
@@ -34,4 +34,4 @@ private:
     int tileHeight_;
 };
 
-#endif  // MAPVIEW_H_
+#endif  // MAPVIEW_HPP_

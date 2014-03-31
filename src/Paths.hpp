@@ -1,7 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef PATHS_H_
-#define PATHS_H_
+#ifndef PATHS_HPP_
+#define PATHS_HPP_
 
 #include <string>
 #include "boost/filesystem.hpp"
@@ -22,4 +22,4 @@ private:
     boost::filesystem::path resourcesPath_;
 };
 
-#endif  // PATHS_H_
+#endif  // PATHS_HPP_

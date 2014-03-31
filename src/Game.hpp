@@ -1,7 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef GAME_H_
-#define GAME_H_
+#ifndef GAME_HPP_
+#define GAME_HPP_
 
 #include <string>
 #include "SFML/Graphics.hpp"
@@ -22,4 +22,4 @@ private:
     sf::RenderWindow window_;
 };
 
-#endif  // GAME_H_
+#endif  // GAME_HPP_

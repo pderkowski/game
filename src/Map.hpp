@@ -1,7 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MAP_H_
-#define MAP_H_
+#ifndef MAP_HPP_
+#define MAP_HPP_
 
 #include <vector>
 #include "Tile.hpp"
@@ -27,4 +27,4 @@ private:
     std::vector<std::vector<Tile>> tiles_;
 };
 
-#endif  // MAP_H_
+#endif  // MAP_HPP_

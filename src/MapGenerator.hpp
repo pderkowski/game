@@ -1,7 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MAPGENERATOR_H_
-#define MAPGENERATOR_H_
+#ifndef MAPGENERATOR_HPP_
+#define MAPGENERATOR_HPP_
 
 #include "Map.hpp"
 
@@ -11,4 +11,4 @@ public:
 private:
 };
 
-#endif  // MAPGENERATOR_H_
+#endif  // MAPGENERATOR_HPP_

@@ -1,7 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef TILE_H_
-#define TILE_H_
+#ifndef TILE_HPP_
+#define TILE_HPP_
 
 class Tile {
 public:
@@ -23,4 +23,4 @@ private:
     Type type_;
 };
 
-#endif  // TILE_H_
+#endif  // TILE_HPP_
