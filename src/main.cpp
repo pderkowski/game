@@ -8,10 +8,10 @@
 #include "Board.hpp"
 #include "BoardView.hpp"
 #include "Game.hpp"
+#include "MapGenerator.hpp"
 
 int main(__attribute__((unused)) int argc, char* argv[]) {
     Paths paths(argv[0]);
-
     sf::Texture texture;
     auto pathToBasicTile = paths.getResourcePath("empty.png").string();
     if (!texture.loadFromFile(pathToBasicTile, sf::IntRect(10, 10, 16, 16))) {
@@ -21,7 +21,8 @@ int main(__attribute__((unused)) int argc, char* argv[]) {
     sf::Sprite sprite;
     sprite.setTexture(texture);
 
-    auto board = std::make_shared<Board>(64, 64);
+    MapGenerator generator;
+    auto board = std::make_shared<Board>(generator.generateMap(64, 64));
 
     BoardView boardView(board, sprite);
     boardView.setOffset(sf::Vector2f(10, 10));
