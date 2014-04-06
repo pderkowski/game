@@ -11,7 +11,7 @@ public:
         Plains,
         Hills,
         Mountains,
-        NumberOfTileTypes  // this has to be the last one in enum
+        NumberOfTileTypes  // this has to be the last one in this enum
     };
 
     Tile();

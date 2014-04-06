@@ -13,8 +13,7 @@
 
 int main(__attribute__((unused)) int argc, char* argv[]) {
     Paths paths(argv[0]);
-    MapGenerator generator;
-    auto map = std::make_shared<Map>(generator.generateMap(64, 64));
+    auto map = std::make_shared<Map>(MapGenerator::generateMap(64, 64));
 
     std::map<Tile::Type, sf::Texture> tileTextures
         = { {Tile::Type::Empty, Resources::getTexture(paths.getResourcePath("tiles/empty.png"))},
