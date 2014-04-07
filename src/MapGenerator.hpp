@@ -14,6 +14,9 @@ public:
 private:
     static void assignTileTypes(Map& map);
     static std::vector<std::vector<float>> generateHeights(int rows, int columns);
+    static std::vector<std::vector<float>> getInitialHeights(int rows, int columns);
+    static void relaxHeights(std::vector<std::vector<float>>& heights);
+    static float calculateDelta(float lhs, float rhs);
     static Tile::Type convertHeightToTileType(float height);
 };
 
