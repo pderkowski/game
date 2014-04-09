@@ -16,6 +16,7 @@ public:
 
 private:
     void handleLeftClick(const sf::Event& event);
+    void handleSpacePressed(const sf::Event& event);
 
     std::shared_ptr<Map> map_;
     MapView mapView_;

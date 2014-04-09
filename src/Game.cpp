@@ -2,6 +2,7 @@
 
 #include <string>
 #include "MapView.hpp"
+#include "MapGenerator.hpp"
 #include "Game.hpp"
 
 Game::Game(const std::string& name, std::shared_ptr<Map> map, const MapView& mapView)
@@ -20,8 +21,11 @@ void Game::start() {
             if (event.type == sf::Event::Closed) {
                 window_.close();
             } else if (event.type == sf::Event::MouseButtonPressed
-                    && event.mouseButton.button ==  sf::Mouse::Button::Left) {
+                    && event.mouseButton.button == sf::Mouse::Button::Left) {
                 handleLeftClick(event);
+            } else if (event.type == sf::Event::KeyPressed
+                    && event.key.code == sf::Keyboard::Key::Space) {
+                handleSpacePressed(event);
             }
         }
 
@@ -37,4 +41,8 @@ void Game::handleLeftClick(const sf::Event& event) {
 
     if (column != Map::OutOfBounds && row != Map::OutOfBounds)
         map_->toggleVisibility(row, column);
+}
+
+void Game::handleSpacePressed(__attribute__((unused)) const sf::Event& event) {
+    *map_ = MapGenerator::generateMap(map_->getRowsNo(), map_->getColumnsNo());
 }
