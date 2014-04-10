@@ -1,5 +1,6 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <cstdlib>
 #include <string>
 #include "MapView.hpp"
 #include "MapGenerator.hpp"
@@ -32,9 +33,12 @@ void Game::handleEvents() {
         } else if (event.type == sf::Event::MouseButtonPressed
                 && event.mouseButton.button == sf::Mouse::Button::Left) {
             handleLeftClick(event);
-        } else if (event.type == sf::Event::KeyPressed
-                && event.key.code == sf::Keyboard::Key::Space) {
-            handleSpacePressed(event);
+        } else if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Key::Space) {
+                handleSpacePressed();
+            } else if (event.key.code == sf::Keyboard::Key::Escape) {
+                handleEscapePressed();
+            }
         }
     }
 }
@@ -47,6 +51,10 @@ void Game::handleLeftClick(const sf::Event& event) {
         map_->toggleVisibility(row, column);
 }
 
-void Game::handleSpacePressed(__attribute__((unused)) const sf::Event& event) {
+void Game::handleSpacePressed() {
     *map_ = MapGenerator::generateMap(map_->getRowsNo(), map_->getColumnsNo());
+}
+
+void Game::handleEscapePressed() {
+    exit(EXIT_SUCCESS);
 }
