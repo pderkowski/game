@@ -49,8 +49,10 @@ void Game::handleEvents() {
 }
 
 void Game::handleLeftClick(const sf::Event& event) {
-    int column = mapView_.convertXCoordsToColumnNo(event.mouseButton.x);
-    int row = mapView_.convertYCoordsToRowNo(event.mouseButton.y);
+    sf::Vector2i mousePosition(event.mouseButton.x, event.mouseButton.y);
+
+    int column = mapView_.convertXCoordsToColumnNo(window_.mapPixelToCoords(mousePosition).x);
+    int row = mapView_.convertYCoordsToRowNo(window_.mapPixelToCoords(mousePosition).y);
 
     if (column != Map::OutOfBounds && row != Map::OutOfBounds)
         map_->toggleVisibility(row, column);
