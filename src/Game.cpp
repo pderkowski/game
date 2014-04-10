@@ -10,9 +10,9 @@ Game::Game(const std::string& name, std::shared_ptr<Map> map, const MapView& map
     : map_(map),
     mapView_(mapView),
     window_(
-        sf::VideoMode(mapView.width(), mapView.height()),
+        sf::VideoMode::getFullscreenModes()[0],
         name,
-        sf::Style::Titlebar | sf::Style::Close)
+        sf::Style::Fullscreen)
 { }
 
 void Game::start() {
