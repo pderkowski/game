@@ -16,22 +16,26 @@ Game::Game(const std::string& name, std::shared_ptr<Map> map, const MapView& map
 
 void Game::start() {
     while (window_.isOpen()) {
-        sf::Event event;
-        while (window_.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window_.close();
-            } else if (event.type == sf::Event::MouseButtonPressed
-                    && event.mouseButton.button == sf::Mouse::Button::Left) {
-                handleLeftClick(event);
-            } else if (event.type == sf::Event::KeyPressed
-                    && event.key.code == sf::Keyboard::Key::Space) {
-                handleSpacePressed(event);
-            }
-        }
+        handleEvents();
 
         window_.clear();
         window_.draw(mapView_);
         window_.display();
+    }
+}
+
+void Game::handleEvents() {
+    sf::Event event;
+    while (window_.pollEvent(event)) {
+        if (event.type == sf::Event::Closed) {
+            window_.close();
+        } else if (event.type == sf::Event::MouseButtonPressed
+                && event.mouseButton.button == sf::Mouse::Button::Left) {
+            handleLeftClick(event);
+        } else if (event.type == sf::Event::KeyPressed
+                && event.key.code == sf::Keyboard::Key::Space) {
+            handleSpacePressed(event);
+        }
     }
 }
 
