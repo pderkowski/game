@@ -13,7 +13,7 @@
 int main(__attribute__((unused)) int argc, char* argv[]) {
     Resources resources(Paths{argv[0]}); // NOLINT
 
-    auto map = std::make_shared<Map>(MapGenerator::generateMap(70, 112));
+    auto map = std::make_shared<Map>(MapGenerator::generateMap(100, 140));
 
     MapView mapView(map, resources.getTileTextures());
     mapView.setOffset(sf::Vector2f(10, 10));

@@ -19,10 +19,12 @@ private:
     void handleLeftClick(const sf::Event& event);
     void handleSpacePressed();
     void handleEscapePressed();
+    void handleMouseMoved(const sf::Event& event);
 
     std::shared_ptr<Map> map_;
     MapView mapView_;
     sf::RenderWindow window_;
+    sf::View view_;
 };
 
 #endif  // GAME_HPP_
