@@ -3,19 +3,28 @@
 #include <cstdlib>
 #include <algorithm>
 #include <string>
+#include "Map.hpp"
 #include "MapDrawer.hpp"
 #include "MapGenerator.hpp"
+#include "Menu.hpp"
+#include "MenuDrawer.hpp"
 #include "Game.hpp"
 
-Game::Game(const std::string& name, std::shared_ptr<Map> map, const MapDrawer& mapDrawer)
-    : map_(map),
-    mapDrawer_(mapDrawer),
-    window_(
-        sf::VideoMode::getFullscreenModes()[0],
-        name,
-        sf::Style::Fullscreen),
-    mapView_(sf::FloatRect(0, 0, window_.getSize().x, window_.getSize().y))
-{ }
+Game::Game(const std::string& name,
+    std::shared_ptr<Map> map,
+    std::shared_ptr<Menu> menu,
+    Resources& resources)
+        : map_(map),
+        mapDrawer_(map, resources),
+        menu_(menu),
+        menuDrawer_(menu_),
+        window_(
+            sf::VideoMode::getFullscreenModes()[0],
+            name,
+            sf::Style::Fullscreen),
+        mapView_(sf::FloatRect(0, 0, window_.getSize().x, window_.getSize().y)) {
+    mapDrawer_.setOffset(sf::Vector2f(10, 10));
+}
 
 void Game::start() {
     while (window_.isOpen()) {
@@ -23,6 +32,7 @@ void Game::start() {
 
         window_.clear();
         drawMap();
+        drawMenuIfVisible();
         window_.display();
     }
 }
@@ -30,6 +40,12 @@ void Game::start() {
 void Game::drawMap() {
     window_.setView(mapView_);
     window_.draw(mapDrawer_);
+}
+
+void Game::drawMenuIfVisible() {
+    if (menuDrawer_.isVisible()) {
+        window_.draw(menuDrawer_);
+    }
 }
 
 void Game::handleEvents() {
@@ -47,6 +63,9 @@ void Game::handleEvents() {
                 break;
             case sf::Keyboard::Key::Escape:
                 handleEscapePressed();
+                break;
+            case sf::Keyboard::Key::M:
+                handleMPressed();
                 break;
             default:
                 break;
@@ -75,6 +94,10 @@ void Game::handleSpacePressed() {
 
 void Game::handleEscapePressed() {
     exit(EXIT_SUCCESS);
+}
+
+void Game::handleMPressed() {
+    menuDrawer_.toggleVisibility();
 }
 
 void Game::handleMouseWheelMoved(const sf::Event& event) {

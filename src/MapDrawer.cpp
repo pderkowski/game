@@ -4,10 +4,19 @@
 #include <map>
 #include "SFML/Graphics.hpp"
 #include "MapDrawer.hpp"
+#include "Resources.hpp"
+#include "Tile.hpp"
 
-MapDrawer::MapDrawer(std::shared_ptr<Map> map,
-    const std::map<Tile::Type, sf::Texture>& tileTextures)
-        : map_(map), tileTextures_(tileTextures), offset_(0, 0), tileWidth_(16), tileHeight_(16)
+MapDrawer::MapDrawer(std::shared_ptr<Map> map, Resources& resources)
+    : map_(map),
+    tileTextures_{  // NOLINT
+        { Tile::Type::Empty, resources.loadTexture("tiles/empty.png") },
+        { Tile::Type::Water, resources.loadTexture("tiles/water.png") },
+        { Tile::Type::Hills, resources.loadTexture("tiles/hills.png") },
+        { Tile::Type::Plains, resources.loadTexture("tiles/plains.png") },
+        { Tile::Type::Mountains, resources.loadTexture("tiles/mountains.png") }
+    },
+    offset_(0, 0), tileWidth_(16), tileHeight_(16)
 { }
 
 void MapDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) const {

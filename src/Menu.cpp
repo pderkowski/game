@@ -1,15 +1,10 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <functional>
+#include <string>
+#include <map>
 #include "Menu.hpp"
 
-Menu::Menu(float width, float height)
-    : width_(width), height_(height)
-{ }
-
-float Menu::width() const {
-    return width_;
-}
-
-float Menu::height() const {
-    return height_;
+void Menu::addItem(const std::string& itemName, std::function<void()> handler) {
+    handlers_[itemName] = handler;
 }

@@ -6,21 +6,28 @@
 #include <string>
 #include "SFML/Graphics.hpp"
 #include "Map.hpp"
+#include "Menu.hpp"
+#include "MenuDrawer.hpp"
 #include "MapDrawer.hpp"
 
 class Game {
 public:
-    Game(const std::string& name, std::shared_ptr<Map> map, const MapDrawer& mapDrawer);
+    Game(const std::string& name,
+        std::shared_ptr<Map> map,
+        std::shared_ptr<Menu> menu,
+        Resources& resources);
 
     void start();
 
 private:
     void drawMap();
+    void drawMenuIfVisible();
 
     void handleEvents();
     void handleLeftClick(const sf::Event& event);
     void handleSpacePressed();
     void handleEscapePressed();
+    void handleMPressed();
     void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);
 
@@ -29,6 +36,8 @@ private:
 
     std::shared_ptr<Map> map_;
     MapDrawer mapDrawer_;
+    std::shared_ptr<Menu> menu_;
+    MenuDrawer menuDrawer_;
     sf::RenderWindow window_;
     sf::View mapView_;
 };

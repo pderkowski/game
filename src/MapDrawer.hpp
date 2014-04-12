@@ -7,10 +7,12 @@
 #include <map>
 #include "SFML/Graphics.hpp"
 #include "Map.hpp"
+#include "Resources.hpp"
+#include "Tile.hpp"
 
 class MapDrawer : public sf::Drawable {
 public:
-    MapDrawer(std::shared_ptr<Map> map, const std::map<Tile::Type, sf::Texture>& tileTextures);
+    MapDrawer(std::shared_ptr<Map> map, Resources& resources);
 
     virtual ~MapDrawer() { }
 

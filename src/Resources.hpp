@@ -4,23 +4,19 @@
 #define RESOURCES_HPP_
 
 #include <map>
+#include <string>
 #include "boost/filesystem.hpp"
 #include "SFML/Graphics.hpp"
-#include "Tile.hpp"
 #include "Paths.hpp"
 
 class Resources {
 public:
     explicit Resources(const Paths& paths);
-    std::map<Tile::Type, sf::Texture> getTileTextures() const;
+    sf::Texture loadTexture(const std::string& relativePath);
 
 private:
-    void loadResources();
-    void loadTileTexture(const Tile::Type alias,
-        const boost::filesystem::path& pathToTexture);
-
     Paths paths_;
-    std::map<Tile::Type, sf::Texture> loadedTextures_;
+    std::map<boost::filesystem::path, sf::Texture> loadedTextures_;
 };
 
 #endif  // RESOURCES_HPP_

@@ -6,33 +6,23 @@
 #include "boost/filesystem.hpp"
 #include "SFML/Graphics.hpp"
 #include "Resources.hpp"
-#include "Tile.hpp"
 
 Resources::Resources(const Paths& paths)
-        : paths_(paths), loadedTextures_() {
-    loadResources();
-}
+    : paths_(paths)
+{ }
 
-std::map<Tile::Type, sf::Texture> Resources::getTileTextures() const {
-    return loadedTextures_;
-}
+sf::Texture Resources::loadTexture(const std::string& relativePath) {
+    boost::filesystem::path pathToTexture = paths_.getResourcePath(relativePath);
 
-void Resources::loadResources() {
-    loadTileTexture(Tile::Type::Empty, paths_.getResourcePath("tiles/empty.png"));
-    loadTileTexture(Tile::Type::Water, paths_.getResourcePath("tiles/water.png"));
-    loadTileTexture(Tile::Type::Hills, paths_.getResourcePath("tiles/hills.png"));
-    loadTileTexture(Tile::Type::Plains, paths_.getResourcePath("tiles/plains.png"));
-    loadTileTexture(Tile::Type::Mountains, paths_.getResourcePath("tiles/mountains.png"));
-}
-
-void Resources::loadTileTexture(const Tile::Type alias,
-        const boost::filesystem::path& pathToTexture) {
-    if (loadedTextures_.find(alias) == loadedTextures_.end()) {
+    if (loadedTextures_.find(pathToTexture) == loadedTextures_.end()) {
         sf::Texture texture;
         if (!texture.loadFromFile(pathToTexture.string())) {
             throw std::runtime_error("Could not load texture from " + pathToTexture.string());
         }
 
-        loadedTextures_[alias] = texture;
+        loadedTextures_[pathToTexture] = texture;
     }
+
+    return loadedTextures_.at(pathToTexture);
 }
+

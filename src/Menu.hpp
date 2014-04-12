@@ -3,16 +3,16 @@
 #ifndef MENU_HPP_
 #define MENU_HPP_
 
+#include <string>
+#include <map>
+#include <functional>
+
 class Menu {
 public:
-    Menu(float width, float height);
-
-    float width() const;
-    float height() const;
+    void addItem(const std::string& itemName, std::function<void()> handler);
 
 private:
-    float width_;
-    float height_;
+    std::map<std::string, std::function<void()>> handlers_;
 };
 
 #endif  // MENU_HPP_
