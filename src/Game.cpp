@@ -105,7 +105,7 @@ float Game::calculateHorizontalShift(float mouseXPosition, float scrollMarginSiz
             -(mapView_.getCenter().x - mapView_.getSize().x / 2));
     } else if (mouseXPosition > window_.getSize().x - scrollMarginSize) {
         return std::min(scrollMarginSize - (window_.getSize().x - mouseXPosition),
-            mapDrawer_.width() - (mapView_.getCenter().x + mapView_.getSize().x / 2));
+            mapDrawer_.getMapWidth() - (mapView_.getCenter().x + mapView_.getSize().x / 2));
     } else {
         return 0;
     }
@@ -117,7 +117,7 @@ float Game::calculateVerticalShift(float mouseYPosition, float scrollMarginSize)
             -(mapView_.getCenter().y - mapView_.getSize().y / 2));
     } else if (mouseYPosition > window_.getSize().y - scrollMarginSize) {
         return std::min(scrollMarginSize - (window_.getSize().y - mouseYPosition),
-            mapDrawer_.height() - (mapView_.getCenter().y + mapView_.getSize().y / 2));
+            mapDrawer_.getMapHeight() - (mapView_.getCenter().y + mapView_.getSize().y / 2));
     } else {
         return 0;
     }

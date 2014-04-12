@@ -40,11 +40,11 @@ int MapDrawer::getTileHeight() const {
     return tileHeight_;
 }
 
-float MapDrawer::width() const {
+float MapDrawer::getMapWidth() const {
     return 2 * offset_.x + (map_->getColumnsNo() - 1) + map_->getColumnsNo() * tileWidth_;
 }
 
-float MapDrawer::height() const {
+float MapDrawer::getMapHeight() const {
     return 2 * offset_.y + (map_->getRowsNo() - 1) + map_->getRowsNo() * tileHeight_;
 }
 

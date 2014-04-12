@@ -18,8 +18,8 @@ public:
 
     int getTileWidth() const;
     int getTileHeight() const;
-    float width() const;
-    float height() const;
+    float getMapWidth() const;
+    float getMapHeight() const;
 
     void setTileWidth(int width);
     void setTileHeight(int height);
