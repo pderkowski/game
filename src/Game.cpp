@@ -71,27 +71,32 @@ void Game::handleEscapePressed() {
 }
 
 void Game::handleMouseMoved(const sf::Event& event) {
-    const int scrollAreaSize = 20;
+    const int scrollMarginSize = 20;
 
-    if (event.mouseMove.x < scrollAreaSize) {
-        float shift = std::max(static_cast<float>(event.mouseMove.x - scrollAreaSize),
+    mapView_.move(calculateHorizontalShift(event.mouseMove.x, scrollMarginSize),
+        calculateVerticalShift(event.mouseMove.y, scrollMarginSize));
+}
+
+float Game::calculateHorizontalShift(float mouseXPosition, float scrollMarginSize) const {
+    if (mouseXPosition < scrollMarginSize) {
+        return std::max(mouseXPosition - scrollMarginSize,
             -(mapView_.getCenter().x - mapView_.getSize().x / 2));
-        mapView_.move(shift, 0);
-    } else if (event.mouseMove.x > static_cast<int>(window_.getSize().x) - scrollAreaSize) {
-        float shift = std::min(
-            static_cast<float>(scrollAreaSize - (window_.getSize().x - event.mouseMove.x)),
+    } else if (mouseXPosition > window_.getSize().x - scrollMarginSize) {
+        return std::min(scrollMarginSize - (window_.getSize().x - mouseXPosition),
             mapDrawer_.width() - (mapView_.getCenter().x + mapView_.getSize().x / 2));
-        mapView_.move(shift, 0);
+    } else {
+        return 0;
     }
+}
 
-    if (event.mouseMove.y < scrollAreaSize) {
-        float shift = std::max(static_cast<float>(event.mouseMove.y - scrollAreaSize),
+float Game::calculateVerticalShift(float mouseYPosition, float scrollMarginSize) const {
+    if (mouseYPosition < scrollMarginSize) {
+        return std::max(mouseYPosition - scrollMarginSize,
             -(mapView_.getCenter().y - mapView_.getSize().y / 2));
-        mapView_.move(0, shift);
-    } else if (event.mouseMove.y > static_cast<int>(window_.getSize().y) - scrollAreaSize) {
-        float shift = std::min(
-            static_cast<float>(scrollAreaSize - (window_.getSize().y - event.mouseMove.y)),
+    } else if (mouseYPosition > window_.getSize().y - scrollMarginSize) {
+        return std::min(scrollMarginSize - (window_.getSize().y - mouseYPosition),
             mapDrawer_.height() - (mapView_.getCenter().y + mapView_.getSize().y / 2));
-        mapView_.move(0, shift);
+    } else {
+        return 0;
     }
 }

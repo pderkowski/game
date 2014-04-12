@@ -23,6 +23,9 @@ private:
     void handleEscapePressed();
     void handleMouseMoved(const sf::Event& event);
 
+    float calculateHorizontalShift(float mouseXPosition, float scrollMarginSize) const;
+    float calculateVerticalShift(float mouseYPosition, float scrollMarginSize) const;
+
     std::shared_ptr<Map> map_;
     MapDrawer mapDrawer_;
     sf::RenderWindow window_;
