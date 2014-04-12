@@ -32,8 +32,12 @@ void MapDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     }
 }
 
-void MapDrawer::setOffset(const sf::Vector2f& offset) {
-    offset_ = offset;
+int MapDrawer::getTileWidth() const {
+    return tileWidth_;
+}
+
+int MapDrawer::getTileHeight() const {
+    return tileHeight_;
 }
 
 float MapDrawer::width() const {
@@ -42,6 +46,18 @@ float MapDrawer::width() const {
 
 float MapDrawer::height() const {
     return 2 * offset_.y + (map_->getRowsNo() - 1) + map_->getRowsNo() * tileHeight_;
+}
+
+void MapDrawer::setOffset(const sf::Vector2f& offset) {
+    offset_ = offset;
+}
+
+void MapDrawer::setTileWidth(int tileWidth) {
+    tileWidth_ = tileWidth;
+}
+
+void MapDrawer::setTileHeight(int tileHeight) {
+    tileHeight_ = tileHeight;
 }
 
 int MapDrawer::convertXCoordsToColumnNo(int x) const {

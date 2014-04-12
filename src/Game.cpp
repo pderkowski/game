@@ -41,11 +41,18 @@ void Game::handleEvents() {
                 && event.mouseButton.button == sf::Mouse::Button::Left) {
             handleLeftClick(event);
         } else if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Key::Space) {
+            switch (event.key.code) {
+            case sf::Keyboard::Key::Space:
                 handleSpacePressed();
-            } else if (event.key.code == sf::Keyboard::Key::Escape) {
+                break;
+            case sf::Keyboard::Key::Escape:
                 handleEscapePressed();
+                break;
+            default:
+                break;
             }
+        } else if (event.type == sf::Event::MouseWheelMoved) {
+            handleMouseWheelMoved(event);
         } else if (event.type == sf::Event::MouseMoved) {
             handleMouseMoved(event);
         }
@@ -68,6 +75,21 @@ void Game::handleSpacePressed() {
 
 void Game::handleEscapePressed() {
     exit(EXIT_SUCCESS);
+}
+
+void Game::handleMouseWheelMoved(const sf::Event& event) {
+    const int minTileSize = 4;
+    const int maxTileSize = 32;
+
+    int newTileWidth = mapDrawer_.getTileWidth() + event.mouseWheel.delta;
+    newTileWidth = std::min(newTileWidth, maxTileSize);
+    newTileWidth = std::max(newTileWidth, minTileSize);
+    mapDrawer_.setTileWidth(newTileWidth);
+
+    int newTileHeight = mapDrawer_.getTileHeight() + event.mouseWheel.delta;
+    newTileHeight = std::min(newTileHeight, maxTileSize);
+    newTileHeight = std::max(newTileHeight, minTileSize);
+    mapDrawer_.setTileHeight(newTileHeight);
 }
 
 void Game::handleMouseMoved(const sf::Event& event) {

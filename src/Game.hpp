@@ -21,6 +21,7 @@ private:
     void handleLeftClick(const sf::Event& event);
     void handleSpacePressed();
     void handleEscapePressed();
+    void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);
 
     float calculateHorizontalShift(float mouseXPosition, float scrollMarginSize) const;

@@ -12,14 +12,18 @@ class MapDrawer : public sf::Drawable {
 public:
     MapDrawer(std::shared_ptr<Map> map, const std::map<Tile::Type, sf::Texture>& tileTextures);
 
-    void setOffset(const sf::Vector2f& offset);
-
     virtual ~MapDrawer() { }
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
+    int getTileWidth() const;
+    int getTileHeight() const;
     float width() const;
     float height() const;
+
+    void setTileWidth(int width);
+    void setTileHeight(int height);
+    void setOffset(const sf::Vector2f& offset);
 
     int convertXCoordsToColumnNo(int x) const;
     int convertYCoordsToRowNo(int y) const;
