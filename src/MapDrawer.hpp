@@ -1,20 +1,20 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MAPVIEW_HPP_
-#define MAPVIEW_HPP_
+#ifndef MAPDRAWER_HPP_
+#define MAPDRAWER_HPP_
 
 #include <memory>
 #include <map>
 #include "SFML/Graphics.hpp"
 #include "Map.hpp"
 
-class MapView : public sf::Drawable {
+class MapDrawer : public sf::Drawable {
 public:
-    MapView(std::shared_ptr<Map> map, const std::map<Tile::Type, sf::Texture>& tileTextures);
+    MapDrawer(std::shared_ptr<Map> map, const std::map<Tile::Type, sf::Texture>& tileTextures);
 
     void setOffset(const sf::Vector2f& offset);
 
-    virtual ~MapView() { }
+    virtual ~MapDrawer() { }
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
@@ -34,4 +34,4 @@ private:
     int tileHeight_;
 };
 
-#endif  // MAPVIEW_HPP_
+#endif  // MAPDRAWER_HPP_

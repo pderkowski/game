@@ -3,13 +3,14 @@
 #include <cmath>
 #include <map>
 #include "SFML/Graphics.hpp"
-#include "MapView.hpp"
+#include "MapDrawer.hpp"
 
-MapView::MapView(std::shared_ptr<Map> map, const std::map<Tile::Type, sf::Texture>& tileTextures)
-    : map_(map), tileTextures_(tileTextures), offset_(0, 0), tileWidth_(16), tileHeight_(16)
+MapDrawer::MapDrawer(std::shared_ptr<Map> map,
+    const std::map<Tile::Type, sf::Texture>& tileTextures)
+        : map_(map), tileTextures_(tileTextures), offset_(0, 0), tileWidth_(16), tileHeight_(16)
 { }
 
-void MapView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void MapDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     sf::Sprite sprite;
     sprite.setTextureRect(sf::IntRect(0, 0, tileWidth_, tileHeight_));
 
@@ -31,19 +32,19 @@ void MapView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     }
 }
 
-void MapView::setOffset(const sf::Vector2f& offset) {
+void MapDrawer::setOffset(const sf::Vector2f& offset) {
     offset_ = offset;
 }
 
-float MapView::width() const {
+float MapDrawer::width() const {
     return 2 * offset_.x + (map_->getColumnsNo() - 1) + map_->getColumnsNo() * tileWidth_;
 }
 
-float MapView::height() const {
+float MapDrawer::height() const {
     return 2 * offset_.y + (map_->getRowsNo() - 1) + map_->getRowsNo() * tileHeight_;
 }
 
-int MapView::convertXCoordsToColumnNo(int x) const {
+int MapDrawer::convertXCoordsToColumnNo(int x) const {
     int column = floor((x - offset_.x) / (tileWidth_ + 1));
 
     if (column < 0 || column >= map_->getColumnsNo())
@@ -52,7 +53,7 @@ int MapView::convertXCoordsToColumnNo(int x) const {
         return column;
 }
 
-int MapView::convertYCoordsToRowNo(int y) const {
+int MapDrawer::convertYCoordsToRowNo(int y) const {
     int row = floor((y - offset_.y) / (tileHeight_ + 1));
 
     if (row < 0 || row >= map_->getRowsNo())
