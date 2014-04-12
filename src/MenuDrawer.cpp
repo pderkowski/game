@@ -14,6 +14,9 @@ void MenuDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     sf::RectangleShape menuBackground(sf::Vector2f(target.getSize().x, target.getSize().y));
     menuBackground.setFillColor(sf::Color(0, 0, 0, 190));
 
+    sf::Vector2f coords = target.mapPixelToCoords(sf::Vector2i(0, 0));
+    menuBackground.setPosition(coords.x, coords.y);
+
     target.draw(menuBackground, states);
 }
 
