@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <string>
+#include <memory>
 #include "Map.hpp"
 #include "MapDrawer.hpp"
 #include "MapGenerator.hpp"
@@ -10,13 +11,10 @@
 #include "MenuDrawer.hpp"
 #include "Game.hpp"
 
-Game::Game(const std::string& name,
-    std::shared_ptr<Map> map,
-    std::shared_ptr<Menu> menu,
-    Resources& resources)
-        : map_(map),
-        mapDrawer_(map, resources),
-        menu_(menu),
+Game::Game(const std::string& name, int rows, int columns, Resources& resources)
+        : map_(std::make_shared<Map>(MapGenerator::generateMap(rows, columns))),
+        mapDrawer_(map_, resources),
+        menu_(std::make_shared<Menu>(Menu())),
         menuDrawer_(menu_),
         window_(
             sf::VideoMode::getFullscreenModes()[0],

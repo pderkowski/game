@@ -12,10 +12,7 @@
 
 class Game {
 public:
-    Game(const std::string& name,
-        std::shared_ptr<Map> map,
-        std::shared_ptr<Menu> menu,
-        Resources& resources);
+    Game(const std::string& name, int rows, int columns, Resources& resources);
 
     void start();
 
