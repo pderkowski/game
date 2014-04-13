@@ -23,6 +23,7 @@ public:
 private:
     std::vector<sf::Text> createMenuTexts(sf::RenderTarget& target) const;
     void centerTextAt(sf::Text& text, const sf::Vector2f& position) const;
+    sf::Vector2f calculateMenuItemPosition(int itemNo, sf::RenderTarget& target) const;
 
     std::shared_ptr<Menu> menu_;
 

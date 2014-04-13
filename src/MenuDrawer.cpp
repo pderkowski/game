@@ -21,7 +21,6 @@ void MenuDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(menuBackground, states);
 
     const auto menuTexts = createMenuTexts(target);
-
     for (const auto& text : menuTexts) {
         target.draw(text, states);
     }
@@ -30,13 +29,9 @@ void MenuDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 std::vector<sf::Text> MenuDrawer::createMenuTexts(sf::RenderTarget& target) const {
     std::vector<sf::Text> res;
 
-    const auto center
-        = target.mapPixelToCoords(sf::Vector2i(target.getSize().x / 2, target.getSize().y / 2));
-
     for (unsigned i = 0; i < menu_->items_.size(); ++i) {
-        sf::Vector2f position(center.x, center.y + i * 40);
         sf::Text text(menu_->items_[i].first, font_, 30);
-        centerTextAt(text, position);
+        centerTextAt(text, calculateMenuItemPosition(i, target));
         res.push_back(text);
     }
 
@@ -47,6 +42,17 @@ void MenuDrawer::centerTextAt(sf::Text& text, const sf::Vector2f& position) cons
     sf::FloatRect textRect = text.getLocalBounds();
     text.setOrigin(textRect.left + textRect.width / 2, textRect.top + textRect.height / 2);
     text.setPosition(position);
+}
+
+sf::Vector2f MenuDrawer::calculateMenuItemPosition(int itemNo, sf::RenderTarget& target) const {
+    const auto center
+        = target.mapPixelToCoords(sf::Vector2i(target.getSize().x / 2, target.getSize().y / 2));
+
+    const float itemNoRelativeToCenter = itemNo - (menu_->items_.size() - 1) / 2.0;
+    const int fontHeight = 30;
+    const int lineSpacing = 10;
+
+    return sf::Vector2f(center.x, center.y + itemNoRelativeToCenter * (fontHeight + lineSpacing));
 }
 
 bool MenuDrawer::isVisible() const {

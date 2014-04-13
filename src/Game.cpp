@@ -26,6 +26,7 @@ Game::Game(const std::string& name, int rows, int columns, Resources& resources)
 }
 
 void Game::initializeMenu() {
+    menu_->addItem("Return", std::bind(&Game::toggleMenu, this));
     menu_->addItem("New game", std::bind(&Game::restart, this));
     menu_->addItem("Quit game", std::bind(&Game::quit, this));
 }
@@ -69,7 +70,7 @@ void Game::handleEvents() {
                 quit();
                 break;
             case sf::Keyboard::Key::M:
-                handleMPressed();
+                toggleMenu();
                 break;
             default:
                 break;
@@ -100,7 +101,7 @@ void Game::quit() {
     exit(EXIT_SUCCESS);
 }
 
-void Game::handleMPressed() {
+void Game::toggleMenu() {
     menuDrawer_.toggleVisibility();
 }
 
