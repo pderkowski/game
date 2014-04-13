@@ -17,13 +17,15 @@ public:
     void start();
 
 private:
+    void initializeMenu();
+
     void drawMap();
     void drawMenuIfVisible();
 
     void handleEvents();
     void handleLeftClick(const sf::Event& event);
-    void handleSpacePressed();
-    void handleEscapePressed();
+    void restart();
+    void quit();
     void handleMPressed();
     void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);

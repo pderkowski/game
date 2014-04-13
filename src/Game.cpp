@@ -15,13 +15,19 @@ Game::Game(const std::string& name, int rows, int columns, Resources& resources)
         : map_(std::make_shared<Map>(MapGenerator::generateMap(rows, columns))),
         mapDrawer_(map_, resources),
         menu_(std::make_shared<Menu>(Menu())),
-        menuDrawer_(menu_),
+        menuDrawer_(menu_, resources),
         window_(
             sf::VideoMode::getFullscreenModes()[0],
             name,
             sf::Style::Fullscreen),
         mapView_(sf::FloatRect(0, 0, window_.getSize().x, window_.getSize().y)) {
+    initializeMenu();
     mapDrawer_.setOffset(sf::Vector2f(10, 10));
+}
+
+void Game::initializeMenu() {
+    menu_->addItem("New game", std::bind(&Game::restart, this));
+    menu_->addItem("Quit game", std::bind(&Game::quit, this));
 }
 
 void Game::start() {
@@ -57,10 +63,10 @@ void Game::handleEvents() {
         } else if (event.type == sf::Event::KeyPressed) {
             switch (event.key.code) {
             case sf::Keyboard::Key::Space:
-                handleSpacePressed();
+                restart();
                 break;
             case sf::Keyboard::Key::Escape:
-                handleEscapePressed();
+                quit();
                 break;
             case sf::Keyboard::Key::M:
                 handleMPressed();
@@ -86,11 +92,11 @@ void Game::handleLeftClick(const sf::Event& event) {
         map_->toggleVisibility(row, column);
 }
 
-void Game::handleSpacePressed() {
+void Game::restart() {
     *map_ = MapGenerator::generateMap(map_->getRowsNo(), map_->getColumnsNo());
 }
 
-void Game::handleEscapePressed() {
+void Game::quit() {
     exit(EXIT_SUCCESS);
 }
 

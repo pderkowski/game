@@ -4,12 +4,14 @@
 #define MENU_DRAWER_HPP_
 
 #include <memory>
+#include <vector>
 #include "SFML/Graphics.hpp"
 #include "Menu.hpp"
+#include "Resources.hpp"
 
 class MenuDrawer : public sf::Drawable {
 public:
-    explicit MenuDrawer(std::shared_ptr<Menu> menu);
+    MenuDrawer(std::shared_ptr<Menu> menu, Resources& resources);
 
     virtual ~MenuDrawer() { }
 
@@ -19,7 +21,13 @@ public:
     void toggleVisibility();
 
 private:
+    std::vector<sf::Text> createMenuTexts(sf::RenderTarget& target) const;
+    void centerTextAt(sf::Text& text, const sf::Vector2f& position) const;
+
     std::shared_ptr<Menu> menu_;
+
+    sf::Font font_;
+
     bool isVisible_;
 };
 

@@ -26,3 +26,18 @@ sf::Texture Resources::loadTexture(const std::string& relativePath) {
     return loadedTextures_.at(pathToTexture);
 }
 
+sf::Font Resources::loadFont(const std::string& relativePath) {
+    boost::filesystem::path pathToFont = paths_.getResourcePath(relativePath);
+
+    if (loadedFonts_.find(pathToFont) == loadedFonts_.end()) {
+        sf::Font font;
+        if (!font.loadFromFile(pathToFont.string())) {
+            throw std::runtime_error("Could not load font from " + pathToFont.string());
+        }
+
+        loadedFonts_[pathToFont] = font;
+    }
+
+    return loadedFonts_.at(pathToFont);
+}
+

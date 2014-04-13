@@ -13,10 +13,12 @@ class Resources {
 public:
     explicit Resources(const Paths& paths);
     sf::Texture loadTexture(const std::string& relativePath);
+    sf::Font loadFont(const std::string& relativePath);
 
 private:
     Paths paths_;
     std::map<boost::filesystem::path, sf::Texture> loadedTextures_;
+    std::map<boost::filesystem::path, sf::Font> loadedFonts_;
 };
 
 #endif  // RESOURCES_HPP_
