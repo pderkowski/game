@@ -3,21 +3,20 @@
 #ifndef LAYER_HPP_
 #define LAYER_HPP_
 
+#include <memory>
 #include <vector>
-#include <utility>
-#include <functional>
 #include "SFML/Graphics.hpp"
+#include "Clickable.hpp"
 
 class Layer {
 public:
-    typedef std::function<void(const sf::Event&)> Handler;
-
-    void addClickableArea(const sf::FloatRect& area, Handler handler);
+    void addClickable(std::shared_ptr<Clickable> clickable);
+    void clearClickables();
 
     void handleClick(const sf::Event&);
 
 private:
-    std::vector<std::pair<sf::FloatRect, Handler>> clickableAreas_;
+    std::vector<std::shared_ptr<Clickable>> clickables_;
 };
 
 #endif  // LAYER_HPP_

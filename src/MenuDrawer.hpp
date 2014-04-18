@@ -8,10 +8,12 @@
 #include "SFML/Graphics.hpp"
 #include "Menu.hpp"
 #include "Resources.hpp"
+#include "Layer.hpp"
+#include "MenuItemDrawer.hpp"
 
 class MenuDrawer : public sf::Drawable {
 public:
-    MenuDrawer(std::shared_ptr<Menu> menu, Resources& resources);
+    MenuDrawer(std::shared_ptr<Menu> menu, Resources& resources, sf::RenderTarget& target);
 
     virtual ~MenuDrawer() { }
 
@@ -20,14 +22,19 @@ public:
     bool isVisible() const;
     void toggleVisibility();
 
+    void reload(sf::RenderTarget& target);
+    void handle(const sf::Event& e);
+
 private:
-    std::vector<sf::Text> createMenuTexts(sf::RenderTarget& target) const;
-    void centerTextAt(sf::Text& text, const sf::Vector2f& position) const;
-    sf::Vector2f calculateMenuItemPosition(int itemNo, sf::RenderTarget& target) const;
+    void initializeMenuItemDrawers(sf::RenderTarget& target);
+    sf::Vector2i calculateMenuItemPosition(int itemNo, sf::RenderTarget& target) const;
 
     std::shared_ptr<Menu> menu_;
 
     sf::Font font_;
+
+    std::vector<std::shared_ptr<MenuItemDrawer>> itemDrawers_;
+    mutable Layer layer_;
 
     bool isVisible_;
 };

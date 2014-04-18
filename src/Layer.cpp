@@ -1,19 +1,27 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <iostream>
 #include <vector>
-#include <functional>
+#include <algorithm>
 #include "SFML/Graphics.hpp"
 #include "Layer.hpp"
+#include "Clickable.hpp"
 
-void Layer::addClickableArea(const sf::FloatRect& area, Handler handler) {
-    clickableAreas_.push_back(std::make_pair(area, handler));
+void Layer::addClickable(std::shared_ptr<Clickable> clickable) {
+    clickables_.push_back(clickable);
+}
+
+void Layer::clearClickables() {
+    clickables_.clear();
 }
 
 void Layer::handleClick(const sf::Event& e) {
-    auto clickedAreaAndHandler = std::find_if(clickableAreas_.rbegin(), clickableAreas_.rend(),
-        [&] (const decltype(clickableAreas_)::value_type& areaAndHandler) {
-            return areaAndHandler.first.contains(e.mouseButton.x, e.mouseButton.y); }); //NOLINT
+    auto clickable = std::find_if(clickables_.rbegin(), clickables_.rend(),
+        [&] (const decltype(clickables_)::value_type& clickable) {
+            return clickable->isClicked(e); }); //NOLINT
 
-    if (clickedAreaAndHandler != clickableAreas_.rend())
-        clickedAreaAndHandler->second(e);
+    if (clickable != clickables_.rend())
+        (*clickable)->handleClick();
+    else
+        std::cout << "Missed!" << std::endl;
 }

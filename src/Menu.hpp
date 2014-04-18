@@ -3,17 +3,19 @@
 #ifndef MENU_HPP_
 #define MENU_HPP_
 
-#include <utility>
+#include <memory>
 #include <string>
 #include <vector>
 #include <functional>
+#include "MenuItem.hpp"
 
 class Menu {
 public:
-    void addItem(const std::string& itemName, std::function<void()> handler);
+    typedef std::function<void()> Callback;
+    void addItem(const std::string& itemName, Callback callback);
 
 private:
-    std::vector<std::pair<std::string, std::function<void()>>> items_;
+    std::vector<std::shared_ptr<MenuItem>> items_;
 
     friend class MenuDrawer;
 };

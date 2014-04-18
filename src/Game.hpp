@@ -4,6 +4,7 @@
 #define GAME_HPP_
 
 #include <string>
+#include <list>
 #include "SFML/Graphics.hpp"
 #include "Map.hpp"
 #include "Menu.hpp"
@@ -17,8 +18,6 @@ public:
     void start();
 
 private:
-    void initializeMenu();
-
     void drawMap();
     void drawMenuIfVisible();
 
@@ -39,6 +38,7 @@ private:
     MenuDrawer menuDrawer_;
     sf::RenderWindow window_;
     sf::View mapView_;
+    std::list<Layer> layers_;
 };
 
 #endif  // GAME_HPP_

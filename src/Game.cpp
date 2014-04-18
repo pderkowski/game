@@ -1,5 +1,6 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <iostream>
 #include <cstdlib>
 #include <algorithm>
 #include <string>
@@ -14,21 +15,20 @@
 Game::Game(const std::string& name, int rows, int columns, Resources& resources)
         : map_(std::make_shared<Map>(MapGenerator::generateMap(rows, columns))),
         mapDrawer_(map_, resources),
-        menu_(std::make_shared<Menu>(Menu())),
-        menuDrawer_(menu_, resources),
+        menu_(std::make_shared<Menu>()),
+        menuDrawer_(menu_, resources, window_),
         window_(
             sf::VideoMode::getFullscreenModes()[0],
             name,
             sf::Style::Fullscreen),
         mapView_(sf::FloatRect(0, 0, window_.getSize().x, window_.getSize().y)) {
-    initializeMenu();
     mapDrawer_.setOffset(sf::Vector2f(10, 10));
-}
 
-void Game::initializeMenu() {
-    menu_->addItem("Return", std::bind(&Game::toggleMenu, this));
-    menu_->addItem("New game", std::bind(&Game::restart, this));
-    menu_->addItem("Quit game", std::bind(&Game::quit, this));
+    menu_->addItem("Return", [&] () { toggleMenu(); }); // NOLINT
+    menu_->addItem("New game", [&] () { restart(); }); // NOLINT
+    menu_->addItem("Quit game", [&] () { quit(); }); // NOLINT
+
+    menuDrawer_.reload(window_);
 }
 
 void Game::start() {
@@ -84,13 +84,17 @@ void Game::handleEvents() {
 }
 
 void Game::handleLeftClick(const sf::Event& event) {
-    sf::Vector2i mousePosition(event.mouseButton.x, event.mouseButton.y);
+    if (menuDrawer_.isVisible()) {
+        menuDrawer_.handle(event);
+    } else {
+        sf::Vector2i mousePosition(event.mouseButton.x, event.mouseButton.y);
 
-    int column = mapDrawer_.convertXCoordsToColumnNo(window_.mapPixelToCoords(mousePosition).x);
-    int row = mapDrawer_.convertYCoordsToRowNo(window_.mapPixelToCoords(mousePosition).y);
+        int column = mapDrawer_.convertXCoordsToColumnNo(window_.mapPixelToCoords(mousePosition).x);
+        int row = mapDrawer_.convertYCoordsToRowNo(window_.mapPixelToCoords(mousePosition).y);
 
-    if (column != Map::OutOfBounds && row != Map::OutOfBounds)
-        map_->toggleVisibility(row, column);
+        if (column != Map::OutOfBounds && row != Map::OutOfBounds)
+            map_->toggleVisibility(row, column);
+    }
 }
 
 void Game::restart() {
