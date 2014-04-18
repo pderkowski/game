@@ -9,14 +9,12 @@
 #include "MapDrawer.hpp"
 #include "MapGenerator.hpp"
 #include "Menu.hpp"
-#include "MenuDrawer.hpp"
 #include "Game.hpp"
 
 Game::Game(const std::string& name, int rows, int columns, Resources& resources)
         : map_(std::make_shared<Map>(MapGenerator::generateMap(rows, columns))),
         mapDrawer_(map_, resources),
-        menu_(std::make_shared<Menu>()),
-        menuDrawer_(menu_, resources, window_),
+        menu_(resources),
         window_(
             sf::VideoMode::getFullscreenModes()[0],
             name,
@@ -24,11 +22,9 @@ Game::Game(const std::string& name, int rows, int columns, Resources& resources)
         mapView_(sf::FloatRect(0, 0, window_.getSize().x, window_.getSize().y)) {
     mapDrawer_.setOffset(sf::Vector2f(10, 10));
 
-    menu_->addItem("Return", [&] () { toggleMenu(); }); // NOLINT
-    menu_->addItem("New game", [&] () { restart(); }); // NOLINT
-    menu_->addItem("Quit game", [&] () { quit(); }); // NOLINT
-
-    menuDrawer_.reload(window_);
+    menu_.addItem("Return", [&] () { toggleMenu(); }); // NOLINT
+    menu_.addItem("New game", [&] () { restart(); }); // NOLINT
+    menu_.addItem("Quit game", [&] () { quit(); }); // NOLINT
 }
 
 void Game::start() {
@@ -48,8 +44,8 @@ void Game::drawMap() {
 }
 
 void Game::drawMenuIfVisible() {
-    if (menuDrawer_.isVisible()) {
-        window_.draw(menuDrawer_);
+    if (menu_.isVisible()) {
+        window_.draw(menu_);
     }
 }
 
@@ -84,17 +80,17 @@ void Game::handleEvents() {
 }
 
 void Game::handleLeftClick(const sf::Event& event) {
-    if (menuDrawer_.isVisible()) {
-        menuDrawer_.handle(event);
+    if (menu_.isVisible()) {
+        menu_.handleClick(event, window_);
     } else {
-        sf::Vector2i mousePosition(event.mouseButton.x, event.mouseButton.y);
+       sf::Vector2i mousePosition(event.mouseButton.x, event.mouseButton.y);
 
-        int column = mapDrawer_.convertXCoordsToColumnNo(window_.mapPixelToCoords(mousePosition).x);
-        int row = mapDrawer_.convertYCoordsToRowNo(window_.mapPixelToCoords(mousePosition).y);
+       int column = mapDrawer_.convertXCoordsToColumnNo(window_.mapPixelToCoords(mousePosition).x);
+       int row = mapDrawer_.convertYCoordsToRowNo(window_.mapPixelToCoords(mousePosition).y);
 
-        if (column != Map::OutOfBounds && row != Map::OutOfBounds)
-            map_->toggleVisibility(row, column);
-    }
+       if (column != Map::OutOfBounds && row != Map::OutOfBounds)
+           map_->toggleVisibility(row, column);
+   }
 }
 
 void Game::restart() {
@@ -106,7 +102,7 @@ void Game::quit() {
 }
 
 void Game::toggleMenu() {
-    menuDrawer_.toggleVisibility();
+    menu_.toggleVisibility();
 }
 
 void Game::handleMouseWheelMoved(const sf::Event& event) {

@@ -4,17 +4,24 @@
 #include <vector>
 #include <memory>
 #include "SFML/Graphics.hpp"
-#include "Menu.hpp"
+#include "MenuModel.hpp"
 #include "MenuDrawer.hpp"
 #include "Resources.hpp"
-#include "Layer.hpp"
 
-MenuDrawer::MenuDrawer(std::shared_ptr<Menu> menu, Resources& resources, sf::RenderTarget& target)
-        : menu_(menu), font_(resources.loadFont("fonts/UbuntuMono.ttf")), isVisible_(false) {
-    initializeMenuItemDrawers(target);
+const float MenuDrawer::fontHeightFactor_ = 1.0 / 25;
+const float MenuDrawer::lineSpacingFactor_ = fontHeightFactor_ / 4;
+
+MenuDrawer::MenuDrawer(std::shared_ptr<MenuModel> model, Resources& resources)
+        : model_(model), font_(resources.loadFont("fonts/UbuntuMono.ttf")) {
+    resetItemDrawers();
 }
 
 void MenuDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    drawBackground(target, states);
+    drawItems(target, states);
+}
+
+void MenuDrawer::drawBackground(sf::RenderTarget& target, sf::RenderStates states) const {
     sf::RectangleShape menuBackground(sf::Vector2f(target.getSize().x, target.getSize().y));
     menuBackground.setFillColor(sf::Color(0, 0, 0, 190));
 
@@ -22,45 +29,40 @@ void MenuDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     menuBackground.setPosition(position.x, position.y);
 
     target.draw(menuBackground, states);
+}
 
+void MenuDrawer::drawItems(sf::RenderTarget& target, sf::RenderStates states) const {
     for (auto itemDrawer : itemDrawers_) {
         target.draw(*itemDrawer, states);
     }
 }
 
-void MenuDrawer::initializeMenuItemDrawers(sf::RenderTarget& target) {
-    for (unsigned i = 0; i < menu_->items_.size(); ++i) {
-        sf::Vector2i position = calculateMenuItemPosition(i, target);
+void MenuDrawer::resetItemDrawers() {
+    itemDrawers_.clear();
 
-        itemDrawers_.push_back(
-            std::make_shared<MenuItemDrawer>(menu_->items_[i], position, font_));
+    for (unsigned i = 0; i < model_->items_.size(); ++i) {
+        float position = calculateItemPosition(i);
 
-        layer_.addClickable(itemDrawers_.back());
+        itemDrawers_.push_back(std::make_shared<MenuItemDrawer>(
+            model_->items_[i], fontHeightFactor_, position, font_));
     }
 }
 
-sf::Vector2i MenuDrawer::calculateMenuItemPosition(int itemNo, sf::RenderTarget& target) const {
-    const auto center = sf::Vector2i(target.getSize().x / 2, target.getSize().y / 2);
+std::shared_ptr<MenuItem> MenuDrawer::getObjectByPosition(const sf::Vector2i& position,
+        sf::RenderTarget& target) {
+    for (auto itemDrawer : itemDrawers_) {
+        auto object = itemDrawer->getObjectByPosition(position, target);
+        if (object)
+            return object;
+    }
 
-    const float itemNoRelativeToCenter = itemNo - (menu_->items_.size() - 1) / 2.0;
-    const int fontHeight = 30;
-    const int lineSpacing = 10;
-
-    return sf::Vector2i(center.x, center.y + itemNoRelativeToCenter * (fontHeight + lineSpacing));
+    return std::shared_ptr<MenuItem>();
 }
 
-bool MenuDrawer::isVisible() const {
-    return isVisible_;
-}
+float MenuDrawer::calculateItemPosition(int itemNo) const {
+    const float center = 0.5;
 
-void MenuDrawer::toggleVisibility() {
-    isVisible_ = !isVisible_;
-}
+    const float itemNoRelativeToCenter = itemNo - (model_->items_.size() - 1) / 2.0;
 
-void MenuDrawer::reload(sf::RenderTarget& target) {
-    initializeMenuItemDrawers(target);
-}
-
-void MenuDrawer::handle(const sf::Event& e) {
-    layer_.handleClick(e);
+    return center + itemNoRelativeToCenter * (fontHeightFactor_ + lineSpacingFactor_);
 }

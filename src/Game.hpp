@@ -8,7 +8,6 @@
 #include "SFML/Graphics.hpp"
 #include "Map.hpp"
 #include "Menu.hpp"
-#include "MenuDrawer.hpp"
 #include "MapDrawer.hpp"
 
 class Game {
@@ -34,11 +33,9 @@ private:
 
     std::shared_ptr<Map> map_;
     MapDrawer mapDrawer_;
-    std::shared_ptr<Menu> menu_;
-    MenuDrawer menuDrawer_;
+    Menu menu_;
     sf::RenderWindow window_;
     sf::View mapView_;
-    std::list<Layer> layers_;
 };
 
 #endif  // GAME_HPP_

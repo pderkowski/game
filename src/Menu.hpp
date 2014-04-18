@@ -7,17 +7,29 @@
 #include <string>
 #include <vector>
 #include <functional>
-#include "MenuItem.hpp"
+#include "SFML/Graphics.hpp"
+#include "MenuDrawer.hpp"
+#include "MenuModel.hpp"
 
-class Menu {
+class Menu : public sf::Drawable {
 public:
     typedef std::function<void()> Callback;
+
+    explicit Menu(Resources& resources);
+    virtual ~Menu() { }
+
     void addItem(const std::string& itemName, Callback callback);
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    void handleClick(const sf::Event& e, sf::RenderTarget& target);
+
+    bool isVisible() const;
+    void toggleVisibility();
 
 private:
-    std::vector<std::shared_ptr<MenuItem>> items_;
+    std::shared_ptr<MenuModel> model_;
+    MenuDrawer drawer_;
 
-    friend class MenuDrawer;
+    bool isVisible_;
 };
 
 #endif  // MENU_HPP_

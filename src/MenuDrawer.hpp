@@ -6,37 +6,37 @@
 #include <memory>
 #include <vector>
 #include "SFML/Graphics.hpp"
-#include "Menu.hpp"
+#include "MenuModel.hpp"
 #include "Resources.hpp"
-#include "Layer.hpp"
+#include "MenuItem.hpp"
 #include "MenuItemDrawer.hpp"
 
 class MenuDrawer : public sf::Drawable {
 public:
-    MenuDrawer(std::shared_ptr<Menu> menu, Resources& resources, sf::RenderTarget& target);
+    MenuDrawer(std::shared_ptr<MenuModel> model, Resources& resources);
 
     virtual ~MenuDrawer() { }
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    void drawBackground(sf::RenderTarget& target, sf::RenderStates states) const;
+    void drawItems(sf::RenderTarget& target, sf::RenderStates states) const;
 
-    bool isVisible() const;
-    void toggleVisibility();
+    void resetItemDrawers();
 
-    void reload(sf::RenderTarget& target);
-    void handle(const sf::Event& e);
+    std::shared_ptr<MenuItem> getObjectByPosition(const sf::Vector2i& position,
+        sf::RenderTarget& target);
 
 private:
-    void initializeMenuItemDrawers(sf::RenderTarget& target);
-    sf::Vector2i calculateMenuItemPosition(int itemNo, sf::RenderTarget& target) const;
+    static const float fontHeightFactor_;
+    static const float lineSpacingFactor_;
 
-    std::shared_ptr<Menu> menu_;
+    float calculateItemPosition(int itemNo) const;
+
+    std::shared_ptr<MenuModel> model_;
 
     sf::Font font_;
 
     std::vector<std::shared_ptr<MenuItemDrawer>> itemDrawers_;
-    mutable Layer layer_;
-
-    bool isVisible_;
 };
 
 #endif  // MENU_DRAWER_HPP_

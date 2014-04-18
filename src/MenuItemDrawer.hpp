@@ -5,25 +5,29 @@
 
 #include <memory>
 #include "SFML/Graphics.hpp"
-#include "RelativeClickable.hpp"
 #include "MenuItem.hpp"
 
-class MenuItemDrawer : public RelativeClickable,  public sf::Drawable {
+class MenuItemDrawer : public sf::Drawable {
 public:
-    MenuItemDrawer(std::shared_ptr<MenuItem> menuItem,
-        const sf::Vector2i& relativePosition,
+    MenuItemDrawer(std::shared_ptr<MenuItem> item,
+        float fontHeightFactor,
+        float relativeYPosition,
         const sf::Font& font);
     virtual ~MenuItemDrawer() { }
 
-    virtual void handleClick();
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-    void centerText(sf::Text& text) const;
+    std::shared_ptr<MenuItem> getObjectByPosition(const sf::Vector2i& position,
+        sf::RenderTarget& target);
 
 private:
+    void centerText(sf::Text& text) const;
+    void moveTextToAbsolutePosition(const sf::RenderTarget& target) const;
+
+    std::shared_ptr<MenuItem> item_;
     mutable sf::Text text_;
-    sf::Vector2i relativePosition_;
-    std::shared_ptr<MenuItem> menuItem_;
+    float fontHeightFactor_;
+    float relativeYPosition_;
 };
 
 #endif  // MENUITEMDRAWER_HPP_
