@@ -11,28 +11,30 @@
 #include "MenuItem.hpp"
 #include "MenuItemDrawer.hpp"
 
-class MenuDrawer : public sf::Drawable {
+class MenuDrawer {
 public:
-    MenuDrawer(std::shared_ptr<MenuModel> model, Resources& resources);
+    MenuDrawer(std::shared_ptr<MenuModel> model, std::shared_ptr<sf::RenderTarget> target,
+        Resources& resources);
 
-    virtual ~MenuDrawer() { }
+    ~MenuDrawer() { }
 
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    void drawBackground(sf::RenderTarget& target, sf::RenderStates states) const;
-    void drawItems(sf::RenderTarget& target, sf::RenderStates states) const;
-
+    void draw() const;
     void resetItemDrawers();
 
-    std::shared_ptr<MenuItem> getObjectByPosition(const sf::Vector2i& position,
-        sf::RenderTarget& target);
+    std::shared_ptr<MenuItem> getObjectByPosition(const sf::Vector2i& position);
 
 private:
+    void drawBackground() const;
+    void drawItems() const;
+
     static const float fontHeightFactor_;
     static const float lineSpacingFactor_;
 
     float calculateItemPosition(int itemNo) const;
 
     std::shared_ptr<MenuModel> model_;
+
+    std::shared_ptr<sf::RenderTarget> target_;
 
     sf::Font font_;
 

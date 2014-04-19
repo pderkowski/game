@@ -1,6 +1,5 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#include <string>
 #include "SFML/Graphics.hpp"
 #include "Paths.hpp"
 #include "Game.hpp"
@@ -9,7 +8,7 @@
 int main(__attribute__((unused)) int argc, char* argv[]) {
     Resources resources(Paths{argv[0]}); // NOLINT
 
-    Game game("game", 100, 160, resources);
+    Game game(100, 160, resources);
     game.start();
 
     return 0;

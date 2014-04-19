@@ -6,35 +6,41 @@
 #include <memory>
 #include <map>
 #include "SFML/Graphics.hpp"
-#include "Map.hpp"
+#include "MapModel.hpp"
 #include "Resources.hpp"
 #include "Tile.hpp"
 
-class MapDrawer : public sf::Drawable {
+class MapDrawer {
 public:
-    MapDrawer(std::shared_ptr<Map> map, Resources& resources);
+    MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::RenderTarget> target,
+        Resources& resources);
 
     virtual ~MapDrawer() { }
 
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    virtual void draw() const;
 
-    int getTileWidth() const;
-    int getTileHeight() const;
+    std::shared_ptr<Tile> getObjectByPosition(const sf::Vector2i& position);
+    void moveViewTo(int x, int y);
+    void zoomViemBy(int delta);
+
+private:
     float getMapWidth() const;
     float getMapHeight() const;
 
-    void setTileWidth(int width);
-    void setTileHeight(int height);
-    void setOffset(const sf::Vector2f& offset);
+    int mapXCoordsToColumn(int x) const;
+    int mapYCoordsToRow(int y) const;
 
-    int convertXCoordsToColumnNo(int x) const;
-    int convertYCoordsToRowNo(int y) const;
+    float calculateHorizontalShift(float mouseXPosition) const;
+    float calculateVerticalShift(float mouseYPosition) const;
 
-private:
-    std::shared_ptr<Map> map_;
+    std::shared_ptr<MapModel> model_;
+    std::shared_ptr<sf::RenderTarget> target_;
 
+    sf::View mapView_;
     std::map<Tile::Type, sf::Texture> tileTextures_;
     sf::Vector2f offset_;
+
+    static const int scrollMarginSize_ = 20;
 
     int tileWidth_;
     int tileHeight_;

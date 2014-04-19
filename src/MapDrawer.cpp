@@ -1,14 +1,19 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <cmath>
+#include <algorithm>
 #include <map>
 #include "SFML/Graphics.hpp"
+#include "MapModel.hpp"
 #include "MapDrawer.hpp"
 #include "Resources.hpp"
 #include "Tile.hpp"
 
-MapDrawer::MapDrawer(std::shared_ptr<Map> map, Resources& resources)
-    : map_(map),
+MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::RenderTarget> target,
+        Resources& resources)
+    : model_(model),
+    target_(target),
+    mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y)),
     tileTextures_{  // NOLINT
         { Tile::Type::Empty, resources.loadTexture("tiles/empty.png") },
         { Tile::Type::Water, resources.loadTexture("tiles/water.png") },
@@ -16,10 +21,12 @@ MapDrawer::MapDrawer(std::shared_ptr<Map> map, Resources& resources)
         { Tile::Type::Plains, resources.loadTexture("tiles/plains.png") },
         { Tile::Type::Mountains, resources.loadTexture("tiles/mountains.png") }
     },
-    offset_(0, 0), tileWidth_(16), tileHeight_(16)
+    offset_(10, 10), tileWidth_(16), tileHeight_(16)
 { }
 
-void MapDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void MapDrawer::draw() const {
+    target_->setView(mapView_);
+
     sf::Sprite sprite;
     sprite.setTextureRect(sf::IntRect(0, 0, tileWidth_, tileHeight_));
 
@@ -28,61 +35,94 @@ void MapDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
     sprite.move(offset_);
 
-    for (int r = 0; r < map_->getRowsNo(); ++r) {
-        for (int c = 0; c < map_->getColumnsNo(); ++c) {
-            if (map_->isVisible(r, c)) {
-                sprite.setTexture(tileTextures_.at(map_->tile(r, c).getType()));
-                target.draw(sprite, states);
+    for (int r = 0; r < model_->getRowsNo(); ++r) {
+        for (int c = 0; c < model_->getColumnsNo(); ++c) {
+            if (model_->getTile(r, c)->isVisible()) {
+                sprite.setTexture(tileTextures_.at(model_->getTile(r, c)->getType()));
+                target_->draw(sprite);
             }
 
             sprite.move(xShift, 0);
         }
-        sprite.move(-(map_->getColumnsNo() * xShift), yShift);
+        sprite.move(-(model_->getColumnsNo() * xShift), yShift);
     }
 }
 
-int MapDrawer::getTileWidth() const {
-    return tileWidth_;
+std::shared_ptr<Tile> MapDrawer::getObjectByPosition(const sf::Vector2i& position) {
+    int column = mapXCoordsToColumn(target_->mapPixelToCoords(position).x);
+    int row = mapYCoordsToRow(target_->mapPixelToCoords(position).y);
+
+    if (column != MapModel::OutOfBounds && row != MapModel::OutOfBounds)
+        return model_->getTile(row, column);
+    else
+        return std::shared_ptr<Tile>();
 }
 
-int MapDrawer::getTileHeight() const {
-    return tileHeight_;
+void MapDrawer::moveViewTo(int x, int y) {
+    mapView_.move(calculateHorizontalShift(x), calculateVerticalShift(y));
+}
+
+void MapDrawer::zoomViemBy(int delta) {
+    const int minTileSize = 4;
+    const int maxTileSize = 32;
+
+    int newTileWidth = tileWidth_ + delta;
+    newTileWidth = std::min(newTileWidth, maxTileSize);
+    newTileWidth = std::max(newTileWidth, minTileSize);
+    tileWidth_ = newTileWidth;
+
+    int newTileHeight = tileHeight_ + delta;
+    newTileHeight = std::min(newTileHeight, maxTileSize);
+    newTileHeight = std::max(newTileHeight, minTileSize);
+    tileHeight_ = newTileHeight;
 }
 
 float MapDrawer::getMapWidth() const {
-    return 2 * offset_.x + (map_->getColumnsNo() - 1) + map_->getColumnsNo() * tileWidth_;
+    return 2 * offset_.x + (model_->getColumnsNo() - 1) + model_->getColumnsNo() * tileWidth_;
 }
 
 float MapDrawer::getMapHeight() const {
-    return 2 * offset_.y + (map_->getRowsNo() - 1) + map_->getRowsNo() * tileHeight_;
+    return 2 * offset_.y + (model_->getRowsNo() - 1) + model_->getRowsNo() * tileHeight_;
 }
 
-void MapDrawer::setOffset(const sf::Vector2f& offset) {
-    offset_ = offset;
-}
-
-void MapDrawer::setTileWidth(int tileWidth) {
-    tileWidth_ = tileWidth;
-}
-
-void MapDrawer::setTileHeight(int tileHeight) {
-    tileHeight_ = tileHeight;
-}
-
-int MapDrawer::convertXCoordsToColumnNo(int x) const {
+int MapDrawer::mapXCoordsToColumn(int x) const {
     int column = floor((x - offset_.x) / (tileWidth_ + 1));
 
-    if (column < 0 || column >= map_->getColumnsNo())
-        return Map::OutOfBounds;
+    if (column < 0 || column >= model_->getColumnsNo())
+        return MapModel::OutOfBounds;
     else
         return column;
 }
 
-int MapDrawer::convertYCoordsToRowNo(int y) const {
+int MapDrawer::mapYCoordsToRow(int y) const {
     int row = floor((y - offset_.y) / (tileHeight_ + 1));
 
-    if (row < 0 || row >= map_->getRowsNo())
-        return Map::OutOfBounds;
+    if (row < 0 || row >= model_->getRowsNo())
+        return MapModel::OutOfBounds;
     else
         return row;
+}
+
+float MapDrawer::calculateHorizontalShift(float mouseXPosition) const {
+    if (mouseXPosition < scrollMarginSize_) {
+        return std::max(mouseXPosition - scrollMarginSize_,
+            -(mapView_.getCenter().x - mapView_.getSize().x / 2));
+    } else if (mouseXPosition > target_->getSize().x - scrollMarginSize_) {
+        return std::min(scrollMarginSize_ - (target_->getSize().x - mouseXPosition),
+            getMapWidth() - (mapView_.getCenter().x + mapView_.getSize().x / 2));
+    } else {
+        return 0;
+    }
+}
+
+float MapDrawer::calculateVerticalShift(float mouseYPosition) const {
+    if (mouseYPosition < scrollMarginSize_) {
+        return std::max(mouseYPosition - scrollMarginSize_,
+            -(mapView_.getCenter().y - mapView_.getSize().y / 2));
+    } else if (mouseYPosition > target_->getSize().y - scrollMarginSize_) {
+        return std::min(scrollMarginSize_ - (target_->getSize().y - mouseYPosition),
+            getMapHeight() - (mapView_.getCenter().y + mapView_.getSize().y / 2));
+    } else {
+        return 0;
+    }
 }

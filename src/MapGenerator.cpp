@@ -4,25 +4,25 @@
 #include <cmath>
 #include <ctime>
 #include <vector>
-#include "Map.hpp"
+#include "MapModel.hpp"
 #include "Tile.hpp"
 #include "MapGenerator.hpp"
 
-Map MapGenerator::generateMap(int rows, int columns) {
+MapModel MapGenerator::generateMap(int rows, int columns) {
     srand(time(NULL));
 
-    Map map(rows, columns);
-    assignTileTypes(map);
+    MapModel model(rows, columns);
+    assignTileTypes(model);
 
-    return map;
+    return model;
 }
 
-void MapGenerator::assignTileTypes(Map& map) {
-    auto heights = generateHeights(map.getRowsNo(), map.getColumnsNo());
+void MapGenerator::assignTileTypes(MapModel& model) {
+    auto heights = generateHeights(model.getRowsNo(), model.getColumnsNo());
 
     for (unsigned r = 0; r < heights.size(); ++r) {
         for (unsigned c = 0; c < heights[r].size(); ++c) {
-            map.tile(r, c).setType(convertHeightToTileType(heights[r][c]));
+            model.getTile(r, c)->setType(convertHeightToTileType(heights[r][c]));
         }
     }
 }

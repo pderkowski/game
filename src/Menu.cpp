@@ -9,9 +9,9 @@
 #include "MenuModel.hpp"
 #include "MenuItem.hpp"
 
-Menu::Menu(Resources& resources)
+Menu::Menu(std::shared_ptr<sf::RenderWindow> target, Resources& resources)
     : model_(std::make_shared<MenuModel>()),
-    drawer_(model_, resources),
+    drawer_(model_, target, resources),
     isVisible_(false)
 { }
 
@@ -20,13 +20,13 @@ void Menu::addItem(const std::string& itemName, Callback callback) {
     drawer_.resetItemDrawers();
 }
 
-void Menu::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    drawer_.draw(target, states);
+void Menu::draw() const {
+    drawer_.draw();
 }
 
-void Menu::handleClick(const sf::Event& e, sf::RenderTarget& target) {
+void Menu::handleClick(const sf::Event& e) {
     std::shared_ptr<MenuItem> clickedObject
-        = drawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y), target);
+        = drawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 
     if (clickedObject) {
         clickedObject->execute();

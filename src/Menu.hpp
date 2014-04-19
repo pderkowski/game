@@ -11,16 +11,16 @@
 #include "MenuDrawer.hpp"
 #include "MenuModel.hpp"
 
-class Menu : public sf::Drawable {
+class Menu {
 public:
     typedef std::function<void()> Callback;
 
-    explicit Menu(Resources& resources);
+    Menu(std::shared_ptr<sf::RenderWindow>, Resources& resources);
     virtual ~Menu() { }
 
     void addItem(const std::string& itemName, Callback callback);
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    void handleClick(const sf::Event& e, sf::RenderTarget& target);
+    virtual void draw() const;
+    void handleClick(const sf::Event& e);
 
     bool isVisible() const;
     void toggleVisibility();

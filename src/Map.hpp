@@ -4,28 +4,28 @@
 #define MAP_HPP_
 
 #include <vector>
+#include <memory>
+#include "SFML/Graphics.hpp"
+#include "MapModel.hpp"
+#include "MapDrawer.hpp"
 #include "Tile.hpp"
 
 class Map {
 public:
-    Map(int rowsNo, int columnsNo);
+    Map(int rows, int columns, std::shared_ptr<sf::RenderWindow> target, Resources& resources);
+    virtual ~Map() { }
 
-    void toggleVisibility(int row, int column);
-    bool isVisible(int row, int column) const;
+    virtual void draw() const;
 
-    int getRowsNo() const;
-    int getColumnsNo() const;
+    void generateMap();
 
-    const Tile& tile(int row, int column) const;
-    Tile& tile(int row, int column);
-
-    static const int OutOfBounds = -1;
+    void handleClick(const sf::Event& e);
+    void handleMouseWheelMoved(const sf::Event& event);
+    void handleMouseMoved(const sf::Event& event);
 
 private:
-    int rowsNo_;
-    int columnsNo_;
-    std::vector<std::vector<bool>> tilesVisibility_;
-    std::vector<std::vector<Tile>> tiles_;
+    std::shared_ptr<MapModel> model_;
+    MapDrawer drawer_;
 };
 
 #endif  // MAP_HPP_

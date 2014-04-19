@@ -5,14 +5,14 @@
 
 #include <vector>
 #include "Tile.hpp"
-#include "Map.hpp"
+#include "MapModel.hpp"
 
 class MapGenerator {
 public:
-    static Map generateMap(int rows, int columns);
+    static MapModel generateMap(int rows, int columns);
 
 private:
-    static void assignTileTypes(Map& map);
+    static void assignTileTypes(MapModel& model);
     static std::vector<std::vector<float>> generateHeights(int rows, int columns);
     static std::vector<std::vector<float>> getInitialHeights(int rows, int columns);
     static void relaxHeights(std::vector<std::vector<float>>& heights);

@@ -20,8 +20,13 @@ public:
     Type getType();
     void setType(Type type);
 
+    void toggleVisibility();
+    bool isVisible() const;
+
 private:
     Type type_;
+
+    bool isVisible_;
 };
 
 #endif  // TILE_HPP_

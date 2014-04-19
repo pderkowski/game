@@ -1,35 +1,40 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <vector>
-#include "Map.hpp"
+#include <memory>
+#include "SFML/Graphics.hpp"
+#include "MapModel.hpp"
+#include "MapDrawer.hpp"
 #include "Tile.hpp"
+#include "MapGenerator.hpp"
+#include "Map.hpp"
 
-Map::Map(int rowsNo, int columnsNo)
-    : rowsNo_(rowsNo), columnsNo_(columnsNo),
-    tilesVisibility_(rowsNo, std::vector<bool>(columnsNo, true)),
-    tiles_(rowsNo, std::vector<Tile>(columnsNo, Tile()))
+Map::Map(int rows, int columns, std::shared_ptr<sf::RenderWindow> target, Resources& resources)
+    : model_(std::make_shared<MapModel>(MapGenerator::generateMap(rows, columns))),
+    drawer_(model_, target, resources)
 { }
 
-void Map::toggleVisibility(int row, int column) {
-    tilesVisibility_[row][column] = !tilesVisibility_[row][column];
+void Map::draw() const {
+    drawer_.draw();
 }
 
-bool Map::isVisible(int row, int column) const {
-    return tilesVisibility_[row][column];
+void Map::generateMap() {
+    *model_ = MapGenerator::generateMap(model_->getRowsNo(), model_->getColumnsNo());
 }
 
-int Map::getRowsNo() const {
-    return rowsNo_;
+void Map::handleClick(const sf::Event& e) {
+    std::shared_ptr<Tile> clickedObject
+        = drawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
+
+    if (clickedObject) {
+        clickedObject->toggleVisibility();
+    }
 }
 
-int Map::getColumnsNo() const {
-    return columnsNo_;
+void Map::handleMouseWheelMoved(const sf::Event& event) {
+    drawer_.zoomViemBy(event.mouseWheel.delta);
 }
 
-const Tile& Map::tile(int row, int column) const {
-    return tiles_[row][column];
-}
-
-Tile& Map::tile(int row, int column) {
-    return tiles_[row][column];
+void Map::handleMouseMoved(const sf::Event& event)  {
+    drawer_.moveViewTo(event.mouseMove.x, event.mouseMove.y);
 }
