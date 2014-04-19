@@ -16,16 +16,19 @@ public:
         const sf::Font& font);
     virtual ~MenuItemDrawer() { }
 
-    virtual void draw() const;
+    virtual void draw();
 
+    std::shared_ptr<MenuItem> getObject();
     std::shared_ptr<MenuItem> getObjectByPosition(const sf::Vector2i& position);
 
+    void setColor(const sf::Color& color);
+
 private:
-    void centerText(sf::Text& text) const;
-    void moveTextToAbsolutePosition() const;
+    void centerText(sf::Text& text);
+    void moveTextToAbsolutePosition();
 
     std::shared_ptr<MenuItem> item_;
-    mutable sf::Text text_;
+    sf::Text text_;
     float fontHeightFactor_;
     float relativeYPosition_;
 

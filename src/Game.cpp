@@ -88,7 +88,9 @@ void Game::handleMouseWheelMoved(const sf::Event& event) {
 }
 
 void Game::handleMouseMoved(const sf::Event& event) {
-    if (!menu_.isVisible()) {
+    if (menu_.isVisible()) {
+        menu_.handleMouseMoved(event);
+    } else {
         map_.handleMouseMoved(event);
     }
 }

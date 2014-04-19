@@ -33,6 +33,17 @@ void Menu::handleClick(const sf::Event& e) {
     }
 }
 
+void Menu::handleMouseMoved(const sf::Event& e) {
+    std::shared_ptr<MenuItem> pointedObject
+        = drawer_.getObjectByPosition(sf::Vector2i(e.mouseMove.x, e.mouseMove.y));
+
+    if (pointedObject) {
+        drawer_.select(pointedObject);
+    } else {
+        drawer_.clearSelection();
+    }
+}
+
 bool Menu::isVisible() const {
     return isVisible_;
 }

@@ -21,6 +21,7 @@ public:
     void addItem(const std::string& itemName, Callback callback);
     virtual void draw() const;
     void handleClick(const sf::Event& e);
+    void handleMouseMoved(const sf::Event& e);
 
     bool isVisible() const;
     void toggleVisibility();

@@ -21,16 +21,21 @@ public:
     void draw() const;
     void resetItemDrawers();
 
+    void select(std::shared_ptr<const MenuItem> item);
+    void clearSelection();
+
     std::shared_ptr<MenuItem> getObjectByPosition(const sf::Vector2i& position);
 
 private:
     void drawBackground() const;
     void drawItems() const;
 
+    float calculateItemPosition(int itemNo) const;
+
+    std::shared_ptr<MenuItemDrawer> getDrawerByObject(std::shared_ptr<const MenuItem> item);
+
     static const float fontHeightFactor_;
     static const float lineSpacingFactor_;
-
-    float calculateItemPosition(int itemNo) const;
 
     std::shared_ptr<MenuModel> model_;
 

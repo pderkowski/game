@@ -16,21 +16,25 @@ MenuItemDrawer::MenuItemDrawer(std::shared_ptr<MenuItem> item,
         target_(target)
 { }
 
-void MenuItemDrawer::centerText(sf::Text& text) const {
+void MenuItemDrawer::centerText(sf::Text& text) {
     sf::FloatRect textRect = text.getLocalBounds();
     text.setOrigin(textRect.left + textRect.width / 2, textRect.top + textRect.height / 2);
 }
 
-void MenuItemDrawer::draw() const {
+void MenuItemDrawer::draw() {
     moveTextToAbsolutePosition();
     target_->draw(text_);
 }
 
-void MenuItemDrawer::moveTextToAbsolutePosition() const {
+void MenuItemDrawer::moveTextToAbsolutePosition() {
     text_.setCharacterSize(fontHeightFactor_ * target_->getSize().y);
     centerText(text_);
     sf::Vector2i position(target_->getSize().x * 0.5, target_->getSize().y * relativeYPosition_);
     text_.setPosition(target_->mapPixelToCoords(position));
+}
+
+std::shared_ptr<MenuItem> MenuItemDrawer::getObject() {
+    return item_;
 }
 
 std::shared_ptr<MenuItem> MenuItemDrawer::getObjectByPosition(const sf::Vector2i& position) {
@@ -41,4 +45,8 @@ std::shared_ptr<MenuItem> MenuItemDrawer::getObjectByPosition(const sf::Vector2i
         return item_;
     else
         return std::shared_ptr<MenuItem>();
+}
+
+void MenuItemDrawer::setColor(const sf::Color& color) {
+    text_.setColor(color);
 }

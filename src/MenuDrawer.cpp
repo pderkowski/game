@@ -33,8 +33,20 @@ void MenuDrawer::drawBackground() const {
 }
 
 void MenuDrawer::drawItems() const {
-    for (auto itemDrawer : itemDrawers_) {
-        itemDrawer->draw();
+    for (auto drawer : itemDrawers_) {
+        drawer->draw();
+    }
+}
+
+void MenuDrawer::select(std::shared_ptr<const MenuItem> item) {
+    auto drawer = getDrawerByObject(item);
+    if (drawer)
+        drawer->setColor(sf::Color(100, 100, 100, 255));
+}
+
+void MenuDrawer::clearSelection() {
+    for (auto drawer : itemDrawers_) {
+        drawer->setColor(sf::Color(255, 255, 255, 255));
     }
 }
 
@@ -65,4 +77,14 @@ float MenuDrawer::calculateItemPosition(int itemNo) const {
     const float itemNoRelativeToCenter = itemNo - (model_->items_.size() - 1) / 2.0;
 
     return center + itemNoRelativeToCenter * (fontHeightFactor_ + lineSpacingFactor_);
+}
+
+std::shared_ptr<MenuItemDrawer> MenuDrawer::getDrawerByObject(
+        std::shared_ptr<const MenuItem> item) {
+    for (auto drawer : itemDrawers_) {
+        if (item == drawer->getObject())
+            return drawer;
+    }
+
+    return std::shared_ptr<MenuItemDrawer>();
 }
