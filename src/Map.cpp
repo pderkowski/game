@@ -40,12 +40,5 @@ void Map::handleMouseWheelMoved(const sf::Event& event) {
 
 void Map::handleMouseMoved(const sf::Event& event)  {
     mapDrawer_.scrollView(event.mouseMove.x, event.mouseMove.y);
-
-    std::shared_ptr<Tile> leftTopTile
-        = mapDrawer_.getObjectByPosition(
-            sf::Vector2i(mapDrawer_.getOffset().x + 1, mapDrawer_.getOffset().y + 1));
-
-    if (leftTopTile) {
-        minimapDrawer_.scrollView(leftTopTile->column, leftTopTile->row);
-    }
+    minimapDrawer_.scrollView(mapDrawer_.getDisplayedTilesRect());
 }

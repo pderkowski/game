@@ -23,7 +23,7 @@ public:
     void scrollView(int x, int y);
     void zoomViemBy(int delta);
 
-    sf::Vector2f getOffset() const;
+    sf::IntRect getDisplayedTilesRect() const;
 
 private:
     float getMapWidth() const;

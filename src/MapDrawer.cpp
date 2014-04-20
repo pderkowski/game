@@ -127,6 +127,15 @@ float MapDrawer::calculateVerticalShift(float mouseYPosition) const {
     }
 }
 
-sf::Vector2f MapDrawer::getOffset() const {
-    return offset_;
+sf::IntRect MapDrawer::getDisplayedTilesRect() const {
+    sf::Vector2i leftTop(offset_.x + 1, offset_.y + 1);
+    sf::Vector2i rightBottom(target_->getSize().x - offset_.x - 1,
+        target_->getSize().y - offset_.y - 1);
+
+    int left = mapXCoordsToColumn(target_->mapPixelToCoords(leftTop).x);
+    int top = mapYCoordsToRow(target_->mapPixelToCoords(leftTop).y);
+    int right = mapXCoordsToColumn(target_->mapPixelToCoords(rightBottom).x);
+    int bottom = mapYCoordsToRow(target_->mapPixelToCoords(rightBottom).y);
+
+    return sf::IntRect(left, top, right - left, bottom - top);
 }

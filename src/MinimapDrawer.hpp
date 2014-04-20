@@ -16,7 +16,7 @@ public:
         Resources& resources);
 
     void createMinimap();
-    void scrollView(int x, int y);
+    void scrollView(const sf::IntRect& bounds);
 
     virtual void draw() const;
 
@@ -43,8 +43,6 @@ private:
     sf::Sprite minimapSprite_;
 
     std::map<Tile::Type, sf::Color> tileColors_;
-
-    sf::Vector2f viewPosition_;
 };
 
 #endif  // MINIMAPDRAWER_HPP_
