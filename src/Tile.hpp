@@ -14,19 +14,16 @@ public:
         NumberOfTileTypes  // this has to be the last one in this enum
     };
 
-    Tile();
-    explicit Tile(Type type);
-
-    Type getType() const;
-    void setType(Type type);
+    Tile(int row, int column);
+    Tile(int row, int column, Type type);
 
     void toggleVisibility();
-    bool isVisible() const;
 
-private:
-    Type type_;
+    int row;
+    int column;
+    Type type;
 
-    bool isVisible_;
+    bool isVisible;
 };
 
 #endif  // TILE_HPP_

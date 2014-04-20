@@ -16,28 +16,35 @@ public:
         Resources& resources);
 
     void createMinimap();
+    void scrollView(int x, int y);
 
     virtual void draw() const;
 
 private:
     sf::RectangleShape createBorders();
+    sf::RectangleShape createView();
 
     sf::Image createMinimapImage();
     sf::Uint8* createMinimapPixels();
+
     sf::Color getColorFromModel(int row, int column) const;
+    sf::Vector2f getBasePosition() const;
 
     std::shared_ptr<const MapModel> model_;
     std::shared_ptr<sf::RenderTarget> target_;
 
-    mutable sf::RectangleShape borders_;
-    sf::Texture minimapTexture_;
-    mutable sf::Sprite minimapSprite_;
-
-    std::map<Tile::Type, sf::Color> tileColors_;
-
     int pixelsPerTile_;
     int width_;
     int height_;
+
+    sf::RectangleShape borders_;
+    sf::RectangleShape view_;
+    sf::Texture minimapTexture_;
+    sf::Sprite minimapSprite_;
+
+    std::map<Tile::Type, sf::Color> tileColors_;
+
+    sf::Vector2f viewPosition_;
 };
 
 #endif  // MINIMAPDRAWER_HPP_

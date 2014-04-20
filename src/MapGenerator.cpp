@@ -22,7 +22,7 @@ void MapGenerator::assignTileTypes(MapModel& model) {
 
     for (unsigned r = 0; r < heights.size(); ++r) {
         for (unsigned c = 0; c < heights[r].size(); ++c) {
-            model.getTile(r, c)->setType(convertHeightToTileType(heights[r][c]));
+            model.getTile(r, c)->type = convertHeightToTileType(heights[r][c]);
         }
     }
 }

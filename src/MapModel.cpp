@@ -11,7 +11,7 @@ MapModel::MapModel(int rowsNo, int columnsNo)
     for (int r = 0; r < rowsNo; ++r) {
         tiles_.push_back(std::vector<std::shared_ptr<Tile>>());
         for (int c = 0; c < columnsNo; ++c) {
-            tiles_[r].push_back(std::make_shared<Tile>());
+            tiles_[r].push_back(std::make_shared<Tile>(r, c));
         }
     }
 }

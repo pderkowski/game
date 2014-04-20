@@ -20,8 +20,10 @@ public:
     virtual void draw() const;
 
     std::shared_ptr<Tile> getObjectByPosition(const sf::Vector2i& position);
-    void moveViewTo(int x, int y);
+    void scrollView(int x, int y);
     void zoomViemBy(int delta);
+
+    sf::Vector2f getOffset() const;
 
 private:
     float getMapWidth() const;

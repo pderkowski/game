@@ -10,23 +10,22 @@
 #include "Tile.hpp"
 
 MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::RenderTarget> target,
-        Resources& resources)
-    : model_(model),
-    target_(target),
-    mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y)),
-    tileTextures_{  // NOLINT
-        { Tile::Type::Empty, resources.loadTexture("tiles/empty.png") },
-        { Tile::Type::Water, resources.loadTexture("tiles/water.png") },
-        { Tile::Type::Hills, resources.loadTexture("tiles/hills.png") },
-        { Tile::Type::Plains, resources.loadTexture("tiles/plains.png") },
-        { Tile::Type::Mountains, resources.loadTexture("tiles/mountains.png") }
-    },
-    offset_(10, 10), tileWidth_(16), tileHeight_(16)
-{ }
+    Resources& resources)
+        : model_(model),
+        target_(target),
+        mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y)),
+        tileTextures_{  // NOLINT
+            { Tile::Type::Empty, resources.loadTexture("tiles/empty.png") },
+            { Tile::Type::Water, resources.loadTexture("tiles/water.png") },
+            { Tile::Type::Hills, resources.loadTexture("tiles/hills.png") },
+            { Tile::Type::Plains, resources.loadTexture("tiles/plains.png") },
+            { Tile::Type::Mountains, resources.loadTexture("tiles/mountains.png") }
+        },
+        offset_(10, 10), tileWidth_(16), tileHeight_(16) {
+    target_->setView(mapView_);
+}
 
 void MapDrawer::draw() const {
-    target_->setView(mapView_);
-
     sf::Sprite sprite;
     sprite.setTextureRect(sf::IntRect(0, 0, tileWidth_, tileHeight_));
 
@@ -37,8 +36,8 @@ void MapDrawer::draw() const {
 
     for (int r = 0; r < model_->getRowsNo(); ++r) {
         for (int c = 0; c < model_->getColumnsNo(); ++c) {
-            if (model_->getTile(r, c)->isVisible()) {
-                sprite.setTexture(tileTextures_.at(model_->getTile(r, c)->getType()));
+            if (model_->getTile(r, c)->isVisible) {
+                sprite.setTexture(tileTextures_.at(model_->getTile(r, c)->type));
                 target_->draw(sprite);
             }
 
@@ -58,8 +57,9 @@ std::shared_ptr<Tile> MapDrawer::getObjectByPosition(const sf::Vector2i& positio
         return std::shared_ptr<Tile>();
 }
 
-void MapDrawer::moveViewTo(int x, int y) {
+void MapDrawer::scrollView(int x, int y) {
     mapView_.move(calculateHorizontalShift(x), calculateVerticalShift(y));
+    target_->setView(mapView_);
 }
 
 void MapDrawer::zoomViemBy(int delta) {
@@ -125,4 +125,8 @@ float MapDrawer::calculateVerticalShift(float mouseYPosition) const {
     } else {
         return 0;
     }
+}
+
+sf::Vector2f MapDrawer::getOffset() const {
+    return offset_;
 }

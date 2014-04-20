@@ -2,26 +2,14 @@
 
 #include "Tile.hpp"
 
-Tile::Tile()
-    : type_(Type::Empty), isVisible_(true)
+Tile::Tile(int row, int column)
+    : row(row), column(column), type(Type::Empty), isVisible(true)
 { }
 
-Tile::Tile(Type type)
-    : type_(type), isVisible_(true)
+Tile::Tile(int row, int column, Type type)
+    : row(row), column(column), type(type), isVisible(true)
 { }
-
-Tile::Type Tile::getType() const {
-    return type_;
-}
-
-void Tile::setType(Type type) {
-    type_ = type;
-}
 
 void Tile::toggleVisibility() {
-    isVisible_ = !isVisible_;
-}
-
-bool Tile::isVisible() const {
-    return isVisible_;
+    isVisible = !isVisible;
 }

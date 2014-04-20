@@ -14,9 +14,8 @@
 class Map {
 public:
     Map(int rows, int columns, std::shared_ptr<sf::RenderWindow> target, Resources& resources);
-    virtual ~Map() { }
 
-    virtual void draw() const;
+    void draw() const;
 
     void generateMap();
 

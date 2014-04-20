@@ -14,34 +14,46 @@ MinimapDrawer::MinimapDrawer(std::shared_ptr<const MapModel> model,
     Resources& resources)
         : model_(model),
         target_(target),
+        pixelsPerTile_(2),
+        width_(pixelsPerTile_ * model->getColumnsNo()),
+        height_(pixelsPerTile_ * model->getRowsNo()),
+        borders_(createBorders()),
+        view_(createView()),
         tileColors_{  // NOLINT
             { Tile::Type::Empty, resources.loadImage("tiles/empty.png").getPixel(0, 0) },
             { Tile::Type::Water, resources.loadImage("tiles/water.png").getPixel(0, 0) },
             { Tile::Type::Hills, resources.loadImage("tiles/hills.png").getPixel(0, 0) },
             { Tile::Type::Plains, resources.loadImage("tiles/plains.png").getPixel(0, 0) },
             { Tile::Type::Mountains, resources.loadImage("tiles/mountains.png").getPixel(0, 0) }
-        },
-        pixelsPerTile_(2),
-        width_(pixelsPerTile_ * model->getColumnsNo()),
-        height_(pixelsPerTile_ * model->getRowsNo()) {
+        }
+{
     createMinimap();
 }
 
-void MinimapDrawer::createMinimap() {
-    borders_ = createBorders();
-
-    minimapTexture_.loadFromImage(createMinimapImage());
-    minimapSprite_.setTexture(minimapTexture_);
+sf::RectangleShape MinimapDrawer::createBorders() {
+    sf::RectangleShape borders;
+    borders.setSize(sf::Vector2f(width_, height_));
+    borders.setFillColor(sf::Color(0, 0, 0, 0));
+    borders.setOutlineColor(sf::Color(0, 0, 0, 255));
+    borders.setOutlineThickness(2);
+    borders.setPosition(getBasePosition());
+    return borders;
 }
 
-void MinimapDrawer::draw() const {
-    sf::Vector2f position = target_->mapPixelToCoords(
-        sf::Vector2i(target_->getSize().x - width_, target_->getSize().y - height_));
+sf::RectangleShape MinimapDrawer::createView() {
+    sf::RectangleShape view;
+    view.setSize(sf::Vector2f(width_, height_));
+    view.setFillColor(sf::Color(255, 255, 255, 100));
+    view.setOutlineColor(sf::Color(255, 255, 255, 255));
+    view.setOutlineThickness(-1);
+    view.setPosition(getBasePosition());
+    return view;
+}
 
-    borders_.setPosition(position);
-    minimapSprite_.setPosition(position);
-    target_->draw(borders_);
-    target_->draw(minimapSprite_);
+void MinimapDrawer::createMinimap() {
+    minimapTexture_.loadFromImage(createMinimapImage());
+    minimapSprite_.setTexture(minimapTexture_);
+    minimapSprite_.setPosition(getBasePosition());
 }
 
 sf::Image MinimapDrawer::createMinimapImage() {
@@ -56,15 +68,6 @@ sf::Image MinimapDrawer::createMinimapImage() {
         delete[] pixels;
         throw;
     }
-}
-
-sf::RectangleShape MinimapDrawer::createBorders() {
-    sf::RectangleShape borders;
-    borders.setSize(sf::Vector2f(width_, height_));
-    borders.setFillColor(sf::Color(0, 0, 0, 0));
-    borders.setOutlineColor(sf::Color(0, 0, 0, 255));
-    borders.setOutlineThickness(2);
-    return borders;
 }
 
 sf::Uint8* MinimapDrawer::createMinimapPixels() {
@@ -88,5 +91,23 @@ sf::Uint8* MinimapDrawer::createMinimapPixels() {
 }
 
 sf::Color MinimapDrawer::getColorFromModel(int row, int column) const {
-    return tileColors_.at(model_->getTile(row, column)->getType());
+    return tileColors_.at(model_->getTile(row, column)->type);
+}
+
+void MinimapDrawer::draw() const {
+    target_->draw(borders_);
+    target_->draw(minimapSprite_);
+    target_->draw(view_);
+}
+
+void MinimapDrawer::scrollView(int x, int y) {
+    borders_.setPosition(getBasePosition());
+    minimapSprite_.setPosition(getBasePosition());
+    viewPosition_ = getBasePosition() + sf::Vector2f(x * pixelsPerTile_, y * pixelsPerTile_);
+    view_.setPosition(viewPosition_);
+}
+
+sf::Vector2f MinimapDrawer::getBasePosition() const {
+    return target_->mapPixelToCoords(
+        sf::Vector2i(target_->getSize().x - width_, target_->getSize().y - height_));
 }
