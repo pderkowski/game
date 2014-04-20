@@ -11,20 +11,23 @@
 
 Map::Map(int rows, int columns, std::shared_ptr<sf::RenderWindow> target, Resources& resources)
     : model_(std::make_shared<MapModel>(MapGenerator::generateMap(rows, columns))),
-    drawer_(model_, target, resources)
+    mapDrawer_(model_, target, resources),
+    minimapDrawer_(model_, target, resources)
 { }
 
 void Map::draw() const {
-    drawer_.draw();
+    mapDrawer_.draw();
+    minimapDrawer_.draw();
 }
 
 void Map::generateMap() {
     *model_ = MapGenerator::generateMap(model_->getRowsNo(), model_->getColumnsNo());
+    minimapDrawer_.createMinimap();
 }
 
 void Map::handleClick(const sf::Event& e) {
     std::shared_ptr<Tile> clickedObject
-        = drawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
+        = mapDrawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 
     if (clickedObject) {
         clickedObject->toggleVisibility();
@@ -32,9 +35,9 @@ void Map::handleClick(const sf::Event& e) {
 }
 
 void Map::handleMouseWheelMoved(const sf::Event& event) {
-    drawer_.zoomViemBy(event.mouseWheel.delta);
+    mapDrawer_.zoomViemBy(event.mouseWheel.delta);
 }
 
 void Map::handleMouseMoved(const sf::Event& event)  {
-    drawer_.moveViewTo(event.mouseMove.x, event.mouseMove.y);
+    mapDrawer_.moveViewTo(event.mouseMove.x, event.mouseMove.y);
 }

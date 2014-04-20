@@ -8,6 +8,7 @@
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
 #include "MapDrawer.hpp"
+#include "MinimapDrawer.hpp"
 #include "Tile.hpp"
 
 class Map {
@@ -25,7 +26,8 @@ public:
 
 private:
     std::shared_ptr<MapModel> model_;
-    MapDrawer drawer_;
+    MapDrawer mapDrawer_;
+    MinimapDrawer minimapDrawer_;
 };
 
 #endif  // MAP_HPP_

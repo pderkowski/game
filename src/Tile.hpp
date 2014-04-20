@@ -17,7 +17,7 @@ public:
     Tile();
     explicit Tile(Type type);
 
-    Type getType();
+    Type getType() const;
     void setType(Type type);
 
     void toggleVisibility();

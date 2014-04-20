@@ -10,7 +10,7 @@ Tile::Tile(Type type)
     : type_(type), isVisible_(true)
 { }
 
-Tile::Type Tile::getType() {
+Tile::Type Tile::getType() const {
     return type_;
 }
 

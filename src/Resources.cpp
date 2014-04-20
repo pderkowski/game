@@ -41,3 +41,17 @@ sf::Font Resources::loadFont(const std::string& relativePath) {
     return loadedFonts_.at(pathToFont);
 }
 
+sf::Image Resources::loadImage(const std::string& relativePath) {
+    boost::filesystem::path pathToImage = paths_.getResourcePath(relativePath);
+
+    if (loadedImages_.find(pathToImage) == loadedImages_.end()) {
+        sf::Image image;
+        if (!image.loadFromFile(pathToImage.string())) {
+            throw std::runtime_error("Could not load image from " + pathToImage.string());
+        }
+
+        loadedImages_[pathToImage] = image;
+    }
+
+    return loadedImages_.at(pathToImage);
+}
