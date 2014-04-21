@@ -18,7 +18,7 @@ public:
     void createMinimap();
     void updateView(const sf::IntRect& bounds);
 
-    virtual void draw() const;
+    void draw() const;
 
 private:
     sf::RectangleShape createBorders();

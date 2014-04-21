@@ -66,10 +66,10 @@ void MapDrawer::zoomViemBy(int delta) {
     delta = delta / abs(delta);
 
     if (canZoomBy(delta))
-        tileSize_ = tileSize_ + delta;
+        tileSize_ += delta;
 }
 
-bool MapDrawer::canZoomBy(int delta) {
+bool MapDrawer::canZoomBy(int delta) const {
     const int minTileSize = 4;
     const int maxTileSize = 32;
 

@@ -15,9 +15,7 @@ public:
     MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::RenderTarget> target,
         Resources& resources);
 
-    virtual ~MapDrawer() { }
-
-    virtual void draw() const;
+    void draw() const;
 
     std::shared_ptr<Tile> getObjectByPosition(const sf::Vector2i& position);
     void scrollView(int x, int y);
@@ -35,7 +33,7 @@ private:
     float calculateHorizontalShift(float mouseXPosition) const;
     float calculateVerticalShift(float mouseYPosition) const;
 
-    bool canZoomBy(int delta);
+    bool canZoomBy(int delta) const;
 
     std::shared_ptr<MapModel> model_;
     std::shared_ptr<sf::RenderTarget> target_;
