@@ -44,8 +44,7 @@ private:
 
     static const int scrollMarginSize_ = 20;
 
-    int tileWidth_;
-    int tileHeight_;
+    int tileSize_;
 };
 
 #endif  // MAPDRAWER_HPP_
