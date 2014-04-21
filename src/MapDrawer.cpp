@@ -65,21 +65,27 @@ void MapDrawer::scrollView(int x, int y) {
 void MapDrawer::zoomViemBy(int delta) {
     delta = delta / abs(delta);
 
+    if (canZoomBy(delta))
+        tileSize_ = tileSize_ + delta;
+}
+
+bool MapDrawer::canZoomBy(int delta) {
     const int minTileSize = 4;
     const int maxTileSize = 32;
 
     int newTileSize = tileSize_ + delta;
-    newTileSize = std::min(newTileSize, maxTileSize);
-    newTileSize = std::max(newTileSize, minTileSize);
-    tileSize_ = newTileSize;
+    return newTileSize >= minTileSize
+        && newTileSize <= maxTileSize
+        && getMapWidth(newTileSize) >= target_->getSize().x
+        && getMapHeight(newTileSize) >= target_->getSize().y;
 }
 
-float MapDrawer::getMapWidth() const {
-    return 2 * offset_.x + (model_->getColumnsNo() - 1) + model_->getColumnsNo() * tileSize_;
+float MapDrawer::getMapWidth(int tileSize) const {
+    return 2 * offset_.x + (model_->getColumnsNo() - 1) + model_->getColumnsNo() * tileSize;
 }
 
-float MapDrawer::getMapHeight() const {
-    return 2 * offset_.y + (model_->getRowsNo() - 1) + model_->getRowsNo() * tileSize_;
+float MapDrawer::getMapHeight(int tileSize) const {
+    return 2 * offset_.y + (model_->getRowsNo() - 1) + model_->getRowsNo() * tileSize;
 }
 
 int MapDrawer::mapXCoordsToColumn(int x) const {
@@ -106,7 +112,7 @@ float MapDrawer::calculateHorizontalShift(float mouseXPosition) const {
             -(mapView_.getCenter().x - mapView_.getSize().x / 2));
     } else if (mouseXPosition > target_->getSize().x - scrollMarginSize_) {
         return std::min(scrollMarginSize_ - (target_->getSize().x - mouseXPosition),
-            getMapWidth() - (mapView_.getCenter().x + mapView_.getSize().x / 2));
+            getMapWidth(tileSize_) - (mapView_.getCenter().x + mapView_.getSize().x / 2));
     } else {
         return 0;
     }
@@ -118,7 +124,7 @@ float MapDrawer::calculateVerticalShift(float mouseYPosition) const {
             -(mapView_.getCenter().y - mapView_.getSize().y / 2));
     } else if (mouseYPosition > target_->getSize().y - scrollMarginSize_) {
         return std::min(scrollMarginSize_ - (target_->getSize().y - mouseYPosition),
-            getMapHeight() - (mapView_.getCenter().y + mapView_.getSize().y / 2));
+            getMapHeight(tileSize_) - (mapView_.getCenter().y + mapView_.getSize().y / 2));
     } else {
         return 0;
     }

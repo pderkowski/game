@@ -26,14 +26,16 @@ public:
     sf::IntRect getDisplayedTilesRect() const;
 
 private:
-    float getMapWidth() const;
-    float getMapHeight() const;
+    float getMapWidth(int tileSize) const;
+    float getMapHeight(int tileSize) const;
 
     int mapXCoordsToColumn(int x) const;
     int mapYCoordsToRow(int y) const;
 
     float calculateHorizontalShift(float mouseXPosition) const;
     float calculateVerticalShift(float mouseYPosition) const;
+
+    bool canZoomBy(int delta);
 
     std::shared_ptr<MapModel> model_;
     std::shared_ptr<sf::RenderTarget> target_;
