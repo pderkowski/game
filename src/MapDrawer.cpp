@@ -47,6 +47,10 @@ void MapDrawer::draw() const {
     }
 }
 
+std::shared_ptr<const sf::RenderTarget> MapDrawer::getTarget() const {
+    return target_;
+}
+
 std::shared_ptr<Tile> MapDrawer::getObjectByPosition(const sf::Vector2i& position) {
     int column = mapXCoordsToColumn(target_->mapPixelToCoords(position).x);
     int row = mapYCoordsToRow(target_->mapPixelToCoords(position).y);
@@ -57,19 +61,46 @@ std::shared_ptr<Tile> MapDrawer::getObjectByPosition(const sf::Vector2i& positio
         return std::shared_ptr<Tile>();
 }
 
-void MapDrawer::scrollView(int x, int y) {
-    mapView_.move(calculateHorizontalShift(x), calculateVerticalShift(y));
+void MapDrawer::scrollView(float x, float y) {
+    mapView_.move(boundShift(x, y));
     target_->setView(mapView_);
 }
 
-void MapDrawer::zoomViemBy(int delta) {
-    delta = delta / abs(delta);
+sf::Vector2f MapDrawer::boundShift(float x, float y) const {
+    sf::Vector2f safeShift;
 
-    if (canZoomBy(delta))
-        tileSize_ += delta;
+    sf::FloatRect bounds(0, 0, getMapWidth(tileSize_), getMapHeight(tileSize_));
+    sf::FloatRect displayed(mapView_.getCenter().x - mapView_.getSize().x / 2,
+        mapView_.getCenter().y - mapView_.getSize().y / 2,
+        mapView_.getSize().x, mapView_.getSize().y);
+
+    float maxLeftShiftPossible = bounds.left - displayed.left;
+    float maxRightShiftPossible = bounds.left + bounds.width - displayed.left - displayed.width;
+    float maxTopShiftPossible = bounds.top - displayed.top;
+    float maxBottomShiftPossible = bounds.top + bounds.height - displayed.top - displayed.height;
+
+    safeShift.x = (x < 0)? std::min(std::max(x, maxLeftShiftPossible), maxRightShiftPossible)
+        : std::max(std::min(x, maxRightShiftPossible), maxLeftShiftPossible);
+    safeShift.y = (y < 0)? std::min(std::max(y, maxTopShiftPossible), maxBottomShiftPossible)
+        : std::max(std::min(y, maxBottomShiftPossible), maxTopShiftPossible);
+
+    return safeShift;
 }
 
-bool MapDrawer::canZoomBy(int delta) const {
+void MapDrawer::zoomViem(int delta, const sf::Vector2i& mousePosition) {
+    delta = delta / abs(delta);
+
+    if (canZoom(delta)) {
+        sf::Vector2f currentCoords = target_->mapPixelToCoords(mousePosition);
+        sf::Vector2f newCoords = getCoordsAfterZoom(delta, mousePosition);
+
+        tileSize_ += delta;
+
+        scrollView(newCoords.x - currentCoords.x, newCoords.y - currentCoords.y);
+    }
+}
+
+bool MapDrawer::canZoom(int delta) const {
     const int minTileSize = 4;
     const int maxTileSize = 32;
 
@@ -78,6 +109,14 @@ bool MapDrawer::canZoomBy(int delta) const {
         && newTileSize <= maxTileSize
         && getMapWidth(newTileSize) >= target_->getSize().x
         && getMapHeight(newTileSize) >= target_->getSize().y;
+}
+
+sf::Vector2f MapDrawer::getCoordsAfterZoom(int delta, const sf::Vector2i& mousePosition) const {
+    sf::Vector2f currentCoords = target_->mapPixelToCoords(mousePosition);
+    double xPositionFraction = currentCoords.x / getMapWidth(tileSize_);
+    double yPositionFraction = currentCoords.y / getMapHeight(tileSize_);
+    return sf::Vector2f(xPositionFraction * getMapWidth(tileSize_ + delta),
+        yPositionFraction * getMapHeight(tileSize_ + delta));
 }
 
 float MapDrawer::getMapWidth(int tileSize) const {
@@ -104,30 +143,6 @@ int MapDrawer::mapYCoordsToRow(int y) const {
         return MapModel::OutOfBounds;
     else
         return row;
-}
-
-float MapDrawer::calculateHorizontalShift(float mouseXPosition) const {
-    if (mouseXPosition < scrollMarginSize_) {
-        return std::max(mouseXPosition - scrollMarginSize_,
-            -(mapView_.getCenter().x - mapView_.getSize().x / 2));
-    } else if (mouseXPosition > target_->getSize().x - scrollMarginSize_) {
-        return std::min(scrollMarginSize_ - (target_->getSize().x - mouseXPosition),
-            getMapWidth(tileSize_) - (mapView_.getCenter().x + mapView_.getSize().x / 2));
-    } else {
-        return 0;
-    }
-}
-
-float MapDrawer::calculateVerticalShift(float mouseYPosition) const {
-    if (mouseYPosition < scrollMarginSize_) {
-        return std::max(mouseYPosition - scrollMarginSize_,
-            -(mapView_.getCenter().y - mapView_.getSize().y / 2));
-    } else if (mouseYPosition > target_->getSize().y - scrollMarginSize_) {
-        return std::min(scrollMarginSize_ - (target_->getSize().y - mouseYPosition),
-            getMapHeight(tileSize_) - (mapView_.getCenter().y + mapView_.getSize().y / 2));
-    } else {
-        return 0;
-    }
 }
 
 sf::IntRect MapDrawer::getDisplayedTilesRect() const {

@@ -37,11 +37,37 @@ void Map::handleClick(const sf::Event& e) {
 }
 
 void Map::handleMouseWheelMoved(const sf::Event& event) {
-    mapDrawer_.zoomViemBy(event.mouseWheel.delta);
+    mapDrawer_.zoomViem(event.mouseWheel.delta,
+        sf::Vector2i(event.mouseWheel.x, event.mouseWheel.y));
     minimapDrawer_.updateView(mapDrawer_.getDisplayedTilesRect());
 }
 
 void Map::handleMouseMoved(const sf::Event& event)  {
-    mapDrawer_.scrollView(event.mouseMove.x, event.mouseMove.y);
+    mapDrawer_.scrollView(calculateHorizontalShift(event.mouseMove.x),
+        calculateVerticalShift(event.mouseMove.y));
     minimapDrawer_.updateView(mapDrawer_.getDisplayedTilesRect());
+}
+
+float Map::calculateHorizontalShift(float mouseXPosition) const {
+    const int scrollMarginSize = 20;
+
+    if (mouseXPosition < scrollMarginSize) {
+        return mouseXPosition - scrollMarginSize;
+    } else if (mouseXPosition > mapDrawer_.getTarget()->getSize().x - scrollMarginSize) {
+        return scrollMarginSize - (mapDrawer_.getTarget()->getSize().x - mouseXPosition);
+    } else {
+        return 0;
+    }
+}
+
+float Map::calculateVerticalShift(float mouseYPosition) const {
+    const int scrollMarginSize = 20;
+
+    if (mouseYPosition < scrollMarginSize) {
+        return mouseYPosition - scrollMarginSize;
+    } else if (mouseYPosition > mapDrawer_.getTarget()->getSize().y - scrollMarginSize) {
+        return scrollMarginSize - (mapDrawer_.getTarget()->getSize().y - mouseYPosition);
+    } else {
+        return 0;
+    }
 }

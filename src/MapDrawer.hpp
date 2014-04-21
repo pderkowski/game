@@ -17,9 +17,11 @@ public:
 
     void draw() const;
 
+    std::shared_ptr<const sf::RenderTarget> getTarget() const;
+
     std::shared_ptr<Tile> getObjectByPosition(const sf::Vector2i& position);
-    void scrollView(int x, int y);
-    void zoomViemBy(int delta);
+    void scrollView(float x, float y);
+    void zoomViem(int delta, const sf::Vector2i& mousePosition);
 
     sf::IntRect getDisplayedTilesRect() const;
 
@@ -30,10 +32,9 @@ private:
     int mapXCoordsToColumn(int x) const;
     int mapYCoordsToRow(int y) const;
 
-    float calculateHorizontalShift(float mouseXPosition) const;
-    float calculateVerticalShift(float mouseYPosition) const;
-
-    bool canZoomBy(int delta) const;
+    bool canZoom(int delta) const;
+    sf::Vector2f boundShift(float x, float y) const;
+    sf::Vector2f getCoordsAfterZoom(int delta, const sf::Vector2i& mousePosition) const;
 
     std::shared_ptr<MapModel> model_;
     std::shared_ptr<sf::RenderTarget> target_;
@@ -41,8 +42,6 @@ private:
     sf::View mapView_;
     std::map<Tile::Type, sf::Texture> tileTextures_;
     sf::Vector2f offset_;
-
-    static const int scrollMarginSize_ = 20;
 
     int tileSize_;
 };
