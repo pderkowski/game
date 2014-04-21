@@ -10,10 +10,11 @@
 #include "Map.hpp"
 
 Map::Map(int rows, int columns, std::shared_ptr<sf::RenderWindow> target, Resources& resources)
-    : model_(std::make_shared<MapModel>(MapGenerator::generateMap(rows, columns))),
-    mapDrawer_(model_, target, resources),
-    minimapDrawer_(model_, target, resources)
-{ }
+        : model_(std::make_shared<MapModel>(MapGenerator::generateMap(rows, columns))),
+        mapDrawer_(model_, target, resources),
+        minimapDrawer_(model_, target, resources) {
+    minimapDrawer_.updateView(mapDrawer_.getDisplayedTilesRect());
+}
 
 void Map::draw() const {
     mapDrawer_.draw();
@@ -23,6 +24,7 @@ void Map::draw() const {
 void Map::generateMap() {
     *model_ = MapGenerator::generateMap(model_->getRowsNo(), model_->getColumnsNo());
     minimapDrawer_.createMinimap();
+    minimapDrawer_.updateView(mapDrawer_.getDisplayedTilesRect());
 }
 
 void Map::handleClick(const sf::Event& e) {
@@ -36,9 +38,10 @@ void Map::handleClick(const sf::Event& e) {
 
 void Map::handleMouseWheelMoved(const sf::Event& event) {
     mapDrawer_.zoomViemBy(event.mouseWheel.delta);
+    minimapDrawer_.updateView(mapDrawer_.getDisplayedTilesRect());
 }
 
 void Map::handleMouseMoved(const sf::Event& event)  {
     mapDrawer_.scrollView(event.mouseMove.x, event.mouseMove.y);
-    minimapDrawer_.scrollView(mapDrawer_.getDisplayedTilesRect());
+    minimapDrawer_.updateView(mapDrawer_.getDisplayedTilesRect());
 }

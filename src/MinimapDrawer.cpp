@@ -100,7 +100,7 @@ void MinimapDrawer::draw() const {
     target_->draw(view_);
 }
 
-void MinimapDrawer::scrollView(const sf::IntRect& bounds) {
+void MinimapDrawer::updateView(const sf::IntRect& bounds) {
     borders_.setPosition(getBasePosition());
     minimapSprite_.setPosition(getBasePosition());
     view_.setPosition(getBasePosition() + sf::Vector2f(bounds.left * pixelsPerTile_,

@@ -16,7 +16,7 @@ public:
         Resources& resources);
 
     void createMinimap();
-    void scrollView(const sf::IntRect& bounds);
+    void updateView(const sf::IntRect& bounds);
 
     virtual void draw() const;
 
