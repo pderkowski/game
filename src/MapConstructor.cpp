@@ -1,7 +1,6 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <random>
-#include <chrono>
 #include <cmath>
 #include <vector>
 #include <algorithm>
@@ -9,11 +8,13 @@
 #include "MapConstructor.hpp"
 #include "MapModel.hpp"
 #include "Tile.hpp"
+#include "Pool.hpp"
 
-MapConstructor::MapConstructor(unsigned rows, unsigned columns)
+MapConstructor::MapConstructor(unsigned rows, unsigned columns,
+    std::shared_ptr<std::default_random_engine> generator)
         : rows_(rows), columns_(columns),
         map_(rows, std::vector<Cell>(columns)),
-        generator_(std::chrono::system_clock::now().time_since_epoch().count()) {
+        generator_(generator) {
     for (unsigned r = 0; r < map_.size(); ++r) {
         for (unsigned c = 0; c < map_[r].size(); ++c) {
             map_[r][c].row = r;
@@ -24,25 +25,22 @@ MapConstructor::MapConstructor(unsigned rows, unsigned columns)
 }
 
 void MapConstructor::spawnContinent(unsigned continentSize) {
-    auto seeds = findContinentSeeds(generator_() % 3 + 2, sqrt(continentSize) / 2);
+    auto seeds = findContinentSeeds((*generator_)() % 3 + 2, sqrt(continentSize) / 2);
     markCells(seeds, Cell::Type::Land);
-    auto border = findNeighbors(seeds);
-    removeMarked(border);
+    auto border = createBorder(seeds);
     int cellsToFind = continentSize - seeds.size();
 
-    while (cellsToFind > 0 && !border.empty()) {
-        Cell* cell = chooseCell(border);
-        if (cell) {
-            markCell(cell, Cell::Type::Land);
-            --cellsToFind;
-            auto neighbors = findNeighbors(cell);
-            removeMarked(neighbors);
-            border.insert(border.end(), neighbors.begin(), neighbors.end());
-        }
-    }
+    while (cellsToFind > 0 && !border.isEmpty()) {
+        auto cell = border.getRandom();
+        border.remove(cell);
+        cell->type = Cell::Type::Land;
+        --cellsToFind;
+        auto neighbors = findNeighbors(cell);
+        removeMarked(neighbors);
 
-    removeMarked(border);
-    markCells(border, Cell::Type::Water);
+        for (auto neighbor : neighbors)
+            utils::increaseWeight(border, neighbor);
+    }
 }
 
 std::vector<MapConstructor::Cell*> MapConstructor::findContinentSeeds(unsigned numberOfSeeds,
@@ -62,26 +60,21 @@ std::vector<MapConstructor::Cell*> MapConstructor::findContinentSeeds(unsigned n
 }
 
 std::pair<unsigned, unsigned> MapConstructor::findContinentCenter(unsigned diameter) {
-    unsigned row = rows_ / 2 + (generator_() % (2 * diameter)) - diameter;
-    unsigned col = (generator_() % (columns_ - 2 * diameter)) + diameter;
+    unsigned row = rows_ / 2 + ((*generator_)() % (2 * diameter)) - diameter;
+    unsigned col = ((*generator_)() % (columns_ - 2 * diameter)) + diameter;
     return std::make_pair(row, col);
 }
 
 MapConstructor::Cell* MapConstructor::findSeed(const std::pair<unsigned, unsigned>& center,
         unsigned diameter) {
-    unsigned row = center.first + generator_() % (2 * diameter) - diameter;
-    unsigned col = center.second + generator_() % (2 * diameter) - diameter;
+    unsigned row = center.first + (*generator_)() % (2 * diameter) - diameter;
+    unsigned col = center.second + (*generator_)() % (2 * diameter) - diameter;
     return &map_[row][col];
 }
 
-void MapConstructor::markCell(Cell* cell, Cell::Type type) {
-    cell->type = type;
-}
-
 void MapConstructor::markCells(const std::vector<Cell*>& cells, Cell::Type type) {
-    for (auto cell : cells) {
-        markCell(cell, type);
-    }
+    for (auto cell : cells)
+        cell->type = type;
 }
 
 std::vector<MapConstructor::Cell*> MapConstructor::findNeighbors(const Cell* cell) {
@@ -123,19 +116,6 @@ void MapConstructor::removeMarked(std::vector<Cell*>& cells) {
     cells.erase(removedIt, cells.end());
 }
 
-MapConstructor::Cell* MapConstructor::chooseCell(std::vector<Cell*>& border) {
-    while (!border.empty()) {
-        Cell* randomCell = border[generator_() % border.size()];
-        if (isUnmarked(randomCell)) {
-            return randomCell;
-        } else {  // one cell can be added multiple times to border, but should be chosen only once
-            removeMarked(border);
-        }
-    }
-
-    return nullptr;
-}
-
 MapModel MapConstructor::getMapModel() const {
     MapModel model(rows_, columns_);
     assignTileTypes(model);
@@ -157,3 +137,20 @@ Tile::Type MapConstructor::convertCellTypeToTileType(Cell::Type type) const {
         return Tile::Type::Water;
     }
 }
+
+Pool<MapConstructor::Cell> MapConstructor::createBorder(
+        const std::vector<MapConstructor::Cell*>& seeds) {
+    Pool<Cell> border(generator_);
+
+    for (auto seed : seeds) {
+        auto neighbors = findNeighbors(seed);
+        removeMarked(neighbors);
+
+        for (auto neighbor : neighbors)
+            utils::increaseWeight(border, neighbor);
+    }
+
+    return border;
+}
+
+

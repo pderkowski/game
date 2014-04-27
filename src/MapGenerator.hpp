@@ -3,7 +3,6 @@
 #ifndef MAPGENERATOR_HPP_
 #define MAPGENERATOR_HPP_
 
-#include <random>
 #include <vector>
 #include "Tile.hpp"
 #include "MapModel.hpp"
