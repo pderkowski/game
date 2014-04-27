@@ -83,8 +83,20 @@ std::vector<MapConstructor::Cell*> MapConstructor::findNeighbors(const Cell* cel
     if (cell->row > 0)
         neighbors.push_back(&map_[cell->row - 1][cell->column]);
 
+    if (cell->row > 0 && cell->column > 0)
+        neighbors.push_back(&map_[cell->row - 1][cell->column - 1]);
+
+    if (cell->row > 0 && cell->column < columns_ - 1)
+        neighbors.push_back(&map_[cell->row - 1][cell->column + 1]);
+
     if (cell->row < rows_ - 1)
         neighbors.push_back(&map_[cell->row + 1][cell->column]);
+
+    if (cell->row < rows_ - 1 && cell->column > 0)
+        neighbors.push_back(&map_[cell->row + 1][cell->column - 1]);
+
+    if (cell->row < rows_ - 1 && cell->column < columns_ - 1)
+        neighbors.push_back(&map_[cell->row + 1][cell->column + 1]);
 
     if (cell->column > 0)
         neighbors.push_back(&map_[cell->row][cell->column - 1]);
