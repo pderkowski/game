@@ -7,6 +7,7 @@
 #include <memory>
 #include <utility>
 #include <map>
+#include <vector>
 
 template <class T>
 class Pool {
@@ -20,6 +21,7 @@ public:
     unsigned getWeight(T* key) const;
     void setWeight(T* key, unsigned weight);
     bool isEmpty() const;
+    std::vector<T*> toVector() const;
 
 private:
     unsigned totalWeight_;
@@ -96,6 +98,17 @@ inline void Pool<T>::setWeight(T* key, unsigned weight) {
 template <class T>
 inline bool Pool<T>::isEmpty() const {
     return weights_.empty();
+}
+
+template <class T>
+inline std::vector<T*> Pool<T>::toVector() const {
+    std::vector<T*> res;
+
+    for (auto keyAndWeight : weights_) {
+        res.push_back(keyAndWeight.first);
+    }
+
+    return res;
 }
 
 

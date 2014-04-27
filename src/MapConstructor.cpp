@@ -41,6 +41,8 @@ void MapConstructor::spawnContinent(unsigned continentSize) {
         for (auto neighbor : neighbors)
             utils::increaseWeight(border, neighbor);
     }
+
+    markCells(border.toVector(), Cell::Type::Water);
 }
 
 std::vector<MapConstructor::Cell*> MapConstructor::findContinentSeeds(unsigned numberOfSeeds,
