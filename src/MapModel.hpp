@@ -5,11 +5,16 @@
 
 #include <vector>
 #include <memory>
+#include <functional>
 #include "Tile.hpp"
 
 class MapModel {
 public:
+    typedef std::vector<std::vector<double>> HeightMap;
+    typedef std::function<Tile::Type(double)> HeightToTileConverter;  // NOLINT
+
     MapModel(int rowsNo, int columnsNo);
+    MapModel(const HeightMap& heightMap, HeightToTileConverter converter);
 
     int getRowsNo() const;
     int getColumnsNo() const;

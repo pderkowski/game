@@ -16,6 +16,17 @@ MapModel::MapModel(int rowsNo, int columnsNo)
     }
 }
 
+MapModel::MapModel(const HeightMap& heightMap, HeightToTileConverter converter)
+        : rowsNo_(heightMap.size()), columnsNo_(heightMap[0].size()) {
+    for (int r = 0; r < rowsNo_; ++r) {
+        tiles_.push_back(std::vector<std::shared_ptr<Tile>>());
+        for (int c = 0; c < columnsNo_; ++c) {
+            Tile t = Tile(r, c, converter(heightMap[r][c]));
+            tiles_[r].push_back(std::make_shared<Tile>(t));
+        }
+    }
+}
+
 int MapModel::getRowsNo() const {
     return rowsNo_;
 }
