@@ -14,7 +14,7 @@ public:
 
     explicit NoiseGenerator(std::shared_ptr<std::default_random_engine> generator);
 
-    noise::utils::NoiseMap generateNoiseMap(unsigned rows, unsigned columns);
+    noise::utils::NoiseMap generateNoiseMap(unsigned rows, unsigned columns, double scale);
 
 private:
     std::shared_ptr<std::default_random_engine> generator_;

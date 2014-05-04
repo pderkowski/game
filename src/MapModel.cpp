@@ -1,6 +1,5 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#include <iostream>
 #include <vector>
 #include <memory>
 #include "MapModel.hpp"

@@ -14,22 +14,19 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
         std::chrono::system_clock::now().time_since_epoch().count());
 
     NoiseGenerator noiseGenerator(generator);
-    auto noiseMap = noiseGenerator.generateNoiseMap(rows, columns);
+    auto noiseMap = noiseGenerator.generateNoiseMap(rows, columns, 8);
     // noiseGenerator.scale(noiseMatrix, -6, 6);
     return MapModel(noiseMap,
         [] (double height) {
             if (height <= 0) {
                 return Tile::Type::Water;
-            } else {
+            } else if (height <= 6) {
                 return Tile::Type::Plains;
+            } else if (height <= 7.5) {
+                return Tile::Type::Hills;
+            } else {
+                return Tile::Type::Mountains;
             }
-            // } else if (height <= 2) {
-            //     return Tile::Type::Plains;
-            // } else if (height <= 6) {
-            //     return Tile::Type::Hills;
-            // } else {
-            //     return Tile::Type::Mountains;
-            // }
         });
 
     // MapConstructor constructor(rows, columns, generator);
