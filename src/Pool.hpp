@@ -112,7 +112,7 @@ inline std::vector<T*> Pool<T>::toVector() const {
 }
 
 
-namespace utils {
+namespace poolUtils {
 
 template <class T>
 void increaseWeight(Pool<T>& pool, T* key, unsigned initialWeight = 1,

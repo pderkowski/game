@@ -39,7 +39,7 @@ void MapConstructor::spawnContinent(unsigned continentSize) {
         removeMarked(neighbors);
 
         for (auto neighbor : neighbors)
-            utils::increaseWeight(border, neighbor);
+            poolUtils::increaseWeight(border, neighbor);
     }
 
     markCells(border.toVector(), Cell::Type::Water);
@@ -161,7 +161,7 @@ Pool<MapConstructor::Cell> MapConstructor::createBorder(
         removeMarked(neighbors);
 
         for (auto neighbor : neighbors)
-            utils::increaseWeight(border, neighbor);
+            poolUtils::increaseWeight(border, neighbor);
     }
 
     return border;

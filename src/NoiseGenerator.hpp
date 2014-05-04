@@ -6,6 +6,7 @@
 #include <random>
 #include <memory>
 #include <vector>
+#include "noiseutils/noiseutils.h"
 
 class NoiseGenerator {
 public:
@@ -13,8 +14,7 @@ public:
 
     explicit NoiseGenerator(std::shared_ptr<std::default_random_engine> generator);
 
-    NoiseMatrix generateNoiseMatrix(unsigned rows, unsigned columns);
-    void scale(NoiseMatrix& matrix, int min, int max) const;
+    noise::utils::NoiseMap generateNoiseMap(unsigned rows, unsigned columns);
 
 private:
     std::shared_ptr<std::default_random_engine> generator_;

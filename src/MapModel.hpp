@@ -7,11 +7,12 @@
 #include <memory>
 #include <functional>
 #include "Tile.hpp"
+#include "noiseutils/noiseutils.h"
 
 class MapModel {
 public:
-    typedef std::vector<std::vector<double>> HeightMap;
-    typedef std::function<Tile::Type(double)> HeightToTileConverter;  // NOLINT
+    typedef noise::utils::NoiseMap HeightMap;
+    typedef std::function<Tile::Type(double)> HeightToTileConverter;
 
     MapModel(int rowsNo, int columnsNo);
     MapModel(const HeightMap& heightMap, HeightToTileConverter converter);

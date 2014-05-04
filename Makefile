@@ -6,12 +6,13 @@ LIB_DIR=lib
 EXE_NAME=game
 
 INCLUDE_DIRS=$(shell find . -path '*/include' -type d)
-CPPFLAGS=$(foreach dir, $(INCLUDE_DIRS), -I$(dir)) -std=c++11 -MD -MP
+CPPFLAGS=$(foreach dir, $(INCLUDE_DIRS), -I$(dir) -isystem $(dir)) -std=c++11 -MD -MP
 WARNINGS=-Wall -Wextra -pedantic -Werror
 
 SFML_LIBS=-lsfml-graphics -lsfml-window -lsfml-system
 BOOST_LIBS=-lboost_filesystem -lboost_system
-LDLIBS=$(SFML_LIBS) $(BOOST_LIBS)
+OTHER_LIBS=-lnoise
+LDLIBS=$(SFML_LIBS) $(BOOST_LIBS) $(OTHER_LIBS)
 LDFLAGS=-Wl,-R$(shell pwd)/$(LIB_DIR)
 
 SRCS=$(shell find $(SRC_DIR) -type f -name '*.cpp')
