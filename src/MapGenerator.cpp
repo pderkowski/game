@@ -3,37 +3,28 @@
 #include <random>
 #include <chrono>
 #include <memory>
+#include <cmath>
 #include "MapModel.hpp"
 #include "MapConstructor.hpp"
 #include "MapGenerator.hpp"
 #include "NoiseGenerator.hpp"
+#include "Gradient.hpp"
+#include "Tile.hpp"
 
 MapModel MapGenerator::generateMap(int rows, int columns) {
     static auto generator = std::make_shared<std::default_random_engine>(
         std::chrono::system_clock::now().time_since_epoch().count());
 
-    // NoiseGenerator noiseGenerator(generator);
-    // auto probabilityMap = noiseGenerator.generateHeightMap(rows, columns);
-    // probabilityMap
-    //     .scale(2)
-    //     .rise(2)
-    //     .exp2()
-    //     .round();
-    // return MapModel(probabilityMap,
-    //     [] (double height) {
-    //         if (height <= 0) {
-    //             return Tile::Type::Water;
-    //         } else if (height <= 6) {
-    //             return Tile::Type::Plains;
-    //         } else if (height <= 7.5) {
-    //             return Tile::Type::Hills;
-    //         } else {
-    //             return Tile::Type::Mountains;
-    //         }
-    //     });
+    auto probabilityMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)());
+    Gradient gradient;
+    gradient.addPoint(0.0, Tile::Type::Water);
+    gradient.addPoint(0.7, Tile::Type::Plains);
+    gradient.addPoint(0.96, Tile::Type::Hills);
+    gradient.addPoint(0.995, Tile::Type::Mountains);
+    return MapModel(probabilityMap, gradient);
 
-    MapConstructor constructor(rows, columns, generator);
-    constructor.spawnContinent(1000);
-    constructor.spawnContinent(600);
-    return constructor.getMapModel();
+    // MapConstructor constructor(rows, columns, generator);
+    // constructor.spawnContinent(1000);
+    // constructor.spawnContinent(600);
+    // return constructor.getMapModel();
 }

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <functional>
+#include <tuple>
 #include "HeightMap.hpp"
 
 HeightMap::HeightMap(unsigned rowsNo, unsigned columnsNo)
@@ -32,4 +33,16 @@ unsigned HeightMap::getRowsNo() const {
 
 unsigned HeightMap::getColumnsNo() const {
     return columnsNo_;
+}
+
+std::vector<std::tuple<unsigned, unsigned, double>> HeightMap::getListOfCells() const {
+    std::vector<std::tuple<unsigned, unsigned, double>> listOfCells;
+
+    for (unsigned r = 0; r < rowsNo_; ++r) {
+        for (unsigned c = 0; c < columnsNo_; ++c) {
+            listOfCells.push_back(std::make_tuple(r, c, map_[r][c]));
+        }
+    }
+
+    return listOfCells;
 }

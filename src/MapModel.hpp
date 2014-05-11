@@ -7,6 +7,7 @@
 #include <memory>
 #include <functional>
 #include "Tile.hpp"
+#include "Gradient.hpp"
 #include "HeightMap.hpp"
 
 class MapModel {
@@ -15,6 +16,7 @@ public:
 
     MapModel(int rowsNo, int columnsNo);
     MapModel(const HeightMap& heightMap, HeightToTileConverter converter);
+    MapModel(const HeightMap& heightMap, const Gradient& gradient);
 
     int getRowsNo() const;
     int getColumnsNo() const;

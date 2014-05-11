@@ -1,11 +1,14 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <iostream>
+#include <tuple>
 #include <vector>
 #include <memory>
+#include <algorithm>
 #include "MapModel.hpp"
 #include "Tile.hpp"
 #include "HeightMap.hpp"
+#include "Gradient.hpp"
 
 MapModel::MapModel(int rowsNo, int columnsNo)
     : rowsNo_(rowsNo), columnsNo_(columnsNo)
@@ -28,6 +31,22 @@ MapModel::MapModel(const HeightMap& heightMap, HeightToTileConverter converter)
             Tile t = Tile(r, c, converter(heightMap[r][c]));
             tiles_[r].push_back(std::make_shared<Tile>(t));
         }
+    }
+}
+
+MapModel::MapModel(const HeightMap& heightMap, const Gradient& gradient)
+    : MapModel(heightMap.getRowsNo(), heightMap.getColumnsNo())
+{
+    auto cells = heightMap.getListOfCells();
+    std::sort(cells.begin(), cells.end(),
+        [] (const std::tuple<unsigned, unsigned, double>& lhs,
+            const std::tuple<unsigned, unsigned, double>& rhs)
+        { return std::get<2>(lhs) < std::get<2>(rhs); });
+
+    for (unsigned cell = 0; cell < cells.size(); ++cell) {
+        double gradientPoint = static_cast<double>(cell) / cells.size();
+        tiles_[std::get<0>(cells[cell])][std::get<1>(cells[cell])]->type
+            = gradient.getValue(gradientPoint);
     }
 }
 

@@ -17,8 +17,8 @@ MapConstructor::MapConstructor(unsigned rows, unsigned columns,
         map_(rows, std::vector<Cell>(columns)),
         probabilityMap_(
             NoiseGenerator::generateHeightMap(rows, columns, (*generator)())
-                .foreach([] (double cell) { return 3 * cell; })
-                .foreach([] (double cell) { return cell + 3; })
+                .foreach([] (double cell) { return 6 * cell; })
+                .foreach([] (double cell) { return (cell > 0)? cell : 0; })
                 .foreach([] (double cell) { return std::exp2(cell); })
                 .foreach([] (double cell) { return std::round(cell); })),
         generator_(generator)
