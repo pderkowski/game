@@ -78,29 +78,20 @@ void MapConstructor::markCells(const std::vector<Cell*>& cells, Cell::Type type)
 std::vector<MapConstructor::Cell*> MapConstructor::findNeighbors(const Cell* cell) {
     std::vector<Cell*> neighbors;
 
-    if (cell->row > 0)
+    if (cell->row > 0) {
         neighbors.push_back(&map_[cell->row - 1][cell->column]);
+        neighbors.push_back(&map_[cell->row - 1][(cell->column + columns_ - 1) % columns_]);
+        neighbors.push_back(&map_[cell->row - 1][(cell->column + columns_ + 1) % columns_]);
+    }
 
-    if (cell->row > 0 && cell->column > 0)
-        neighbors.push_back(&map_[cell->row - 1][cell->column - 1]);
-
-    if (cell->row > 0 && cell->column < columns_ - 1)
-        neighbors.push_back(&map_[cell->row - 1][cell->column + 1]);
-
-    if (cell->row < rows_ - 1)
+    if (cell->row < rows_ - 1) {
         neighbors.push_back(&map_[cell->row + 1][cell->column]);
+        neighbors.push_back(&map_[cell->row + 1][(cell->column + columns_ - 1) % columns_]);
+        neighbors.push_back(&map_[cell->row + 1][(cell->column + columns_ + 1) % columns_]);
+    }
 
-    if (cell->row < rows_ - 1 && cell->column > 0)
-        neighbors.push_back(&map_[cell->row + 1][cell->column - 1]);
-
-    if (cell->row < rows_ - 1 && cell->column < columns_ - 1)
-        neighbors.push_back(&map_[cell->row + 1][cell->column + 1]);
-
-    if (cell->column > 0)
-        neighbors.push_back(&map_[cell->row][cell->column - 1]);
-
-    if (cell->row < columns_ - 1)
-        neighbors.push_back(&map_[cell->row][cell->column + 1]);
+    neighbors.push_back(&map_[cell->row][(cell->column + columns_ - 1) % columns_]);
+    neighbors.push_back(&map_[cell->row][(cell->column + columns_ + 1) % columns_]);
 
     return neighbors;
 }
