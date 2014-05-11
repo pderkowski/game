@@ -6,15 +6,13 @@
 #include <random>
 #include <memory>
 #include <vector>
-#include "noiseutils/noiseutils.h"
+#include "HeightMap.hpp"
 
 class NoiseGenerator {
 public:
-    typedef std::vector<std::vector<double>> NoiseMatrix;
-
     explicit NoiseGenerator(std::shared_ptr<std::default_random_engine> generator);
 
-    noise::utils::NoiseMap generateNoiseMap(unsigned rows, unsigned columns, double scale);
+    HeightMap generateHeightMap(unsigned rows, unsigned columns);
 
 private:
     std::shared_ptr<std::default_random_engine> generator_;

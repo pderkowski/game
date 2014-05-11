@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include "NoiseGenerator.hpp"
+#include "HeightMap.hpp"
 #include "noise/noise.h"
 #include "noiseutils/noiseutils.h"
 
@@ -10,20 +11,23 @@ NoiseGenerator::NoiseGenerator(std::shared_ptr<std::default_random_engine> gener
     : generator_(generator)
 { }
 
-noise::utils::NoiseMap NoiseGenerator::generateNoiseMap(unsigned rows, unsigned columns,
-        double scale) {
+HeightMap NoiseGenerator::generateHeightMap(unsigned rows, unsigned columns) {
     noise::module::Perlin perlinModule;
     perlinModule.SetSeed((*generator_)());
-    noise::module::ScaleBias scaledPerlinModule;
-    scaledPerlinModule.SetSourceModule(0, perlinModule);
-    scaledPerlinModule.SetBias(0);
-    scaledPerlinModule.SetScale(scale);
     noise::utils::NoiseMap noiseMap;
-    noise::utils::NoiseMapBuilderPlane heightMapBuilder;
-    heightMapBuilder.SetSourceModule(scaledPerlinModule);
-    heightMapBuilder.SetDestNoiseMap(noiseMap);
-    heightMapBuilder.SetDestSize(columns, rows);
-    heightMapBuilder.SetBounds(0.0, columns / 32.0, 0.0, rows / 32.0);
-    heightMapBuilder.Build();
-    return noiseMap;
+    noise::utils::NoiseMapBuilderPlane noiseMapBuilder;
+    noiseMapBuilder.SetSourceModule(perlinModule);
+    noiseMapBuilder.SetDestNoiseMap(noiseMap);
+    noiseMapBuilder.SetDestSize(columns, rows);
+    noiseMapBuilder.SetBounds(0.0, columns / 16.0, 0.0, rows / 16.0);
+    noiseMapBuilder.Build();
+
+    HeightMap result(rows, columns);
+    for (unsigned r = 0; r < rows; ++r) {
+        for (unsigned c = 0; c < columns; ++c) {
+            result[r][c] = noiseMap.GetValue(c, r);
+        }
+    }
+
+    return result;
 }

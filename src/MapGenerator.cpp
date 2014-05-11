@@ -7,16 +7,16 @@
 #include "MapConstructor.hpp"
 #include "MapGenerator.hpp"
 #include "NoiseGenerator.hpp"
-#include "noiseutils/noiseutils.h"
 
 MapModel MapGenerator::generateMap(int rows, int columns) {
     static auto generator = std::make_shared<std::default_random_engine>(
         std::chrono::system_clock::now().time_since_epoch().count());
 
     NoiseGenerator noiseGenerator(generator);
-    auto noiseMap = noiseGenerator.generateNoiseMap(rows, columns, 8);
+    auto heightMap = noiseGenerator.generateHeightMap(rows, columns);
+    heightMap.scale(8);
     // noiseGenerator.scale(noiseMatrix, -6, 6);
-    return MapModel(noiseMap,
+    return MapModel(heightMap,
         [] (double height) {
             if (height <= 0) {
                 return Tile::Type::Water;

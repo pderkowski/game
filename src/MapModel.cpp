@@ -4,10 +4,11 @@
 #include <memory>
 #include "MapModel.hpp"
 #include "Tile.hpp"
-#include "noiseutils/noiseutils.h"
+#include "HeightMap.hpp"
 
 MapModel::MapModel(int rowsNo, int columnsNo)
-        : rowsNo_(rowsNo), columnsNo_(columnsNo) {
+    : rowsNo_(rowsNo), columnsNo_(columnsNo)
+{
     for (int r = 0; r < rowsNo; ++r) {
         tiles_.push_back(std::vector<std::shared_ptr<Tile>>());
         for (int c = 0; c < columnsNo; ++c) {
@@ -17,11 +18,12 @@ MapModel::MapModel(int rowsNo, int columnsNo)
 }
 
 MapModel::MapModel(const HeightMap& heightMap, HeightToTileConverter converter)
-        : rowsNo_(heightMap.GetHeight()), columnsNo_(heightMap.GetWidth()) {
+    : rowsNo_(heightMap.getRowsNo()), columnsNo_(heightMap.getColumnsNo())
+{
     for (int r = 0; r < rowsNo_; ++r) {
         tiles_.push_back(std::vector<std::shared_ptr<Tile>>());
         for (int c = 0; c < columnsNo_; ++c) {
-            Tile t = Tile(r, c, converter(heightMap.GetValue(c, r)));
+            Tile t = Tile(r, c, converter(heightMap[r][c]));
             tiles_[r].push_back(std::make_shared<Tile>(t));
         }
     }
