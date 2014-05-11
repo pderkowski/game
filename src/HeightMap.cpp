@@ -1,6 +1,8 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <iostream>
 #include <vector>
+#include <functional>
 #include "HeightMap.hpp"
 
 HeightMap::HeightMap(unsigned rowsNo, unsigned columnsNo)
@@ -15,20 +17,13 @@ std::vector<double>& HeightMap::operator[] (unsigned row) {
     return map_[row];
 }
 
-void HeightMap::scale(double factor) {
+HeightMap& HeightMap::foreach(std::function<double(double)> transformation) {
     for (auto& row : map_) {
         for (auto& cell : row) {
-            cell *= factor;
+            cell = transformation(cell);
         }
     }
-}
-
-void HeightMap::rise(double delta) {
-    for (auto& row : map_) {
-        for (auto& cell : row) {
-            cell += delta;
-        }
-    }
+    return *this;
 }
 
 unsigned HeightMap::getRowsNo() const {

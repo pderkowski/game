@@ -1,19 +1,13 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#include <memory>
-#include <vector>
 #include "NoiseGenerator.hpp"
 #include "HeightMap.hpp"
 #include "noise/noise.h"
 #include "noiseutils/noiseutils.h"
 
-NoiseGenerator::NoiseGenerator(std::shared_ptr<std::default_random_engine> generator)
-    : generator_(generator)
-{ }
-
-HeightMap NoiseGenerator::generateHeightMap(unsigned rows, unsigned columns) {
+HeightMap NoiseGenerator::generateHeightMap(unsigned rows, unsigned columns, unsigned seed) {
     noise::module::Perlin perlinModule;
-    perlinModule.SetSeed((*generator_)());
+    perlinModule.SetSeed(seed);
     noise::utils::NoiseMap noiseMap;
     noise::utils::NoiseMapBuilderPlane noiseMapBuilder;
     noiseMapBuilder.SetSourceModule(perlinModule);

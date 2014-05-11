@@ -32,15 +32,14 @@ public:
     MapModel getMapModel() const;
 
 private:
-    std::pair<unsigned, unsigned> findContinentCenter(unsigned diameter);
-    std::vector<Cell*> findContinentSeeds(unsigned numberOfSeeds, unsigned diameter);
-    Cell* findSeed(const std::pair<unsigned, unsigned>& center, unsigned diameter);
+    Cell* findContinentSeed();
+    Cell* getRandomCellCloseToCenter();
     void markCells(const std::vector<Cell*>& cells, Cell::Type type);
     std::vector<Cell*> findNeighbors(const std::vector<Cell*>& cells);
     std::vector<Cell*> findNeighbors(const Cell* cell);
     bool isUnmarked(const Cell* cell) const;
     void removeMarked(std::vector<Cell*>& cells);
-    Pool<Cell> createBorder(const std::vector<MapConstructor::Cell*>& seeds);
+    Pool<Cell> createBorder(const Cell* seed);
 
     void assignTileTypes(MapModel& model) const;
     Tile::Type convertCellTypeToTileType(Cell::Type type) const;
@@ -48,6 +47,7 @@ private:
     unsigned rows_;
     unsigned columns_;
     std::vector<std::vector<Cell>> map_;
+    HeightMap probabilityMap_;
 
     std::shared_ptr<std::default_random_engine> generator_;
 };

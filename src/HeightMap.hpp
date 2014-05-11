@@ -3,6 +3,7 @@
 #ifndef HEIGHTMAP_HPP_
 #define HEIGHTMAP_HPP_
 
+#include <functional>
 #include <vector>
 
 class HeightMap {
@@ -12,8 +13,7 @@ public:
     const std::vector<double>& operator[] (unsigned row) const;
     std::vector<double>& operator[] (unsigned row);
 
-    void scale(double factor);
-    void rise(double delta);
+    HeightMap& foreach(std::function<double(double)> transformation);
 
     unsigned getRowsNo() const;
     unsigned getColumnsNo() const;

@@ -1,5 +1,6 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <iostream>
 #include <vector>
 #include <memory>
 #include "MapModel.hpp"
@@ -23,6 +24,7 @@ MapModel::MapModel(const HeightMap& heightMap, HeightToTileConverter converter)
     for (int r = 0; r < rowsNo_; ++r) {
         tiles_.push_back(std::vector<std::shared_ptr<Tile>>());
         for (int c = 0; c < columnsNo_; ++c) {
+            std::cout << heightMap[r][c] << "\n";
             Tile t = Tile(r, c, converter(heightMap[r][c]));
             tiles_[r].push_back(std::make_shared<Tile>(t));
         }

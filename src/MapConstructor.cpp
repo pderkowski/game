@@ -7,6 +7,7 @@
 #include <utility>
 #include "MapConstructor.hpp"
 #include "MapModel.hpp"
+#include "NoiseGenerator.hpp"
 #include "Tile.hpp"
 #include "Pool.hpp"
 
@@ -14,7 +15,14 @@ MapConstructor::MapConstructor(unsigned rows, unsigned columns,
     std::shared_ptr<std::default_random_engine> generator)
         : rows_(rows), columns_(columns),
         map_(rows, std::vector<Cell>(columns)),
-        generator_(generator) {
+        probabilityMap_(
+            NoiseGenerator::generateHeightMap(rows, columns, (*generator)())
+                .foreach([] (double cell) { return 3 * cell; })
+                .foreach([] (double cell) { return cell + 3; })
+                .foreach([] (double cell) { return std::exp2(cell); })
+                .foreach([] (double cell) { return std::round(cell); })),
+        generator_(generator)
+{
     for (unsigned r = 0; r < map_.size(); ++r) {
         for (unsigned c = 0; c < map_[r].size(); ++c) {
             map_[r][c].row = r;
@@ -25,10 +33,10 @@ MapConstructor::MapConstructor(unsigned rows, unsigned columns,
 }
 
 void MapConstructor::spawnContinent(unsigned continentSize) {
-    auto seeds = findContinentSeeds((*generator_)() % 3 + 2, sqrt(continentSize) / 2);
-    markCells(seeds, Cell::Type::Land);
-    auto border = createBorder(seeds);
-    int cellsToFind = continentSize - seeds.size();
+    auto seed = findContinentSeed();
+    seed->type = Cell::Type::Land;
+    auto border = createBorder(seed);
+    int cellsToFind = continentSize - 1;
 
     while (cellsToFind > 0 && !border.isEmpty()) {
         auto cell = border.getRandom();
@@ -38,40 +46,28 @@ void MapConstructor::spawnContinent(unsigned continentSize) {
         auto neighbors = findNeighbors(cell);
         removeMarked(neighbors);
 
-        for (auto neighbor : neighbors)
-            poolUtils::increaseWeight(border, neighbor);
+        for (auto neighbor : neighbors) {
+            if (border.contains(neighbor))
+                border.setWeight(neighbor, 2 * border.getWeight(neighbor));
+            else
+                border.insert(neighbor, probabilityMap_[neighbor->row][neighbor->column]);
+        }
     }
 
     markCells(border.toVector(), Cell::Type::Water);
 }
 
-std::vector<MapConstructor::Cell*> MapConstructor::findContinentSeeds(unsigned numberOfSeeds,
-        unsigned diameter) {
-    std::vector<MapConstructor::Cell*> seeds;
+MapConstructor::Cell* MapConstructor::findContinentSeed() {
+    Cell* res = getRandomCellCloseToCenter();
 
-    auto center = findContinentCenter(diameter);
+    while (res->type != Cell::Type::Unmarked)
+        res = getRandomCellCloseToCenter();
 
-    for (unsigned i = 0; i < numberOfSeeds; ++i) {
-        Cell* seed = findSeed(center, diameter);
-        if (std::find(seeds.begin(), seeds.end(), seed) == seeds.end()) {
-            seeds.push_back(seed);
-        }
-    }
-
-    return seeds;
+    return res;
 }
 
-std::pair<unsigned, unsigned> MapConstructor::findContinentCenter(unsigned diameter) {
-    unsigned row = rows_ / 2 + ((*generator_)() % (2 * diameter)) - diameter;
-    unsigned col = ((*generator_)() % (columns_ - 2 * diameter)) + diameter;
-    return std::make_pair(row, col);
-}
-
-MapConstructor::Cell* MapConstructor::findSeed(const std::pair<unsigned, unsigned>& center,
-        unsigned diameter) {
-    unsigned row = center.first + (*generator_)() % (2 * diameter) - diameter;
-    unsigned col = center.second + (*generator_)() % (2 * diameter) - diameter;
-    return &map_[row][col];
+MapConstructor::Cell* MapConstructor::getRandomCellCloseToCenter() {
+    return &map_[(*generator_)() % (rows_ / 2) + (rows_ / 4)][(*generator_)() % columns_];
 }
 
 void MapConstructor::markCells(const std::vector<Cell*>& cells, Cell::Type type) {
@@ -152,17 +148,14 @@ Tile::Type MapConstructor::convertCellTypeToTileType(Cell::Type type) const {
     }
 }
 
-Pool<MapConstructor::Cell> MapConstructor::createBorder(
-        const std::vector<MapConstructor::Cell*>& seeds) {
+Pool<MapConstructor::Cell> MapConstructor::createBorder(const Cell* seed) {
     Pool<Cell> border(generator_);
 
-    for (auto seed : seeds) {
-        auto neighbors = findNeighbors(seed);
-        removeMarked(neighbors);
+    auto neighbors = findNeighbors(seed);
+    removeMarked(neighbors);
 
-        for (auto neighbor : neighbors)
-            poolUtils::increaseWeight(border, neighbor);
-    }
+    for (auto neighbor : neighbors)
+        border.insert(neighbor, probabilityMap_[neighbor->row][neighbor->column]);
 
     return border;
 }

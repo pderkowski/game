@@ -97,7 +97,7 @@ inline void Pool<T>::setWeight(T* key, unsigned weight) {
 
 template <class T>
 inline bool Pool<T>::isEmpty() const {
-    return weights_.empty();
+    return totalWeight_ == 0;
 }
 
 template <class T>
@@ -110,22 +110,6 @@ inline std::vector<T*> Pool<T>::toVector() const {
 
     return res;
 }
-
-
-namespace poolUtils {
-
-template <class T>
-void increaseWeight(Pool<T>& pool, T* key, unsigned initialWeight = 1,
-        unsigned increaseFactor = 2) {
-    if (pool.contains(key)) {
-        unsigned weight = pool.getWeight(key);
-        pool.setWeight(key, weight * increaseFactor);
-    } else {
-        pool.insert(key, initialWeight);
-    }
-}
-
-}  // namespace utils
 
 #endif  // POOL_HPP_
 
