@@ -1,5 +1,6 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <iostream>
 #include <cmath>
 #include <algorithm>
 #include <map>
@@ -34,15 +35,13 @@ void MapDrawer::draw() const {
     const float yShift = sprite.getLocalBounds().height + 1;
 
     for (int r = 0; r < model_->getRowsNo(); ++r) {
-        for (int c = 0; c < model_->getColumnsNo(); ++c) {
+        for (int c = 0; c < 2 * model_->getColumnsNo(); ++c) {
             if (model_->getTile(r, c)->isVisible) {
                 sprite.setTexture(tileTextures_.at(model_->getTile(r, c)->type));
+                sprite.setPosition(c * xShift, r * yShift);
                 target_->draw(sprite);
             }
-
-            sprite.move(xShift, 0);
         }
-        sprite.move(-(model_->getColumnsNo() * xShift), yShift);
     }
 }
 
@@ -60,26 +59,25 @@ std::shared_ptr<Tile> MapDrawer::getObjectByPosition(const sf::Vector2i& positio
         return std::shared_ptr<Tile>();
 }
 
-void MapDrawer::scrollView(float x, float y) {
+void MapDrawer::scrollView(int x, int y) {
     mapView_.move(boundShift(x, y));
     target_->setView(mapView_);
 }
 
-sf::Vector2f MapDrawer::boundShift(float x, float y) const {
+sf::Vector2f MapDrawer::boundShift(int x, int y) const {
     sf::Vector2f safeShift;
 
-    sf::FloatRect bounds(0, 0, getMapWidth(tileSize_), getMapHeight(tileSize_));
-    sf::FloatRect displayed(mapView_.getCenter().x - mapView_.getSize().x / 2,
+    sf::IntRect bounds(0, 0, getMapWidth(tileSize_), getMapHeight(tileSize_));
+    sf::IntRect displayed(mapView_.getCenter().x - mapView_.getSize().x / 2,
         mapView_.getCenter().y - mapView_.getSize().y / 2,
         mapView_.getSize().x, mapView_.getSize().y);
 
-    float maxLeftShiftPossible = bounds.left - displayed.left;
-    float maxRightShiftPossible = bounds.left + bounds.width - displayed.left - displayed.width;
-    float maxTopShiftPossible = bounds.top - displayed.top;
-    float maxBottomShiftPossible = bounds.top + bounds.height - displayed.top - displayed.height;
+    int maxTopShiftPossible = bounds.top - displayed.top;
+    int maxBottomShiftPossible = bounds.top + bounds.height - displayed.top - displayed.height;
 
-    safeShift.x = (x < 0)? std::min(std::max(x, maxLeftShiftPossible), maxRightShiftPossible)
-        : std::max(std::min(x, maxRightShiftPossible), maxLeftShiftPossible);
+    safeShift.x
+        = static_cast<int>((displayed.left + x + getMapWidth(tileSize_)) % getMapWidth(tileSize_))
+            - displayed.left;
     safeShift.y = (y < 0)? std::min(std::max(y, maxTopShiftPossible), maxBottomShiftPossible)
         : std::max(std::min(y, maxBottomShiftPossible), maxTopShiftPossible);
 
@@ -118,16 +116,16 @@ sf::Vector2f MapDrawer::getCoordsAfterZoom(int delta, const sf::Vector2i& mouseP
         yPositionFraction * getMapHeight(tileSize_ + delta));
 }
 
-float MapDrawer::getMapWidth(int tileSize) const {
+unsigned MapDrawer::getMapWidth(int tileSize) const {
     return (model_->getColumnsNo() - 1) + model_->getColumnsNo() * tileSize;
 }
 
-float MapDrawer::getMapHeight(int tileSize) const {
+unsigned MapDrawer::getMapHeight(int tileSize) const {
     return (model_->getRowsNo() - 1) + model_->getRowsNo() * tileSize;
 }
 
 int MapDrawer::mapXCoordsToColumn(int x) const {
-    int column = floor(x / (tileSize_ + 1));
+    int column = floor((x % getMapWidth(tileSize_)) / (tileSize_ + 1));
 
     if (column < 0 || column >= model_->getColumnsNo())
         return MapModel::OutOfBounds;
@@ -136,7 +134,7 @@ int MapDrawer::mapXCoordsToColumn(int x) const {
 }
 
 int MapDrawer::mapYCoordsToRow(int y) const {
-    int row = floor(y / (tileSize_ + 1));
+    int row = floor((y % getMapHeight(tileSize_)) / (tileSize_ + 1));
 
     if (row < 0 || row >= model_->getRowsNo())
         return MapModel::OutOfBounds;
@@ -153,10 +151,12 @@ sf::IntRect MapDrawer::getDisplayedTilesRect() const {
     int right = mapXCoordsToColumn(target_->mapPixelToCoords(rightBottom).x);
     int bottom = mapYCoordsToRow(target_->mapPixelToCoords(rightBottom).y);
 
-    left = (left == MapModel::OutOfBounds)? 0 : left;
     top = (top == MapModel::OutOfBounds)? 0 : top;
-    right = (right == MapModel::OutOfBounds)? (model_->getColumnsNo() - 1) : right;
     bottom = (bottom == MapModel::OutOfBounds)? (model_->getRowsNo() - 1) : bottom;
 
-    return sf::IntRect(left, top, right - left, bottom - top);
+    if (left < right) {
+        return sf::IntRect(left, top, right - left + 1, bottom - top + 1);
+    } else {
+        return sf::IntRect(left, top, model_->getColumnsNo() - left + right, bottom - top + 1);
+    }
 }

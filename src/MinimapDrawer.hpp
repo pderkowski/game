@@ -15,14 +15,16 @@ public:
     MinimapDrawer(std::shared_ptr<const MapModel>, std::shared_ptr<sf::RenderTarget> target,
         Resources& resources);
 
-    void createMinimap();
     void updateView(const sf::IntRect& bounds);
 
     void draw() const;
 
+    void rebuild();
+
 private:
     sf::RectangleShape createBorders();
     sf::RectangleShape createView();
+    sf::Texture createBackground();
 
     sf::Image createMinimapImage();
     sf::Uint8* createMinimapPixels();
@@ -37,12 +39,12 @@ private:
     int width_;
     int height_;
 
+    std::map<Tile::Type, sf::Color> tileColors_;
+
     sf::RectangleShape borders_;
     sf::RectangleShape view_;
-    sf::Texture minimapTexture_;
-    sf::Sprite minimapSprite_;
-
-    std::map<Tile::Type, sf::Color> tileColors_;
+    sf::Texture background_;
+    sf::RenderTexture minimap_;
 };
 
 #endif  // MINIMAPDRAWER_HPP_

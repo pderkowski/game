@@ -24,8 +24,8 @@ public:
     void handleMouseMoved(const sf::Event& event);
 
 private:
-    float calculateHorizontalShift(float mouseXPosition) const;
-    float calculateVerticalShift(float mouseYPosition) const;
+    int calculateHorizontalShift(float mouseXPosition) const;
+    int calculateVerticalShift(float mouseYPosition) const;
 
     std::shared_ptr<MapModel> model_;
     MapDrawer mapDrawer_;

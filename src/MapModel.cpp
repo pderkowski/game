@@ -59,9 +59,9 @@ int MapModel::getColumnsNo() const {
 }
 
 std::shared_ptr<const Tile> MapModel::getTile(int row, int column) const {
-    return tiles_[row][column];
+    return tiles_[row][column % columnsNo_];
 }
 
 std::shared_ptr<Tile> MapModel::getTile(int row, int column) {
-    return tiles_[row][column];
+    return tiles_[row][column % columnsNo_];
 }

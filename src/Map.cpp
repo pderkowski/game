@@ -23,7 +23,7 @@ void Map::draw() const {
 
 void Map::generateMap() {
     *model_ = MapGenerator::generateMap(model_->getRowsNo(), model_->getColumnsNo());
-    minimapDrawer_.createMinimap();
+    minimapDrawer_.rebuild();
     minimapDrawer_.updateView(mapDrawer_.getDisplayedTilesRect());
 }
 
@@ -48,7 +48,7 @@ void Map::handleMouseMoved(const sf::Event& event)  {
     minimapDrawer_.updateView(mapDrawer_.getDisplayedTilesRect());
 }
 
-float Map::calculateHorizontalShift(float mouseXPosition) const {
+int Map::calculateHorizontalShift(float mouseXPosition) const {
     const int scrollMarginSize = 20;
 
     if (mouseXPosition < scrollMarginSize) {
@@ -60,7 +60,7 @@ float Map::calculateHorizontalShift(float mouseXPosition) const {
     }
 }
 
-float Map::calculateVerticalShift(float mouseYPosition) const {
+int Map::calculateVerticalShift(float mouseYPosition) const {
     const int scrollMarginSize = 20;
 
     if (mouseYPosition < scrollMarginSize) {
