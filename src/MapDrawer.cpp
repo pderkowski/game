@@ -21,7 +21,8 @@ MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::Render
             { Tile::Type::Plains, resources.loadTexture("tiles/plains.png") },
             { Tile::Type::Mountains, resources.loadTexture("tiles/mountains.png") }
         },
-        offset_(10, 10), tileSize_(16) {
+        tileSize_(16)
+{
     target_->setView(mapView_);
 }
 
@@ -31,8 +32,6 @@ void MapDrawer::draw() const {
 
     const float xShift = sprite.getLocalBounds().width + 1;
     const float yShift = sprite.getLocalBounds().height + 1;
-
-    sprite.move(offset_);
 
     for (int r = 0; r < model_->getRowsNo(); ++r) {
         for (int c = 0; c < model_->getColumnsNo(); ++c) {
@@ -120,15 +119,15 @@ sf::Vector2f MapDrawer::getCoordsAfterZoom(int delta, const sf::Vector2i& mouseP
 }
 
 float MapDrawer::getMapWidth(int tileSize) const {
-    return 2 * offset_.x + (model_->getColumnsNo() - 1) + model_->getColumnsNo() * tileSize;
+    return (model_->getColumnsNo() - 1) + model_->getColumnsNo() * tileSize;
 }
 
 float MapDrawer::getMapHeight(int tileSize) const {
-    return 2 * offset_.y + (model_->getRowsNo() - 1) + model_->getRowsNo() * tileSize;
+    return (model_->getRowsNo() - 1) + model_->getRowsNo() * tileSize;
 }
 
 int MapDrawer::mapXCoordsToColumn(int x) const {
-    int column = floor((x - offset_.x) / (tileSize_ + 1));
+    int column = floor(x / (tileSize_ + 1));
 
     if (column < 0 || column >= model_->getColumnsNo())
         return MapModel::OutOfBounds;
@@ -137,7 +136,7 @@ int MapDrawer::mapXCoordsToColumn(int x) const {
 }
 
 int MapDrawer::mapYCoordsToRow(int y) const {
-    int row = floor((y - offset_.y) / (tileSize_ + 1));
+    int row = floor(y / (tileSize_ + 1));
 
     if (row < 0 || row >= model_->getRowsNo())
         return MapModel::OutOfBounds;
@@ -146,9 +145,8 @@ int MapDrawer::mapYCoordsToRow(int y) const {
 }
 
 sf::IntRect MapDrawer::getDisplayedTilesRect() const {
-    sf::Vector2i leftTop(offset_.x + 1, offset_.y + 1);
-    sf::Vector2i rightBottom(target_->getSize().x - offset_.x - 1,
-        target_->getSize().y - offset_.y - 1);
+    sf::Vector2i leftTop(0, 0);
+    sf::Vector2i rightBottom(target_->getSize().x - 1, target_->getSize().y - 1);
 
     int left = mapXCoordsToColumn(target_->mapPixelToCoords(leftTop).x);
     int top = mapYCoordsToRow(target_->mapPixelToCoords(leftTop).y);

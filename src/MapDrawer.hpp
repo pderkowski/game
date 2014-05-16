@@ -41,7 +41,6 @@ private:
 
     sf::View mapView_;
     std::map<Tile::Type, sf::Texture> tileTextures_;
-    sf::Vector2f offset_;
 
     int tileSize_;
 };

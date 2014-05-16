@@ -18,13 +18,13 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
     auto probabilityMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)());
     Gradient gradient;
     gradient.addPoint(0.0, Tile::Type::Water);
-    gradient.addPoint(0.7, Tile::Type::Plains);
+    gradient.addPoint(0.75, Tile::Type::Plains);
     gradient.addPoint(0.96, Tile::Type::Hills);
     gradient.addPoint(0.995, Tile::Type::Mountains);
     return MapModel(probabilityMap, gradient);
 
     // MapConstructor constructor(rows, columns, generator);
-    // constructor.spawnContinent(1000);
+    // constructor.spawnContinent(2000);
     // constructor.spawnContinent(600);
     // return constructor.getMapModel();
 }
