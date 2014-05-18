@@ -9,13 +9,15 @@
 #include "MapDrawer.hpp"
 #include "Resources.hpp"
 #include "Tile.hpp"
+#include "Coordinates.hpp"
+#include "Utils.hpp"
 
 MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::RenderTarget> target,
     Resources& resources)
         : model_(model),
         target_(target),
         mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y)),
-        tileTextures_{  // NOLINT
+        tileTextures_{
             { Tile::Type::Empty, resources.loadTexture("tiles/empty.png") },
             { Tile::Type::Water, resources.loadTexture("tiles/water.png") },
             { Tile::Type::Hills, resources.loadTexture("tiles/hills.png") },
@@ -36,9 +38,12 @@ void MapDrawer::draw() const {
 
     for (int r = 0; r < model_->getRowsNo(); ++r) {
         for (int c = 0; c < 2 * model_->getColumnsNo(); ++c) {
-            if (model_->getTile(r, c)->isVisible) {
-                sprite.setTexture(tileTextures_.at(model_->getTile(r, c)->type));
-                sprite.setPosition(c * xShift, r * yShift);
+            coords::IsometricPoint tileIsometricCoords{ c, r };
+            auto tile = model_->getTile(tileIsometricCoords);
+            if (tile->isVisible) {
+                auto spriteCoords = coords::cartesian_isometric.invert(tileIsometricCoords);
+                sprite.setTexture(tileTextures_.at(tile->type));
+                sprite.setPosition(utils::positiveModulo(spriteCoords.x / 2 * xShift, (2 * getMapWidth(tileSize_) + 2)), spriteCoords.y * yShift);
                 target_->draw(sprite);
             }
         }
@@ -54,7 +59,7 @@ std::shared_ptr<Tile> MapDrawer::getObjectByPosition(const sf::Vector2i& positio
     int row = mapYCoordsToRow(target_->mapPixelToCoords(position).y);
 
     if (column != MapModel::OutOfBounds && row != MapModel::OutOfBounds)
-        return model_->getTile(row, column);
+        return model_->getTile(coords::IsometricPoint{ column, row });
     else
         return std::shared_ptr<Tile>();
 }

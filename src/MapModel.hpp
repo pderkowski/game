@@ -9,6 +9,7 @@
 #include "Tile.hpp"
 #include "Gradient.hpp"
 #include "HeightMap.hpp"
+#include "Coordinates.hpp"
 
 class MapModel {
 public:
@@ -21,8 +22,8 @@ public:
     int getRowsNo() const;
     int getColumnsNo() const;
 
-    std::shared_ptr<const Tile> getTile(int row, int column) const;
-    std::shared_ptr<Tile> getTile(int row, int column);
+    std::shared_ptr<const Tile> getTile(const coords::IsometricPoint& p) const;
+    std::shared_ptr<Tile> getTile(const coords::IsometricPoint& p);
 
     static const int OutOfBounds = -1;
 

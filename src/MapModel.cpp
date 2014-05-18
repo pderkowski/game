@@ -9,26 +9,27 @@
 #include "Tile.hpp"
 #include "HeightMap.hpp"
 #include "Gradient.hpp"
+#include "Coordinates.hpp"
+#include "Utils.hpp"
 
 MapModel::MapModel(int rowsNo, int columnsNo)
     : rowsNo_(rowsNo), columnsNo_(columnsNo)
 {
     for (int r = 0; r < rowsNo; ++r) {
-        tiles_.push_back(std::vector<std::shared_ptr<Tile>>());
+        tiles_.push_back(std::vector<std::shared_ptr<Tile>>(columnsNo));
         for (int c = 0; c < columnsNo; ++c) {
-            tiles_[r].push_back(std::make_shared<Tile>(r, c));
+            coords::IsometricPoint p{ c, r };
+            tiles_[r][c] = std::make_shared<Tile>(coords::isometric_rotated.convert(p));
         }
     }
 }
 
 MapModel::MapModel(const HeightMap& heightMap, HeightToTileConverter converter)
-    : rowsNo_(heightMap.getRowsNo()), columnsNo_(heightMap.getColumnsNo())
+    : MapModel(heightMap.getRowsNo(), heightMap.getColumnsNo())
 {
     for (int r = 0; r < rowsNo_; ++r) {
-        tiles_.push_back(std::vector<std::shared_ptr<Tile>>());
         for (int c = 0; c < columnsNo_; ++c) {
-            Tile t = Tile(r, c, converter(heightMap(r, c)));
-            tiles_[r].push_back(std::make_shared<Tile>(t));
+           tiles_[r][c]->type = converter(heightMap(r, c));
         }
     }
 }
@@ -57,10 +58,12 @@ int MapModel::getColumnsNo() const {
     return columnsNo_;
 }
 
-std::shared_ptr<const Tile> MapModel::getTile(int row, int column) const {
-    return tiles_[row][column % columnsNo_];
+std::shared_ptr<const Tile> MapModel::getTile(const coords::IsometricPoint& p) const {
+    return tiles_[p.y][utils::positiveModulo(p.x, columnsNo_)];
 }
 
-std::shared_ptr<Tile> MapModel::getTile(int row, int column) {
-    return tiles_[row][column % columnsNo_];
+std::shared_ptr<Tile> MapModel::getTile(const coords::IsometricPoint& p) {
+    return tiles_[p.y][utils::positiveModulo(p.x, columnsNo_)];
 }
+
+

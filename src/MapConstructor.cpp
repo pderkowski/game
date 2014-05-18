@@ -10,8 +10,9 @@
 #include "NoiseGenerator.hpp"
 #include "Tile.hpp"
 #include "Pool.hpp"
+#include "Coordinates.hpp"
 
-MapConstructor::MapConstructor(unsigned rows, unsigned columns,
+MapConstructor::MapConstructor(int rows, int columns,
     std::shared_ptr<std::default_random_engine> generator)
         : rows_(rows), columns_(columns),
         map_(rows, std::vector<Cell>(columns)),
@@ -113,7 +114,7 @@ bool MapConstructor::isUnmarked(const Cell* cell) const {
 
 void MapConstructor::removeMarked(std::vector<Cell*>& cells) {
     auto removedIt = std::remove_if(cells.begin(), cells.end(),
-        [&](const Cell* cell) { return !isUnmarked(cell); }); //NOLINT
+        [&](const Cell* cell) { return !isUnmarked(cell); });
     cells.erase(removedIt, cells.end());
 }
 
@@ -124,9 +125,9 @@ MapModel MapConstructor::getMapModel() const {
 }
 
 void MapConstructor::assignTileTypes(MapModel& model) const {
-    for (unsigned r = 0; r < rows_; ++r) {
-        for (unsigned c = 0; c < columns_; ++c) {
-            model.getTile(r, c)->type = convertCellTypeToTileType(map_[r][c].type);
+    for (int r = 0; r < rows_; ++r) {
+        for (int c = 0; c < columns_; ++c) {
+            model.getTile(coords::IsometricPoint{ c, r })->type = convertCellTypeToTileType(map_[r][c].type);
         }
     }
 }

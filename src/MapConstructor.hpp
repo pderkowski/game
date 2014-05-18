@@ -20,13 +20,13 @@ private:
             Land
         };
 
-        unsigned row;
-        unsigned column;
+        int row;
+        int column;
         Type type;
     };
 
 public:
-    MapConstructor(unsigned rows, unsigned columns,
+    MapConstructor(int rows, int columns,
         std::shared_ptr<std::default_random_engine> generator);
     void spawnContinent(unsigned continentSize);
     MapModel getMapModel() const;
@@ -44,8 +44,8 @@ private:
     void assignTileTypes(MapModel& model) const;
     Tile::Type convertCellTypeToTileType(Cell::Type type) const;
 
-    unsigned rows_;
-    unsigned columns_;
+    int rows_;
+    int columns_;
     std::vector<std::vector<Cell>> map_;
     HeightMap probabilityMap_;
 

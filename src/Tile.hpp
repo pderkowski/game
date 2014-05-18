@@ -3,6 +3,8 @@
 #ifndef TILE_HPP_
 #define TILE_HPP_
 
+#include "Coordinates.hpp"
+
 class Tile {
 public:
     enum Type {
@@ -14,13 +16,12 @@ public:
         NumberOfTileTypes  // this has to be the last one in this enum
     };
 
-    Tile(int row, int column);
-    Tile(int row, int column, Type type);
+    Tile(const coords::RotatedPoint& coordinates);
+    Tile(const coords::RotatedPoint& coordinates, Type type);
 
     void toggleVisibility();
 
-    int row;
-    int column;
+    coords::RotatedPoint coordinates;
     Type type;
 
     bool isVisible;

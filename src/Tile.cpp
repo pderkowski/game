@@ -1,13 +1,14 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include "Tile.hpp"
+#include "Coordinates.hpp"
 
-Tile::Tile(int row, int column)
-    : row(row), column(column), type(Type::Empty), isVisible(true)
+Tile::Tile(const coords::RotatedPoint& coordinates)
+    : coordinates(coordinates), type(Type::Empty), isVisible(true)
 { }
 
-Tile::Tile(int row, int column, Type type)
-    : row(row), column(column), type(type), isVisible(true)
+Tile::Tile(const coords::RotatedPoint& coordinates, Type type)
+    : coordinates(coordinates), type(type), isVisible(true)
 { }
 
 void Tile::toggleVisibility() {

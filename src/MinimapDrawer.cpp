@@ -8,6 +8,7 @@
 #include "Resources.hpp"
 #include "MinimapDrawer.hpp"
 #include "Tile.hpp"
+#include "Coordinates.hpp"
 
 MinimapDrawer::MinimapDrawer(std::shared_ptr<const MapModel> model,
     std::shared_ptr<sf::RenderTarget> target,
@@ -94,7 +95,7 @@ sf::Uint8* MinimapDrawer::createMinimapPixels() {
 }
 
 sf::Color MinimapDrawer::getColorFromModel(int row, int column) const {
-    return tileColors_.at(model_->getTile(row, column)->type);
+    return tileColors_.at(model_->getTile(coords::IsometricPoint{ column, row })->type);
 }
 
 void MinimapDrawer::draw() const {
