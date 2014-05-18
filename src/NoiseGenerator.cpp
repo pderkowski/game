@@ -1,9 +1,12 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <iostream>
 #include "NoiseGenerator.hpp"
 #include "HeightMap.hpp"
 #include "noise/noise.h"
 #include "noiseutils/noiseutils.h"
+#include "Coordinates.hpp"
+#include "Utils.hpp"
 
 HeightMap NoiseGenerator::generateHeightMap(unsigned rows, unsigned columns, unsigned seed) {
     noise::module::Perlin perlinModule;
@@ -13,14 +16,16 @@ HeightMap NoiseGenerator::generateHeightMap(unsigned rows, unsigned columns, uns
     noise::utils::NoiseMapBuilderCylinder noiseMapBuilder;
     noiseMapBuilder.SetSourceModule(perlinModule);
     noiseMapBuilder.SetDestNoiseMap(noiseMap);
-    noiseMapBuilder.SetDestSize(columns, rows);
+    noiseMapBuilder.SetDestSize(2 * columns, rows);
     noiseMapBuilder.SetBounds(-180.0, 180.0, 0.0, rows / 20.0);
     noiseMapBuilder.Build();
 
     HeightMap result(rows, columns);
     for (unsigned r = 0; r < rows; ++r) {
         for (unsigned c = 0; c < columns; ++c) {
-            result(r, c) = noiseMap.GetValue(c, r);
+            auto p = coords::cartesian_isometric.invert(
+                coords::IsometricPoint{ static_cast<int>(c), static_cast<int>(r) });
+            result(r, c) = noiseMap.GetValue(::utils::positiveModulo(p.x, 2 * columns), p.y);
         }
     }
 
