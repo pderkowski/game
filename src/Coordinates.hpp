@@ -5,7 +5,7 @@
 
 #include "Converter.hpp"
 
-namespace coordinates {
+namespace coords {
     struct CartesianPoint {
         int x;
         int y;
@@ -24,6 +24,6 @@ namespace coordinates {
     extern const Converter<CartesianPoint, IsometricPoint> cartesian_isometric;
     extern const Converter<IsometricPoint, RotatedPoint> isometric_rotated;
     extern const Converter<RotatedPoint, CartesianPoint> rotated_cartesian;
-}  // namespace coordinates
+}  // namespace coords
 
 #endif  // COORDINATES_HPP_

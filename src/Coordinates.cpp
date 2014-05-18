@@ -5,9 +5,9 @@
 #include "Coordinates.hpp"
 #include "Converter.hpp"
 
-using namespace coordinates;
+using namespace coords;
 
-const Converter<CartesianPoint, IsometricPoint> coordinates::cartesian_isometric(
+const Converter<CartesianPoint, IsometricPoint> coords::cartesian_isometric(
     [] (const CartesianPoint& car) {
         return IsometricPoint{ std::lrint(car.x * 0.5 - car.y * 0.5), std::lrint(car.y) };
     },
@@ -16,7 +16,7 @@ const Converter<CartesianPoint, IsometricPoint> coordinates::cartesian_isometric
     }
 );
 
-const Converter<IsometricPoint, RotatedPoint> coordinates::isometric_rotated(
+const Converter<IsometricPoint, RotatedPoint> coords::isometric_rotated(
     [] (const IsometricPoint& iso) {
         return RotatedPoint{ std::lrint(iso.x), std::lrint(iso.x + iso.y) };
     },
@@ -25,7 +25,7 @@ const Converter<IsometricPoint, RotatedPoint> coordinates::isometric_rotated(
     }
 );
 
-const Converter<RotatedPoint, CartesianPoint> coordinates::rotated_cartesian(
+const Converter<RotatedPoint, CartesianPoint> coords::rotated_cartesian(
     [] (const RotatedPoint& rot) {
         return CartesianPoint{ std::lrint(rot.x + rot.y), std::lrint(rot.y - rot.x) };
     },
