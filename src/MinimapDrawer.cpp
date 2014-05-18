@@ -68,7 +68,7 @@ sf::Image MinimapDrawer::createMinimapImage() {
         image.create(width_, height_, pixels);
         delete[] pixels;
         return image;
-    } catch (...) {  // NOLINT
+    } catch (...) {
         delete[] pixels;
         throw;
     }
@@ -95,7 +95,8 @@ sf::Uint8* MinimapDrawer::createMinimapPixels() {
 }
 
 sf::Color MinimapDrawer::getColorFromModel(int row, int column) const {
-    return tileColors_.at(model_->getTile(coords::IsometricPoint{ column, row })->type);
+    auto p = coords::cartesian_isometric.convert(coords::CartesianPoint{ 2 * column, row });
+    return tileColors_.at(model_->getTile(p)->type);
 }
 
 void MinimapDrawer::draw() const {
