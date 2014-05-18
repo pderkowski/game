@@ -20,7 +20,7 @@ HeightMap NoiseGenerator::generateHeightMap(unsigned rows, unsigned columns, uns
     HeightMap result(rows, columns);
     for (unsigned r = 0; r < rows; ++r) {
         for (unsigned c = 0; c < columns; ++c) {
-            result[r][c] = noiseMap.GetValue(c, r);
+            result(r, c) = noiseMap.GetValue(c, r);
         }
     }
 

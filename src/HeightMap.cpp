@@ -10,12 +10,12 @@ HeightMap::HeightMap(unsigned rowsNo, unsigned columnsNo)
     : rowsNo_(rowsNo), columnsNo_(columnsNo), map_(rowsNo, std::vector<double>(columnsNo))
 { }
 
-const std::vector<double>& HeightMap::operator[] (unsigned row) const {
-    return map_[row];
+const double& HeightMap::operator() (unsigned row, unsigned column) const {
+    return map_[row][column];
 }
 
-std::vector<double>& HeightMap::operator[] (unsigned row) {
-    return map_[row];
+double& HeightMap::operator() (unsigned row, unsigned column) {
+    return map_[row][column];
 }
 
 HeightMap& HeightMap::foreach(std::function<double(double)> transformation) {

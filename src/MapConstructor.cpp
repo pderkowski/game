@@ -50,7 +50,7 @@ void MapConstructor::spawnContinent(unsigned continentSize) {
             if (border.contains(neighbor))
                 border.setWeight(neighbor, 2 * border.getWeight(neighbor));
             else
-                border.insert(neighbor, probabilityMap_[neighbor->row][neighbor->column]);
+                border.insert(neighbor, probabilityMap_(neighbor->row, neighbor->column));
         }
     }
 
@@ -146,7 +146,7 @@ Pool<MapConstructor::Cell> MapConstructor::createBorder(const Cell* seed) {
     removeMarked(neighbors);
 
     for (auto neighbor : neighbors)
-        border.insert(neighbor, probabilityMap_[neighbor->row][neighbor->column]);
+        border.insert(neighbor, probabilityMap_(neighbor->row, neighbor->column));
 
     return border;
 }

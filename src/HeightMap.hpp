@@ -11,8 +11,8 @@ class HeightMap {
 public:
     HeightMap(unsigned rowsNo, unsigned columnsNo);
 
-    const std::vector<double>& operator[] (unsigned row) const;
-    std::vector<double>& operator[] (unsigned row);
+    const double& operator() (unsigned row, unsigned column) const;
+    double& operator() (unsigned row, unsigned column);
 
     HeightMap& foreach(std::function<double(double)> transformation);
 
