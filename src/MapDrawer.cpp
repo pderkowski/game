@@ -30,11 +30,10 @@ MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::Render
 }
 
 void MapDrawer::draw() const {
-    sf::Sprite sprite;
-    sprite.setTextureRect(sf::IntRect(0, 0, tileSize_, tileSize_));
+    sf::CircleShape sprite(tileSize_ / 2, 4);
 
-    const float xShift = sprite.getLocalBounds().width + 1;
-    const float yShift = sprite.getLocalBounds().height + 1;
+    const float xShift = sprite.getLocalBounds().width / 2;
+    const float yShift = sprite.getLocalBounds().height / 2;
 
     for (int r = 0; r < model_->getRowsNo(); ++r) {
         for (int c = 0; c < 2 * model_->getColumnsNo(); ++c) {
@@ -42,8 +41,8 @@ void MapDrawer::draw() const {
             auto tile = model_->getTile(tileIsometricCoords);
             if (tile->isVisible) {
                 auto spriteCoords = coords::cartesian_isometric.invert(tileIsometricCoords);
-                sprite.setTexture(tileTextures_.at(tile->type));
-                sprite.setPosition(utils::positiveModulo(spriteCoords.x / 2 * xShift, (2 * getMapWidth(tileSize_) + 2)), spriteCoords.y * yShift);
+                sprite.setTexture(&tileTextures_.at(tile->type));
+                sprite.setPosition(utils::positiveModulo(spriteCoords.x * xShift, 2 * getMapWidth(tileSize_)), spriteCoords.y * yShift);
                 target_->draw(sprite);
             }
         }
@@ -122,11 +121,11 @@ sf::Vector2f MapDrawer::getCoordsAfterZoom(int delta, const sf::Vector2i& mouseP
 }
 
 unsigned MapDrawer::getMapWidth(int tileSize) const {
-    return (model_->getColumnsNo() - 1) + model_->getColumnsNo() * tileSize;
+    return model_->getColumnsNo() * tileSize;
 }
 
 unsigned MapDrawer::getMapHeight(int tileSize) const {
-    return (model_->getRowsNo() - 1) + model_->getRowsNo() * tileSize;
+    return model_->getRowsNo() * tileSize;
 }
 
 int MapDrawer::mapXCoordsToColumn(int x) const {

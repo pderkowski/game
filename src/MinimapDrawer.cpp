@@ -16,8 +16,8 @@ MinimapDrawer::MinimapDrawer(std::shared_ptr<const MapModel> model,
         : model_(model),
         target_(target),
         pixelsPerTile_(2),
-        width_(pixelsPerTile_ * model->getColumnsNo()),
-        height_(pixelsPerTile_ * model->getRowsNo()),
+        width_(coords::cartesian_isometric.invert(coords::IsometricPoint{ model->getColumnsNo(), 0 }).x * pixelsPerTile_),
+        height_(coords::cartesian_isometric.invert(coords::IsometricPoint{ 0, model->getRowsNo() }).y * pixelsPerTile_),
         tileColors_{
             { Tile::Type::Empty, resources.loadImage("tiles/empty.png").getPixel(0, 0) },
             { Tile::Type::Water, resources.loadImage("tiles/water.png").getPixel(0, 0) },
@@ -77,11 +77,9 @@ sf::Image MinimapDrawer::createMinimapImage() {
 sf::Uint8* MinimapDrawer::createMinimapPixels() {
     sf::Uint8* pixels = new sf::Uint8[4 * width_ * height_];
 
-    int columns = model_->getColumnsNo() * pixelsPerTile_;
-    int rows = model_->getRowsNo() * pixelsPerTile_;
-    for (int r = 0; r < rows; ++r) {
-        for (int c = 0; c < columns; ++c) {
-            int pixelNo = (r * columns + c) * 4;
+    for (int r = 0; r < height_; ++r) {
+        for (int c = 0; c < width_; ++c) {
+            int pixelNo = (r * width_ + c) * 4;
 
             sf::Color color = getColorFromModel(r / pixelsPerTile_, c / pixelsPerTile_);
             pixels[pixelNo + 0] = color.r;
@@ -95,7 +93,7 @@ sf::Uint8* MinimapDrawer::createMinimapPixels() {
 }
 
 sf::Color MinimapDrawer::getColorFromModel(int row, int column) const {
-    auto p = coords::cartesian_isometric.convert(coords::CartesianPoint{ 2 * column, row });
+    auto p = coords::cartesian_isometric.convert(coords::CartesianPoint{ column, row });
     return tileColors_.at(model_->getTile(p)->type);
 }
 

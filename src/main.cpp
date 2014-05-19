@@ -8,7 +8,7 @@
 int main(__attribute__((unused)) int argc, char* argv[]) {
     Resources resources(Paths{argv[0]});
 
-    Game game(120, 200, resources);
+    Game game(120, 120, resources);
     game.start();
 
     return 0;
