@@ -24,16 +24,22 @@ MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::Render
             { Tile::Type::Plains, resources.loadTexture("tiles/plains.png") },
             { Tile::Type::Mountains, resources.loadTexture("tiles/mountains.png") }
         },
-        tileSize_(32)
+        tileWidth_(32),
+        tileHeight_(tileWidth_ / 2)
 {
     target_->setView(mapView_);
 }
 
 void MapDrawer::draw() const {
-    sf::CircleShape sprite(tileSize_ / 2, 4);
-    sprite.setOrigin(tileSize_ / 2, tileSize_ / 2);
+    sf::ConvexShape sprite;
+    sprite.setPointCount(4);
+    sprite.setPoint(0, sf::Vector2f(tileWidth_ / 2, 0));
+    sprite.setPoint(1, sf::Vector2f(tileWidth_, tileHeight_ / 2));
+    sprite.setPoint(2, sf::Vector2f(tileWidth_ / 2, tileHeight_));
+    sprite.setPoint(3, sf::Vector2f(0, tileHeight_ / 2));
+    sprite.setOrigin(tileWidth_ / 2, tileHeight_ / 2);
 
-    const sf::Vector2f shift(tileSize_ / 2, tileSize_ / 2);
+    const sf::Vector2f shift(tileWidth_ / 2, tileHeight_ / 2);
 
     for (int r = 0; r < model_->getRowsNo(); ++r) {
         for (int c = 0; c < 2 * model_->getColumnsNo(); ++c) {
@@ -42,7 +48,7 @@ void MapDrawer::draw() const {
             if (tile->isVisible) {
                 auto spriteCoords = tileIsoCoords.toCartesian();
                 sprite.setTexture(&tileTextures_.at(tile->type));
-                sprite.setPosition(utils::positiveModulo(spriteCoords.x * shift.x, 2 * getMapWidth(tileSize_)),
+                sprite.setPosition(utils::positiveModulo(spriteCoords.x * shift.x, 2 * getMapWidth()),
                     spriteCoords.y * shift.y);
                 target_->draw(sprite);
             }
@@ -65,8 +71,8 @@ std::shared_ptr<Tile> MapDrawer::getObjectByPosition(const sf::Vector2i& positio
 
 IntIsoPoint MapDrawer::mapPixelToMapCoords(const sf::Vector2i& position) {
     return IntIsoPoint(CartPoint(
-        target_->mapPixelToCoords(position).x * 2 / tileSize_,
-        target_->mapPixelToCoords(position).y * 2 / tileSize_
+        target_->mapPixelToCoords(position).x * 2 / tileWidth_,
+        target_->mapPixelToCoords(position).y * 2 / tileHeight_
     ).toIsometric());
 }
 
@@ -78,7 +84,7 @@ void MapDrawer::scrollView(int x, int y) {
 sf::Vector2f MapDrawer::boundShift(int x, int y) const {
     sf::Vector2f safeShift;
 
-    sf::IntRect bounds(0, 0, getMapWidth(tileSize_), getMapHeight(tileSize_));
+    sf::IntRect bounds(0, 0, getMapWidth(), getMapHeight());
     sf::IntRect displayed(mapView_.getCenter().x - mapView_.getSize().x / 2,
         mapView_.getCenter().y - mapView_.getSize().y / 2,
         mapView_.getSize().x, mapView_.getSize().y);
@@ -87,7 +93,7 @@ sf::Vector2f MapDrawer::boundShift(int x, int y) const {
     int maxBottomShiftPossible = bounds.top + bounds.height - displayed.top - displayed.height;
 
     safeShift.x
-        = static_cast<int>((displayed.left + x + getMapWidth(tileSize_)) % getMapWidth(tileSize_))
+        = static_cast<int>((displayed.left + x + getMapWidth()) % getMapWidth())
             - displayed.left;
     safeShift.y = (y < 0)? std::min(std::max(y, maxTopShiftPossible), maxBottomShiftPossible)
         : std::max(std::min(y, maxBottomShiftPossible), maxTopShiftPossible);
@@ -96,43 +102,46 @@ sf::Vector2f MapDrawer::boundShift(int x, int y) const {
 }
 
 void MapDrawer::zoomViem(int delta, const sf::Vector2i& mousePosition) {
-    delta = 2 * delta / abs(delta);
+    delta = delta / abs(delta);
 
     if (canZoom(delta)) {
         sf::Vector2f currentCoords = target_->mapPixelToCoords(mousePosition);
         sf::Vector2f newCoords = getCoordsAfterZoom(delta, mousePosition);
 
-        tileSize_ += (delta);
+        tileWidth_ += (2 * delta);
+        tileHeight_ += delta;
 
         scrollView(newCoords.x - currentCoords.x, newCoords.y - currentCoords.y);
     }
 }
 
 bool MapDrawer::canZoom(int delta) const {
-    const int minTileSize = 8;
-    const int maxTileSize = 64;
+    const unsigned minTileSize = 8;
+    const unsigned maxTileSize = 64;
 
-    int newTileSize = tileSize_ + delta;
-    return newTileSize >= minTileSize
-        && newTileSize <= maxTileSize
-        && getMapWidth(newTileSize) >= target_->getSize().x
-        && getMapHeight(newTileSize) >= target_->getSize().y;
+    unsigned newTileWidth = tileWidth_ + 2 * delta;
+    unsigned newTileHeight = tileHeight_ + delta;
+
+    return minTileSize <= newTileWidth && newTileWidth <= maxTileSize
+        && minTileSize <= newTileHeight && newTileHeight <= maxTileSize
+        && (model_->getColumnsNo() * newTileWidth) >= target_->getSize().x
+        && ((model_->getRowsNo() - 1) * newTileHeight / 2) >= target_->getSize().y;
 }
 
 sf::Vector2f MapDrawer::getCoordsAfterZoom(int delta, const sf::Vector2i& mousePosition) const {
     sf::Vector2f currentCoords = target_->mapPixelToCoords(mousePosition);
-    double xPositionFraction = currentCoords.x / getMapWidth(tileSize_);
-    double yPositionFraction = currentCoords.y / getMapHeight(tileSize_);
-    return sf::Vector2f(xPositionFraction * getMapWidth(tileSize_ + delta),
-        yPositionFraction * getMapHeight(tileSize_ + delta));
+    double xPositionFraction = currentCoords.x / getMapWidth();
+    double yPositionFraction = currentCoords.y / getMapHeight();
+    return sf::Vector2f(xPositionFraction * model_->getColumnsNo() * (tileWidth_ + 2 * delta),
+        yPositionFraction * (model_->getRowsNo() - 1) * (tileHeight_ + delta) / 2);
 }
 
-unsigned MapDrawer::getMapWidth(int tileSize) const {
-    return model_->getColumnsNo() * tileSize;
+unsigned MapDrawer::getMapWidth() const {
+    return model_->getColumnsNo() * tileWidth_;
 }
 
-unsigned MapDrawer::getMapHeight(int tileSize) const {
-    return (model_->getRowsNo() - 1) * tileSize / 2;
+unsigned MapDrawer::getMapHeight() const {
+    return (model_->getRowsNo() - 1) * tileHeight_ / 2;
 }
 
 sf::FloatRect MapDrawer::getDisplayedRect() const {
@@ -143,8 +152,8 @@ sf::FloatRect MapDrawer::getDisplayedRect() const {
     sf::Vector2f rightBottomCoords = target_->mapPixelToCoords(rightBottom);
 
     return sf::FloatRect(
-        leftTopCoords.x / getMapWidth(tileSize_),
-        leftTopCoords.y / getMapHeight(tileSize_),
-        (rightBottomCoords.x - leftTopCoords.x) / getMapWidth(tileSize_),
-        (rightBottomCoords.y - leftTopCoords.y) / getMapHeight(tileSize_));
+        leftTopCoords.x / getMapWidth(),
+        leftTopCoords.y / getMapHeight(),
+        (rightBottomCoords.x - leftTopCoords.x) / getMapWidth(),
+        (rightBottomCoords.y - leftTopCoords.y) / getMapHeight());
 }

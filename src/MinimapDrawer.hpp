@@ -35,7 +35,8 @@ private:
     std::shared_ptr<const MapModel> model_;
     std::shared_ptr<sf::RenderTarget> target_;
 
-    int pixelsPerTile_;
+    int horizontalPixelsPerTile_;
+    int verticalPixelsPerTile_;
     int width_;
     int height_;
 

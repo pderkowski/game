@@ -30,8 +30,8 @@ public:
 private:
     IntIsoPoint mapPixelToMapCoords(const sf::Vector2i& position);
 
-    unsigned getMapWidth(int tileSize) const;
-    unsigned getMapHeight(int tileSize) const;
+    unsigned getMapWidth() const;
+    unsigned getMapHeight() const;
 
     bool canZoom(int delta) const;
     sf::Vector2f boundShift(int x, int y) const;
@@ -43,7 +43,8 @@ private:
     sf::View mapView_;
     std::map<Tile::Type, sf::Texture> tileTextures_;
 
-    int tileSize_;
+    int tileWidth_;
+    int tileHeight_;
 };
 
 #endif  // MAPDRAWER_HPP_

@@ -15,9 +15,10 @@ MinimapDrawer::MinimapDrawer(std::shared_ptr<const MapModel> model,
     Resources& resources)
         : model_(model),
         target_(target),
-        pixelsPerTile_(2),
-        width_(IsoPoint(model->getColumnsNo(), 0 ).toCartesian().x * pixelsPerTile_),
-        height_(IsoPoint(0, model->getRowsNo()).toCartesian().y * pixelsPerTile_),
+        horizontalPixelsPerTile_(2),
+        verticalPixelsPerTile_(horizontalPixelsPerTile_ / 2),
+        width_(IsoPoint(model->getColumnsNo(), 0 ).toCartesian().x * horizontalPixelsPerTile_),
+        height_(IsoPoint(0, model->getRowsNo()).toCartesian().y * verticalPixelsPerTile_),
         tileColors_{
             { Tile::Type::Empty, resources.loadImage("tiles/empty.png").getPixel(0, 0) },
             { Tile::Type::Water, resources.loadImage("tiles/water.png").getPixel(0, 0) },
@@ -81,7 +82,8 @@ sf::Uint8* MinimapDrawer::createMinimapPixels() {
         for (int c = 0; c < width_; ++c) {
             int pixelNo = (r * width_ + c) * 4;
 
-            sf::Color color = getColorFromModel(r / pixelsPerTile_, c / pixelsPerTile_);
+            sf::Color color = getColorFromModel(r / verticalPixelsPerTile_,
+                c / horizontalPixelsPerTile_);
             pixels[pixelNo + 0] = color.r;
             pixels[pixelNo + 1] = color.g;
             pixels[pixelNo + 2] = color.b;
