@@ -102,7 +102,7 @@ sf::Vector2f MapDrawer::boundShift(int x, int y) const {
 }
 
 void MapDrawer::zoomViem(int delta, const sf::Vector2i& mousePosition) {
-    delta = delta / abs(delta);
+    delta = 2 * delta / abs(delta);
 
     if (canZoom(delta)) {
         sf::Vector2f currentCoords = target_->mapPixelToCoords(mousePosition);
