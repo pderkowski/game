@@ -30,6 +30,9 @@ all: mkdir exe
 exe: $(OBJS)
 	$(CPP) -o $(EXE_DIR)/$(EXE_NAME) $? -L$(LIB_DIR) $(LDLIBS) $(LDFLAGS)
 
+debug: CPPFLAGS += -DDEBUG -g
+debug: exe
+
 mkdir: $(EXE_DIR)
 
 clean:
