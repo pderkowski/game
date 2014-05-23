@@ -1,35 +1,135 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <cmath>
-#include <functional>
 #include "Coordinates.hpp"
-#include "Converter.hpp"
 
-using namespace coords;
+namespace {
 
-const Converter<CartesianPoint, IsometricPoint> coords::cartesian_isometric(
-    [] (const CartesianPoint& car) {
-        return IsometricPoint{ std::lrint(car.x * 0.5 - car.y * 0.5), std::lrint(car.y) };
-    },
-    [] (const IsometricPoint& iso) {
-        return CartesianPoint{ std::lrint(iso.x * 2 + iso.y), std::lrint(iso.y) };
-    }
-);
+IsoPoint cartesian_isometric(const CartPoint& cart) {
+    return IsoPoint(cart.x * 0.5 - cart.y * 0.5, cart.y);
+}
 
-const Converter<IsometricPoint, RotatedPoint> coords::isometric_rotated(
-    [] (const IsometricPoint& iso) {
-        return RotatedPoint{ std::lrint(iso.x), std::lrint(iso.x + iso.y) };
-    },
-    [] (const RotatedPoint& rot) {
-        return IsometricPoint{ std::lrint(rot.x), std::lrint(rot.y - rot.x) };
-    }
-);
+CartPoint isometric_cartesian(const IsoPoint& iso) {
+    return CartPoint(iso.x * 2 + iso.y, iso.y);
+}
 
-const Converter<RotatedPoint, CartesianPoint> coords::rotated_cartesian(
-    [] (const RotatedPoint& rot) {
-        return CartesianPoint{ std::lrint(rot.x + rot.y), std::lrint(rot.y - rot.x) };
-    },
-    [] (const CartesianPoint& car) {
-        return RotatedPoint{ std::lrint(car.x * 0.5 - car.y * 0.5), std::lrint(car.x * 0.5 + car.y * 0.5) };
-    }
-);
+RotPoint isometric_rotated(const IsoPoint& iso) {
+    return RotPoint(iso.x, iso.x + iso.y);
+}
+
+IsoPoint rotated_isometric(const RotPoint& rot) {
+    return IsoPoint(rot.x, rot.y - rot.x);
+}
+
+CartPoint rotated_cartesian(const RotPoint& rot) {
+    return CartPoint(rot.x + rot.y, rot.y - rot.x);
+}
+
+RotPoint cartesian_rotated(const CartPoint& cart) {
+    return RotPoint(cart.x * 0.5 - cart.y * 0.5, cart.x * 0.5 + cart.y * 0.5);
+}
+
+}
+
+
+CartPoint::CartPoint(double x, double y)
+    : x(x), y(y)
+{ }
+
+CartPoint::CartPoint(const IntCartPoint& p)
+    : x(p.x), y(p.y)
+{ }
+
+IsoPoint CartPoint::toIsometric() const {
+    return ::cartesian_isometric(*this);
+}
+
+RotPoint CartPoint::toRotated() const {
+    return ::cartesian_rotated(*this);
+}
+
+
+IntCartPoint::IntCartPoint(int x, int y)
+    : x(x), y(y)
+{ }
+
+IntCartPoint::IntCartPoint(const CartPoint& p)
+    : x(std::lround(p.x)), y(std::lround(p.y))
+{ }
+
+IsoPoint IntCartPoint::toIsometric() const {
+    return ::cartesian_isometric(*this);
+}
+
+RotPoint IntCartPoint::toRotated() const {
+    return ::cartesian_rotated(*this);
+}
+
+
+IsoPoint::IsoPoint(double x, double y)
+    : x(x), y(y)
+{ }
+
+IsoPoint::IsoPoint(const IntIsoPoint& p)
+    : x(p.x), y(p.y)
+{ }
+
+CartPoint IsoPoint::toCartesian() const {
+    return ::isometric_cartesian(*this);
+}
+
+RotPoint IsoPoint::toRotated() const {
+    return ::isometric_rotated(*this);
+}
+
+
+IntIsoPoint::IntIsoPoint(int x, int y)
+    : x(x), y(y)
+{ }
+
+IntIsoPoint::IntIsoPoint(const IsoPoint& p)
+    : x(std::lround(p.x)), y(std::lround(p.y))
+{ }
+
+CartPoint IntIsoPoint::toCartesian() const {
+    return ::isometric_cartesian(*this);
+}
+
+RotPoint IntIsoPoint::toRotated() const {
+    return ::isometric_rotated(*this);
+}
+
+
+RotPoint::RotPoint(double x, double y)
+    : x(x), y(y)
+{ }
+
+RotPoint::RotPoint(const IntRotPoint& p)
+    : x(p.x), y(p.y)
+{ }
+
+CartPoint RotPoint::toCartesian() const {
+    return ::rotated_cartesian(*this);
+}
+
+IsoPoint RotPoint::toIsometric() const {
+    return ::rotated_isometric(*this);
+}
+
+
+IntRotPoint::IntRotPoint(int x, int y)
+    : x(x), y(y)
+{ }
+
+IntRotPoint::IntRotPoint(const RotPoint& p)
+    : x(std::lround(p.x)), y(std::lround(p.y))
+{ }
+
+CartPoint IntRotPoint::toCartesian() const {
+    return ::rotated_cartesian(*this);
+}
+
+IsoPoint IntRotPoint::toIsometric() const {
+    return ::rotated_isometric(*this);
+}
+

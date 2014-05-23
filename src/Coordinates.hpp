@@ -3,27 +3,77 @@
 #ifndef COORDINATES_HPP_
 #define COORDINATES_HPP_
 
-#include "Converter.hpp"
+struct IntCartPoint;
+struct CartPoint;
+struct IntIsoPoint;
+struct IsoPoint;
+struct IntRotPoint;
+struct RotPoint;
 
-namespace coords {
-    struct CartesianPoint {
-        int x;
-        int y;
-    };
+struct CartPoint {
+    CartPoint(double x, double y);
+    CartPoint(const IntCartPoint& p);
 
-    struct IsometricPoint {
-        int x;
-        int y;
-    };
+    IsoPoint toIsometric() const;
+    RotPoint toRotated() const;
 
-    struct RotatedPoint {
-        int x;
-        int y;
-    };
+    double x;
+    double y;
+};
 
-    extern const Converter<CartesianPoint, IsometricPoint> cartesian_isometric;
-    extern const Converter<IsometricPoint, RotatedPoint> isometric_rotated;
-    extern const Converter<RotatedPoint, CartesianPoint> rotated_cartesian;
-}  // namespace coords
+struct IntCartPoint {
+    IntCartPoint(int x, int y);
+    explicit IntCartPoint(const CartPoint& p);
+
+    IsoPoint toIsometric() const;
+    RotPoint toRotated() const;
+
+    int x;
+    int y;
+};
+
+struct IsoPoint {
+    IsoPoint(double x, double y);
+    IsoPoint(const IntIsoPoint& p);
+
+    RotPoint toRotated() const;
+    CartPoint toCartesian() const;
+
+    double x;
+    double y;
+};
+
+struct IntIsoPoint {
+    IntIsoPoint(int x, int y);
+    explicit IntIsoPoint(const IsoPoint& p);
+
+    RotPoint toRotated() const;
+    CartPoint toCartesian() const;
+
+    int x;
+    int y;
+};
+
+struct RotPoint {
+    RotPoint(double x, double y);
+    RotPoint(const IntRotPoint& p);
+
+    IsoPoint toIsometric() const;
+    CartPoint toCartesian() const;
+
+    double x;
+    double y;
+};
+
+struct IntRotPoint {
+    IntRotPoint(int x, int y);
+    explicit IntRotPoint(const RotPoint& p);
+
+    IsoPoint toIsometric() const;
+    CartPoint toCartesian() const;
+
+    int x;
+    int y;
+};
 
 #endif  // COORDINATES_HPP_

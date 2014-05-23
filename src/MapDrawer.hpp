@@ -9,6 +9,7 @@
 #include "MapModel.hpp"
 #include "Resources.hpp"
 #include "Tile.hpp"
+#include "Coordinates.hpp"
 
 class MapDrawer {
 public:
@@ -24,14 +25,13 @@ public:
     void scrollView(int x, int y);
     void zoomViem(int delta, const sf::Vector2i& mousePosition);
 
-    sf::IntRect getDisplayedTilesRect() const;
+    sf::FloatRect getDisplayedRect() const;
 
 private:
+    IntIsoPoint mapPixelToMapCoords(const sf::Vector2i& position);
+
     unsigned getMapWidth(int tileSize) const;
     unsigned getMapHeight(int tileSize) const;
-
-    int mapXCoordsToColumn(int x) const;
-    int mapYCoordsToRow(int y) const;
 
     bool canZoom(int delta) const;
     sf::Vector2f boundShift(int x, int y) const;

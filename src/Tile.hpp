@@ -16,12 +16,12 @@ public:
         NumberOfTileTypes  // this has to be the last one in this enum
     };
 
-    Tile(const coords::RotatedPoint& coordinates);
-    Tile(const coords::RotatedPoint& coordinates, Type type);
+    Tile(const IntRotPoint& coordinates);
+    Tile(const IntRotPoint& coordinates, Type type);
 
     void toggleVisibility();
 
-    coords::RotatedPoint coordinates;
+    IntRotPoint coordinates;
     Type type;
 
     bool isVisible;

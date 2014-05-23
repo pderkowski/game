@@ -22,10 +22,10 @@ public:
     int getRowsNo() const;
     int getColumnsNo() const;
 
-    std::shared_ptr<const Tile> getTile(const coords::IsometricPoint& p) const;
-    std::shared_ptr<Tile> getTile(const coords::IsometricPoint& p);
+    bool isInBounds(const IntIsoPoint& p) const;
 
-    static const int OutOfBounds = -1;
+    std::shared_ptr<const Tile> getTile(const IntIsoPoint& p) const;
+    std::shared_ptr<Tile> getTile(const IntIsoPoint& p);
 
 private:
     int rowsNo_;

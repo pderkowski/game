@@ -16,8 +16,8 @@ MinimapDrawer::MinimapDrawer(std::shared_ptr<const MapModel> model,
         : model_(model),
         target_(target),
         pixelsPerTile_(2),
-        width_(coords::cartesian_isometric.invert(coords::IsometricPoint{ model->getColumnsNo(), 0 }).x * pixelsPerTile_),
-        height_(coords::cartesian_isometric.invert(coords::IsometricPoint{ 0, model->getRowsNo() }).y * pixelsPerTile_),
+        width_(IsoPoint(model->getColumnsNo(), 0 ).toCartesian().x * pixelsPerTile_),
+        height_(IsoPoint(0, model->getRowsNo()).toCartesian().y * pixelsPerTile_),
         tileColors_{
             { Tile::Type::Empty, resources.loadImage("tiles/empty.png").getPixel(0, 0) },
             { Tile::Type::Water, resources.loadImage("tiles/water.png").getPixel(0, 0) },
@@ -93,7 +93,7 @@ sf::Uint8* MinimapDrawer::createMinimapPixels() {
 }
 
 sf::Color MinimapDrawer::getColorFromModel(int row, int column) const {
-    auto p = coords::cartesian_isometric.convert(coords::CartesianPoint{ column, row });
+    IntIsoPoint p(CartPoint(column, row).toIsometric());
     return tileColors_.at(model_->getTile(p)->type);
 }
 
@@ -104,11 +104,11 @@ void MinimapDrawer::draw() const {
     target_->draw(minimapSprite);
 }
 
-void MinimapDrawer::updateView(const sf::IntRect& bounds) {
+void MinimapDrawer::updateView(const sf::FloatRect& bounds) {
     minimap_.clear();
     minimap_.draw(sf::Sprite(background_));
-    view_.setPosition(sf::Vector2f(bounds.left * pixelsPerTile_, bounds.top * pixelsPerTile_));
-    view_.setSize(sf::Vector2f(bounds.width * pixelsPerTile_, bounds.height * pixelsPerTile_));
+    view_.setPosition(sf::Vector2f(bounds.left * width_, bounds.top * height_));
+    view_.setSize(sf::Vector2f(bounds.width * width_, bounds.height * height_));
     minimap_.draw(view_);
     view_.move(-width_, 0);
     minimap_.draw(view_);

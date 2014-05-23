@@ -18,8 +18,7 @@ MapModel::MapModel(int rowsNo, int columnsNo)
     for (int r = 0; r < rowsNo; ++r) {
         tiles_.push_back(std::vector<std::shared_ptr<Tile>>(columnsNo));
         for (int c = 0; c < columnsNo; ++c) {
-            coords::IsometricPoint p{ c, r };
-            tiles_[r][c] = std::make_shared<Tile>(coords::isometric_rotated.convert(p));
+            tiles_[r][c] = std::make_shared<Tile>(IntRotPoint(IntIsoPoint(c, r).toRotated()));
         }
     }
 }
@@ -58,12 +57,16 @@ int MapModel::getColumnsNo() const {
     return columnsNo_;
 }
 
-std::shared_ptr<const Tile> MapModel::getTile(const coords::IsometricPoint& p) const {
-    return tiles_[p.y][utils::positiveModulo(p.x, columnsNo_)];
+bool MapModel::isInBounds(const IntIsoPoint& p) const {
+    return 0 <= p.y && p.y < getRowsNo();
 }
 
-std::shared_ptr<Tile> MapModel::getTile(const coords::IsometricPoint& p) {
-    return tiles_[p.y][utils::positiveModulo(p.x, columnsNo_)];
+std::shared_ptr<const Tile> MapModel::getTile(const IntIsoPoint& p) const {
+    return tiles_[utils::positiveModulo(p.y, rowsNo_)][utils::positiveModulo(p.x, columnsNo_)];
+}
+
+std::shared_ptr<Tile> MapModel::getTile(const IntIsoPoint& p) {
+    return tiles_[utils::positiveModulo(p.y, rowsNo_)][utils::positiveModulo(p.x, columnsNo_)];
 }
 
 

@@ -15,7 +15,7 @@ public:
     MinimapDrawer(std::shared_ptr<const MapModel>, std::shared_ptr<sf::RenderTarget> target,
         Resources& resources);
 
-    void updateView(const sf::IntRect& bounds);
+    void updateView(const sf::FloatRect& bounds);
 
     void draw() const;
 

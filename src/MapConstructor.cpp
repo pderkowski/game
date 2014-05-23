@@ -127,7 +127,7 @@ MapModel MapConstructor::getMapModel() const {
 void MapConstructor::assignTileTypes(MapModel& model) const {
     for (int r = 0; r < rows_; ++r) {
         for (int c = 0; c < columns_; ++c) {
-            model.getTile(coords::IsometricPoint{ c, r })->type = convertCellTypeToTileType(map_[r][c].type);
+            model.getTile(IntIsoPoint(c, r))->type = convertCellTypeToTileType(map_[r][c].type);
         }
     }
 }

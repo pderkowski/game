@@ -13,7 +13,7 @@ Map::Map(int rows, int columns, std::shared_ptr<sf::RenderWindow> target, Resour
         : model_(std::make_shared<MapModel>(MapGenerator::generateMap(rows, columns))),
         mapDrawer_(model_, target, resources),
         minimapDrawer_(model_, target, resources) {
-    minimapDrawer_.updateView(mapDrawer_.getDisplayedTilesRect());
+    minimapDrawer_.updateView(mapDrawer_.getDisplayedRect());
 }
 
 void Map::draw() const {
@@ -24,7 +24,7 @@ void Map::draw() const {
 void Map::generateMap() {
     *model_ = MapGenerator::generateMap(model_->getRowsNo(), model_->getColumnsNo());
     minimapDrawer_.rebuild();
-    minimapDrawer_.updateView(mapDrawer_.getDisplayedTilesRect());
+    minimapDrawer_.updateView(mapDrawer_.getDisplayedRect());
 }
 
 void Map::handleClick(const sf::Event& e) {
@@ -39,13 +39,13 @@ void Map::handleClick(const sf::Event& e) {
 void Map::handleMouseWheelMoved(const sf::Event& event) {
     mapDrawer_.zoomViem(event.mouseWheel.delta,
         sf::Vector2i(event.mouseWheel.x, event.mouseWheel.y));
-    minimapDrawer_.updateView(mapDrawer_.getDisplayedTilesRect());
+    minimapDrawer_.updateView(mapDrawer_.getDisplayedRect());
 }
 
 void Map::handleMouseMoved(const sf::Event& event)  {
     mapDrawer_.scrollView(calculateHorizontalShift(event.mouseMove.x),
         calculateVerticalShift(event.mouseMove.y));
-    minimapDrawer_.updateView(mapDrawer_.getDisplayedTilesRect());
+    minimapDrawer_.updateView(mapDrawer_.getDisplayedRect());
 }
 
 int Map::calculateHorizontalShift(float mouseXPosition) const {

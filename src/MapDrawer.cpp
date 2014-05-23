@@ -24,25 +24,26 @@ MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::Render
             { Tile::Type::Plains, resources.loadTexture("tiles/plains.png") },
             { Tile::Type::Mountains, resources.loadTexture("tiles/mountains.png") }
         },
-        tileSize_(16)
+        tileSize_(32)
 {
     target_->setView(mapView_);
 }
 
 void MapDrawer::draw() const {
     sf::CircleShape sprite(tileSize_ / 2, 4);
+    sprite.setOrigin(tileSize_ / 2, tileSize_ / 2);
 
-    const float xShift = sprite.getLocalBounds().width / 2;
-    const float yShift = sprite.getLocalBounds().height / 2;
+    const sf::Vector2f shift(tileSize_ / 2, tileSize_ / 2);
 
     for (int r = 0; r < model_->getRowsNo(); ++r) {
         for (int c = 0; c < 2 * model_->getColumnsNo(); ++c) {
-            coords::IsometricPoint tileIsometricCoords{ c, r };
-            auto tile = model_->getTile(tileIsometricCoords);
+            IntIsoPoint tileIsoCoords(c, r);
+            auto tile = model_->getTile(tileIsoCoords);
             if (tile->isVisible) {
-                auto spriteCoords = coords::cartesian_isometric.invert(tileIsometricCoords);
+                auto spriteCoords = tileIsoCoords.toCartesian();
                 sprite.setTexture(&tileTextures_.at(tile->type));
-                sprite.setPosition(utils::positiveModulo(spriteCoords.x * xShift, 2 * getMapWidth(tileSize_)), spriteCoords.y * yShift);
+                sprite.setPosition(utils::positiveModulo(spriteCoords.x * shift.x, 2 * getMapWidth(tileSize_)),
+                    spriteCoords.y * shift.y);
                 target_->draw(sprite);
             }
         }
@@ -54,13 +55,19 @@ std::shared_ptr<const sf::RenderTarget> MapDrawer::getTarget() const {
 }
 
 std::shared_ptr<Tile> MapDrawer::getObjectByPosition(const sf::Vector2i& position) {
-    int column = mapXCoordsToColumn(target_->mapPixelToCoords(position).x);
-    int row = mapYCoordsToRow(target_->mapPixelToCoords(position).y);
+    auto mapCoords = mapPixelToMapCoords(position);
 
-    if (column != MapModel::OutOfBounds && row != MapModel::OutOfBounds)
-        return model_->getTile(coords::IsometricPoint{ column, row });
+    if (model_->isInBounds(mapCoords))
+        return model_->getTile(mapCoords);
     else
         return std::shared_ptr<Tile>();
+}
+
+IntIsoPoint MapDrawer::mapPixelToMapCoords(const sf::Vector2i& position) {
+    return IntIsoPoint(CartPoint(
+        target_->mapPixelToCoords(position).x * 2 / tileSize_,
+        target_->mapPixelToCoords(position).y * 2 / tileSize_
+    ).toIsometric());
 }
 
 void MapDrawer::scrollView(int x, int y) {
@@ -89,21 +96,21 @@ sf::Vector2f MapDrawer::boundShift(int x, int y) const {
 }
 
 void MapDrawer::zoomViem(int delta, const sf::Vector2i& mousePosition) {
-    delta = delta / abs(delta);
+    delta = 2 * delta / abs(delta);
 
     if (canZoom(delta)) {
         sf::Vector2f currentCoords = target_->mapPixelToCoords(mousePosition);
         sf::Vector2f newCoords = getCoordsAfterZoom(delta, mousePosition);
 
-        tileSize_ += delta;
+        tileSize_ += (delta);
 
         scrollView(newCoords.x - currentCoords.x, newCoords.y - currentCoords.y);
     }
 }
 
 bool MapDrawer::canZoom(int delta) const {
-    const int minTileSize = 4;
-    const int maxTileSize = 32;
+    const int minTileSize = 8;
+    const int maxTileSize = 64;
 
     int newTileSize = tileSize_ + delta;
     return newTileSize >= minTileSize
@@ -125,42 +132,19 @@ unsigned MapDrawer::getMapWidth(int tileSize) const {
 }
 
 unsigned MapDrawer::getMapHeight(int tileSize) const {
-    return model_->getRowsNo() * tileSize;
+    return (model_->getRowsNo() - 1) * tileSize / 2;
 }
 
-int MapDrawer::mapXCoordsToColumn(int x) const {
-    int column = floor((x % getMapWidth(tileSize_)) / (tileSize_ + 1));
-
-    if (column < 0 || column >= model_->getColumnsNo())
-        return MapModel::OutOfBounds;
-    else
-        return column;
-}
-
-int MapDrawer::mapYCoordsToRow(int y) const {
-    int row = floor((y % getMapHeight(tileSize_)) / (tileSize_ + 1));
-
-    if (row < 0 || row >= model_->getRowsNo())
-        return MapModel::OutOfBounds;
-    else
-        return row;
-}
-
-sf::IntRect MapDrawer::getDisplayedTilesRect() const {
+sf::FloatRect MapDrawer::getDisplayedRect() const {
     sf::Vector2i leftTop(0, 0);
     sf::Vector2i rightBottom(target_->getSize().x - 1, target_->getSize().y - 1);
 
-    int left = mapXCoordsToColumn(target_->mapPixelToCoords(leftTop).x);
-    int top = mapYCoordsToRow(target_->mapPixelToCoords(leftTop).y);
-    int right = mapXCoordsToColumn(target_->mapPixelToCoords(rightBottom).x);
-    int bottom = mapYCoordsToRow(target_->mapPixelToCoords(rightBottom).y);
+    sf::Vector2f leftTopCoords = target_->mapPixelToCoords(leftTop);
+    sf::Vector2f rightBottomCoords = target_->mapPixelToCoords(rightBottom);
 
-    top = (top == MapModel::OutOfBounds)? 0 : top;
-    bottom = (bottom == MapModel::OutOfBounds)? (model_->getRowsNo() - 1) : bottom;
-
-    if (left < right) {
-        return sf::IntRect(left, top, right - left + 1, bottom - top + 1);
-    } else {
-        return sf::IntRect(left, top, model_->getColumnsNo() - left + right, bottom - top + 1);
-    }
+    return sf::FloatRect(
+        leftTopCoords.x / getMapWidth(tileSize_),
+        leftTopCoords.y / getMapHeight(tileSize_),
+        (rightBottomCoords.x - leftTopCoords.x) / getMapWidth(tileSize_),
+        (rightBottomCoords.y - leftTopCoords.y) / getMapHeight(tileSize_));
 }

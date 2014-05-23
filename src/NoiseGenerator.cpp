@@ -23,8 +23,7 @@ HeightMap NoiseGenerator::generateHeightMap(unsigned rows, unsigned columns, uns
     HeightMap result(rows, columns);
     for (unsigned r = 0; r < rows; ++r) {
         for (unsigned c = 0; c < columns; ++c) {
-            auto p = coords::cartesian_isometric.invert(
-                coords::IsometricPoint{ static_cast<int>(c), static_cast<int>(r) });
+            auto p = IntIsoPoint(c, r).toCartesian();
             result(r, c) = noiseMap.GetValue(::utils::positiveModulo(p.x, 2 * columns), p.y);
         }
     }

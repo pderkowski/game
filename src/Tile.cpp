@@ -3,11 +3,11 @@
 #include "Tile.hpp"
 #include "Coordinates.hpp"
 
-Tile::Tile(const coords::RotatedPoint& coordinates)
+Tile::Tile(const IntRotPoint& coordinates)
     : coordinates(coordinates), type(Type::Empty), isVisible(true)
 { }
 
-Tile::Tile(const coords::RotatedPoint& coordinates, Type type)
+Tile::Tile(const IntRotPoint& coordinates, Type type)
     : coordinates(coordinates), type(type), isVisible(true)
 { }
 
