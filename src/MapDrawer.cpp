@@ -16,44 +16,62 @@ MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::Render
     Resources& resources)
         : model_(model),
         target_(target),
+        tileWidth_(96),
+        tileHeight_(tileWidth_ / 2),
         mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y)),
-        tileTextures_{
-            { Tile::Type::Empty, resources.loadTexture("tiles/empty.png") },
-            { Tile::Type::Water, resources.loadTexture("tiles/water.png") },
-            { Tile::Type::Hills, resources.loadTexture("tiles/hills.png") },
-            { Tile::Type::Plains, resources.loadTexture("tiles/plains.png") },
-            { Tile::Type::Mountains, resources.loadTexture("tiles/mountains.png") }
+        texture_(resources.loadTexture("tiles/terrain.png")),
+        textureCoords_{
+            { Tile::Type::Empty, sf::Vector2f(0 * tileWidth_, 0 * tileHeight_) },
+            { Tile::Type::Hills, sf::Vector2f(1 * tileWidth_, 0 * tileHeight_) },
+            { Tile::Type::Mountains, sf::Vector2f(2 * tileWidth_, 0 * tileHeight_) },
+            { Tile::Type::Plains, sf::Vector2f(3 * tileWidth_, 0 * tileHeight_) },
+            { Tile::Type::Water, sf::Vector2f(4 * tileWidth_, 0 * tileHeight_) }
         },
-        tileWidth_(32),
-        tileHeight_(tileWidth_ / 2)
+        mapVertices_(sf::Quads, 4 * model->getRowsNo() * 2 * model->getColumnsNo())
 {
-    target_->setView(mapView_);
+    setMapVertices();
 }
 
-void MapDrawer::draw() const {
-    sf::ConvexShape sprite;
-    sprite.setPointCount(4);
-    sprite.setPoint(0, sf::Vector2f(tileWidth_ / 2, 0));
-    sprite.setPoint(1, sf::Vector2f(tileWidth_, tileHeight_ / 2));
-    sprite.setPoint(2, sf::Vector2f(tileWidth_ / 2, tileHeight_));
-    sprite.setPoint(3, sf::Vector2f(0, tileHeight_ / 2));
-    sprite.setOrigin(tileWidth_ / 2, tileHeight_ / 2);
+void MapDrawer::setModel(std::shared_ptr<MapModel> model) {
+    model_ = model;
+    mapView_.reset(sf::FloatRect(0, 0, target_->getSize().x, target_->getSize().y));
+    mapVertices_.resize(4 * model->getRowsNo() * 2 * model->getColumnsNo());
+    setMapVertices();
+}
 
-    const sf::Vector2f shift(tileWidth_ / 2, tileHeight_ / 2);
-
+void MapDrawer::setMapVertices() {
     for (int r = 0; r < model_->getRowsNo(); ++r) {
         for (int c = 0; c < 2 * model_->getColumnsNo(); ++c) {
             IntIsoPoint tileIsoCoords(c, r);
             auto tile = model_->getTile(tileIsoCoords);
-            if (tile->isVisible) {
-                auto spriteCoords = tileIsoCoords.toCartesian();
-                sprite.setTexture(&tileTextures_.at(tile->type));
-                sprite.setPosition(utils::positiveModulo(spriteCoords.x * shift.x, 2 * getMapWidth()),
-                    spriteCoords.y * shift.y);
-                target_->draw(sprite);
-            }
+            auto spriteCoords = tileIsoCoords.toCartesian();
+
+            sf::Vertex* quad = &mapVertices_[(c + r * 2 * model_->getColumnsNo()) * 4];
+
+            sf::Vector2f quadCenter(
+                utils::positiveModulo(spriteCoords.x * tileWidth_ / 2, 2 * getMapWidth()),
+                spriteCoords.y * tileHeight_ / 2);
+
+            quad[0].position = sf::Vector2f(quadCenter.x, quadCenter.y - tileHeight_ / 2);
+            quad[1].position = sf::Vector2f(quadCenter.x + tileWidth_ / 2, quadCenter.y);
+            quad[2].position = sf::Vector2f(quadCenter.x, quadCenter.y + tileHeight_ / 2);
+            quad[3].position = sf::Vector2f(quadCenter.x - tileWidth_ / 2, quadCenter.y);
+
+            sf::Vector2f texTopLeft = textureCoords_.at(tile->type);
+
+            quad[0].texCoords = sf::Vector2f(texTopLeft.x + tileWidth_ / 2, texTopLeft.y);
+            quad[1].texCoords = sf::Vector2f(texTopLeft.x + tileWidth_, texTopLeft.y + tileHeight_ / 2);
+            quad[2].texCoords = sf::Vector2f(texTopLeft.x + tileWidth_ / 2, texTopLeft.y + tileHeight_);
+            quad[3].texCoords = sf::Vector2f(texTopLeft.x, texTopLeft.y + tileHeight_ / 2);
         }
     }
+}
+
+void MapDrawer::draw() const {
+    auto states = sf::RenderStates::Default;
+    states.texture = &texture_;
+    target_->setView(mapView_);
+    target_->draw(mapVertices_, states);
 }
 
 std::shared_ptr<const sf::RenderTarget> MapDrawer::getTarget() const {
@@ -102,38 +120,23 @@ sf::Vector2f MapDrawer::boundShift(int x, int y) const {
 }
 
 void MapDrawer::zoomViem(int delta, const sf::Vector2i& mousePosition) {
-    delta = 2 * delta / abs(delta);
+    target_->setView(mapView_);
+    const float zoomFactor = (delta > 0)? 4.0 / 5 : 5.0 / 4;
 
-    if (canZoom(delta)) {
-        sf::Vector2f currentCoords = target_->mapPixelToCoords(mousePosition);
-        sf::Vector2f newCoords = getCoordsAfterZoom(delta, mousePosition);
+    if (canZoom(zoomFactor)) {
+        target_->setView(mapView_);
+        sf::Vector2f oldCoords = target_->mapPixelToCoords(mousePosition);
+        mapView_.zoom(zoomFactor);
+        target_->setView(mapView_);
 
-        tileWidth_ += (2 * delta);
-        tileHeight_ += delta;
-
-        scrollView(newCoords.x - currentCoords.x, newCoords.y - currentCoords.y);
+        sf::Vector2f newCoords = target_->mapPixelToCoords(mousePosition);
+        scrollView(oldCoords.x - newCoords.x, oldCoords.y - newCoords.y);
     }
 }
 
-bool MapDrawer::canZoom(int delta) const {
-    const unsigned minTileSize = 8;
-    const unsigned maxTileSize = 64;
-
-    unsigned newTileWidth = tileWidth_ + 2 * delta;
-    unsigned newTileHeight = tileHeight_ + delta;
-
-    return minTileSize <= newTileWidth && newTileWidth <= maxTileSize
-        && minTileSize <= newTileHeight && newTileHeight <= maxTileSize
-        && (model_->getColumnsNo() * newTileWidth) >= target_->getSize().x
-        && ((model_->getRowsNo() - 1) * newTileHeight / 2) >= target_->getSize().y;
-}
-
-sf::Vector2f MapDrawer::getCoordsAfterZoom(int delta, const sf::Vector2i& mousePosition) const {
-    sf::Vector2f currentCoords = target_->mapPixelToCoords(mousePosition);
-    double xPositionFraction = currentCoords.x / getMapWidth();
-    double yPositionFraction = currentCoords.y / getMapHeight();
-    return sf::Vector2f(xPositionFraction * model_->getColumnsNo() * (tileWidth_ + 2 * delta),
-        yPositionFraction * (model_->getRowsNo() - 1) * (tileHeight_ + delta) / 2);
+bool MapDrawer::canZoom(float zoomFactor) const {
+    return mapView_.getSize().x * zoomFactor < getMapWidth()
+        && mapView_.getSize().y * zoomFactor < getMapHeight();
 }
 
 unsigned MapDrawer::getMapWidth() const {
@@ -144,7 +147,8 @@ unsigned MapDrawer::getMapHeight() const {
     return (model_->getRowsNo() - 1) * tileHeight_ / 2;
 }
 
-sf::FloatRect MapDrawer::getDisplayedRect() const {
+sf::FloatRect MapDrawer::getDisplayedRectangle() const {
+    target_->setView(mapView_);
     sf::Vector2i leftTop(0, 0);
     sf::Vector2i rightBottom(target_->getSize().x - 1, target_->getSize().y - 1);
 

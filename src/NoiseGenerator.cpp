@@ -17,7 +17,7 @@ HeightMap NoiseGenerator::generateHeightMap(unsigned rows, unsigned columns, uns
     noiseMapBuilder.SetSourceModule(perlinModule);
     noiseMapBuilder.SetDestNoiseMap(noiseMap);
     noiseMapBuilder.SetDestSize(2 * columns, rows);
-    noiseMapBuilder.SetBounds(-180.0, 180.0, 0.0, rows / 20.0);
+    noiseMapBuilder.SetBounds(-180.0, 180.0, 0.0, rows / 40.0);
     noiseMapBuilder.Build();
 
     HeightMap result(rows, columns);

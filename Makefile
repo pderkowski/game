@@ -39,7 +39,7 @@ clean:
 	$(RM) $(OBJS) $(DEPS)
 
 distclean: clean
-	$(RM) $(EXE_DIR)
+	$(RM) $(EXE_DIR) core
 
 run: mkdir exe
 	./$(EXE_DIR)/$(EXE_NAME)

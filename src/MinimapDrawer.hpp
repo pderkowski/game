@@ -12,19 +12,18 @@
 
 class MinimapDrawer {
 public:
-    MinimapDrawer(std::shared_ptr<const MapModel>, std::shared_ptr<sf::RenderTarget> target,
-        Resources& resources);
+    MinimapDrawer(std::shared_ptr<const MapModel>, std::shared_ptr<sf::RenderTarget> target);
 
-    void updateView(const sf::FloatRect& bounds);
+    void updateMinimap(const sf::FloatRect& boundsOfDisplayedRectangle);
 
     void draw() const;
 
-    void rebuild();
+    void setModel(std::shared_ptr<const MapModel> model);
 
 private:
-    sf::RectangleShape createBorders();
-    sf::RectangleShape createView();
-    sf::Texture createBackground();
+    sf::RectangleShape createMinimapBorders();
+    sf::RectangleShape createDisplayedRectangle();
+    sf::Texture createMinimapBackground();
 
     sf::Image createMinimapImage();
     sf::Uint8* createMinimapPixels();
@@ -35,16 +34,16 @@ private:
     std::shared_ptr<const MapModel> model_;
     std::shared_ptr<sf::RenderTarget> target_;
 
+    std::map<Tile::Type, sf::Color> tileColors_;
+
     int horizontalPixelsPerTile_;
     int verticalPixelsPerTile_;
     int width_;
     int height_;
 
-    std::map<Tile::Type, sf::Color> tileColors_;
-
-    sf::RectangleShape borders_;
-    sf::RectangleShape view_;
-    sf::Texture background_;
+    sf::RectangleShape minimapBorders_;
+    sf::RectangleShape displayedRectangle_;
+    sf::Texture minimapBackground_;
     sf::RenderTexture minimap_;
 };
 

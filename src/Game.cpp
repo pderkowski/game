@@ -12,10 +12,11 @@ Game::Game(int rows, int columns, Resources& resources)
             "",
             sf::Style::Fullscreen)),
         map_(rows, columns, window_, resources),
-        menu_(window_, resources) {
-    menu_.addItem("Return", [&] () { toggleMenu(); }); // NOLINT
-    menu_.addItem("New game", [&] () { restart(); }); // NOLINT
-    menu_.addItem("Quit game", [&] () { quit(); }); // NOLINT
+        menu_(window_, resources)
+{
+    menu_.addItem("Return", [&] () { toggleMenu(); });
+    menu_.addItem("New game", [&] () { restart(); });
+    menu_.addItem("Quit game", [&] () { quit(); });
 }
 
 void Game::start() {

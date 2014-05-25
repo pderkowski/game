@@ -11,33 +11,37 @@
 #include "Coordinates.hpp"
 
 MinimapDrawer::MinimapDrawer(std::shared_ptr<const MapModel> model,
-    std::shared_ptr<sf::RenderTarget> target,
-    Resources& resources)
+    std::shared_ptr<sf::RenderTarget> target)
         : model_(model),
         target_(target),
+        tileColors_{
+            { Tile::Type::Empty, sf::Color(160, 160, 160) },
+            { Tile::Type::Water, sf::Color(127, 201, 255) },
+            { Tile::Type::Hills, sf::Color(198, 148, 4) },
+            { Tile::Type::Plains, sf::Color(77, 173, 36) },
+            { Tile::Type::Mountains, sf::Color(101, 61, 1) }
+        },
         horizontalPixelsPerTile_(2),
         verticalPixelsPerTile_(horizontalPixelsPerTile_ / 2),
         width_(IsoPoint(model->getColumnsNo(), 0 ).toCartesian().x * horizontalPixelsPerTile_),
         height_(IsoPoint(0, model->getRowsNo()).toCartesian().y * verticalPixelsPerTile_),
-        tileColors_{
-            { Tile::Type::Empty, resources.loadImage("tiles/empty.png").getPixel(0, 0) },
-            { Tile::Type::Water, resources.loadImage("tiles/water.png").getPixel(0, 0) },
-            { Tile::Type::Hills, resources.loadImage("tiles/hills.png").getPixel(0, 0) },
-            { Tile::Type::Plains, resources.loadImage("tiles/plains.png").getPixel(0, 0) },
-            { Tile::Type::Mountains, resources.loadImage("tiles/mountains.png").getPixel(0, 0) }
-        },
-        borders_(createBorders()),
-        view_(createView()),
-        background_(createBackground())
+        minimapBorders_(createMinimapBorders()),
+        displayedRectangle_(createDisplayedRectangle()),
+        minimapBackground_(createMinimapBackground())
 {
     minimap_.create(width_, height_);
 }
 
-void MinimapDrawer::rebuild() {
-    background_ = createBackground();
+void MinimapDrawer::setModel(std::shared_ptr<const MapModel> model) {
+    model_ = model;
+    width_ = IsoPoint(model->getColumnsNo(), 0 ).toCartesian().x * horizontalPixelsPerTile_;
+    height_ = IsoPoint(0, model->getRowsNo()).toCartesian().y * verticalPixelsPerTile_;
+    minimapBorders_ = createMinimapBorders();
+    displayedRectangle_ = createDisplayedRectangle(),
+    minimapBackground_ = createMinimapBackground();
 }
 
-sf::RectangleShape MinimapDrawer::createBorders() {
+sf::RectangleShape MinimapDrawer::createMinimapBorders() {
     sf::RectangleShape borders;
     borders.setSize(sf::Vector2f(width_, height_));
     borders.setFillColor(sf::Color(0, 0, 0, 0));
@@ -46,7 +50,7 @@ sf::RectangleShape MinimapDrawer::createBorders() {
     return borders;
 }
 
-sf::RectangleShape MinimapDrawer::createView() {
+sf::RectangleShape MinimapDrawer::createDisplayedRectangle() {
     sf::RectangleShape view;
     view.setSize(sf::Vector2f(width_, height_));
     view.setFillColor(sf::Color(255, 255, 255, 100));
@@ -55,7 +59,7 @@ sf::RectangleShape MinimapDrawer::createView() {
     return view;
 }
 
-sf::Texture MinimapDrawer::createBackground() {
+sf::Texture MinimapDrawer::createMinimapBackground() {
     sf::Texture background;
     background.loadFromImage(createMinimapImage());
     return background;
@@ -100,21 +104,22 @@ sf::Color MinimapDrawer::getColorFromModel(int row, int column) const {
 }
 
 void MinimapDrawer::draw() const {
+    target_->setView(target_->getDefaultView());
     sf::Sprite minimapSprite;
     minimapSprite.setTexture(minimap_.getTexture());
     minimapSprite.setPosition(getBasePosition());
     target_->draw(minimapSprite);
 }
 
-void MinimapDrawer::updateView(const sf::FloatRect& bounds) {
+void MinimapDrawer::updateMinimap(const sf::FloatRect& bounds) {
     minimap_.clear();
-    minimap_.draw(sf::Sprite(background_));
-    view_.setPosition(sf::Vector2f(bounds.left * width_, bounds.top * height_));
-    view_.setSize(sf::Vector2f(bounds.width * width_, bounds.height * height_));
-    minimap_.draw(view_);
-    view_.move(-width_, 0);
-    minimap_.draw(view_);
-    minimap_.draw(borders_);
+    minimap_.draw(sf::Sprite(minimapBackground_));
+    displayedRectangle_.setPosition(sf::Vector2f(bounds.left * width_, bounds.top * height_));
+    displayedRectangle_.setSize(sf::Vector2f(bounds.width * width_, bounds.height * height_));
+    minimap_.draw(displayedRectangle_);
+    displayedRectangle_.move(-width_, 0);
+    minimap_.draw(displayedRectangle_);
+    minimap_.draw(minimapBorders_);
     minimap_.display();
 }
 
