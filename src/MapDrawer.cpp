@@ -17,18 +17,18 @@ MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::Render
         : model_(model),
         target_(target),
         tileWidth_(96),
-        tileHeight_(tileWidth_ / 2),
+        tileHeight_(48),
         mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y)),
-        texture_(resources.loadTexture("tiles/terrain.png")),
+        texture_(resources.loadTexture("tiles/terrain1.png")),
         textureCoords_{
-            { Tile::Type::Empty, sf::Vector2f(0 * tileWidth_, 0 * tileHeight_) },
-            { Tile::Type::Hills, sf::Vector2f(1 * tileWidth_, 0 * tileHeight_) },
-            { Tile::Type::Mountains, sf::Vector2f(2 * tileWidth_, 0 * tileHeight_) },
-            { Tile::Type::Plains, sf::Vector2f(3 * tileWidth_, 0 * tileHeight_) },
-            { Tile::Type::Water, sf::Vector2f(4 * tileWidth_, 0 * tileHeight_) }
+            { Tile::Type::Hills, sf::Vector2f(1, 197) },
+            { Tile::Type::Mountains, sf::Vector2f(1, 246) },
+            { Tile::Type::Plains, sf::Vector2f(1, 99) },
+            { Tile::Type::Water, sf::Vector2f(98, 1) }
         },
         mapVertices_(sf::Quads, 4 * model->getRowsNo() * 2 * model->getColumnsNo())
 {
+    texture_.setSmooth(true);
     setMapVertices();
 }
 
@@ -52,17 +52,21 @@ void MapDrawer::setMapVertices() {
                 utils::positiveModulo(spriteCoords.x * tileWidth_ / 2, 2 * getMapWidth()),
                 spriteCoords.y * tileHeight_ / 2);
 
-            quad[0].position = sf::Vector2f(quadCenter.x, quadCenter.y - tileHeight_ / 2);
-            quad[1].position = sf::Vector2f(quadCenter.x + tileWidth_ / 2, quadCenter.y);
-            quad[2].position = sf::Vector2f(quadCenter.x, quadCenter.y + tileHeight_ / 2);
-            quad[3].position = sf::Vector2f(quadCenter.x - tileWidth_ / 2, quadCenter.y);
+            quad[0].position = sf::Vector2f(quadCenter.x - tileWidth_ / 2,
+                quadCenter.y - tileHeight_ / 2);
+            quad[1].position = sf::Vector2f(quadCenter.x + tileWidth_ / 2,
+                quadCenter.y - tileHeight_ / 2);
+            quad[2].position = sf::Vector2f(quadCenter.x + tileWidth_ / 2,
+                quadCenter.y + tileHeight_ / 2);
+            quad[3].position = sf::Vector2f(quadCenter.x - tileWidth_ / 2,
+                quadCenter.y + tileHeight_ / 2);
 
             sf::Vector2f texTopLeft = textureCoords_.at(tile->type);
 
-            quad[0].texCoords = sf::Vector2f(texTopLeft.x + tileWidth_ / 2, texTopLeft.y);
-            quad[1].texCoords = sf::Vector2f(texTopLeft.x + tileWidth_, texTopLeft.y + tileHeight_ / 2);
-            quad[2].texCoords = sf::Vector2f(texTopLeft.x + tileWidth_ / 2, texTopLeft.y + tileHeight_);
-            quad[3].texCoords = sf::Vector2f(texTopLeft.x, texTopLeft.y + tileHeight_ / 2);
+            quad[0].texCoords = sf::Vector2f(texTopLeft.x, texTopLeft.y);
+            quad[1].texCoords = sf::Vector2f(texTopLeft.x + tileWidth_, texTopLeft.y);
+            quad[2].texCoords = sf::Vector2f(texTopLeft.x + tileWidth_, texTopLeft.y + tileHeight_);
+            quad[3].texCoords = sf::Vector2f(texTopLeft.x, texTopLeft.y + tileHeight_);
         }
     }
 }
