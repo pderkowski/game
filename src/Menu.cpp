@@ -9,9 +9,9 @@
 #include "MenuModel.hpp"
 #include "MenuItem.hpp"
 
-Menu::Menu(std::shared_ptr<sf::RenderWindow> target, Resources& resources)
+Menu::Menu(std::shared_ptr<sf::RenderWindow> target)
     : model_(std::make_shared<MenuModel>()),
-    drawer_(model_, target, resources),
+    drawer_(model_, target),
     isVisible_(false)
 { }
 

@@ -7,14 +7,12 @@
 #include <vector>
 #include "SFML/Graphics.hpp"
 #include "MenuModel.hpp"
-#include "Resources.hpp"
 #include "MenuItem.hpp"
 #include "MenuItemDrawer.hpp"
 
 class MenuDrawer {
 public:
-    MenuDrawer(std::shared_ptr<MenuModel> model, std::shared_ptr<sf::RenderTarget> target,
-        Resources& resources);
+    MenuDrawer(std::shared_ptr<MenuModel> model, std::shared_ptr<sf::RenderTarget> target);
 
     ~MenuDrawer() { }
 

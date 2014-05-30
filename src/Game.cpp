@@ -6,13 +6,13 @@
 #include "Menu.hpp"
 #include "Game.hpp"
 
-Game::Game(int rows, int columns, Resources& resources)
+Game::Game(int rows, int columns)
         : window_(std::make_shared<sf::RenderWindow>(
             sf::VideoMode::getFullscreenModes()[0],
             "",
             sf::Style::Fullscreen)),
-        map_(rows, columns, window_, resources),
-        menu_(window_, resources)
+        map_(rows, columns, window_),
+        menu_(window_)
 {
     menu_.addItem("Return", [&] () { toggleMenu(); });
     menu_.addItem("New game", [&] () { restart(); });

@@ -11,16 +11,18 @@
 
 class Resources {
 public:
-    explicit Resources(const Paths& paths);
-    sf::Texture loadTexture(const std::string& relativePath);
-    sf::Font loadFont(const std::string& relativePath);
-    sf::Image loadImage(const std::string& relativePath);
+    static void initialize(const Paths& paths);
+    static sf::Texture loadTexture(const std::string& relativePath);
+    static sf::Font loadFont(const std::string& relativePath);
+    static sf::Image loadImage(const std::string& relativePath);
 
 private:
-    Paths paths_;
-    std::map<boost::filesystem::path, sf::Texture> loadedTextures_;
-    std::map<boost::filesystem::path, sf::Font> loadedFonts_;
-    std::map<boost::filesystem::path, sf::Image> loadedImages_;
+    Resources() = delete;
+
+    static Paths paths_;
+    static std::map<boost::filesystem::path, sf::Texture> loadedTextures_;
+    static std::map<boost::filesystem::path, sf::Font> loadedFonts_;
+    static std::map<boost::filesystem::path, sf::Image> loadedImages_;
 };
 
 #endif  // RESOURCES_HPP_

@@ -11,9 +11,9 @@
 const float MenuDrawer::fontHeightFactor_ = 1.0 / 25;
 const float MenuDrawer::lineSpacingFactor_ = fontHeightFactor_ / 4;
 
-MenuDrawer::MenuDrawer(std::shared_ptr<MenuModel> model, std::shared_ptr<sf::RenderTarget> target,
-    Resources& resources)
-        : model_(model), target_(target), font_(resources.loadFont("fonts/UbuntuMono.ttf")) {
+MenuDrawer::MenuDrawer(std::shared_ptr<MenuModel> model, std::shared_ptr<sf::RenderTarget> target)
+        : model_(model), target_(target), font_(Resources::loadFont("fonts/UbuntuMono.ttf"))
+{
     resetItemDrawers();
 }
 

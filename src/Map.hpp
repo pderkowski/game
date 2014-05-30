@@ -13,7 +13,7 @@
 
 class Map {
 public:
-    Map(int rows, int columns, std::shared_ptr<sf::RenderWindow> target, Resources& resources);
+    Map(int rows, int columns, std::shared_ptr<sf::RenderWindow> target);
 
     void draw() const;
 

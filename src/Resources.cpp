@@ -7,9 +7,17 @@
 #include "SFML/Graphics.hpp"
 #include "Resources.hpp"
 
-Resources::Resources(const Paths& paths)
-    : paths_(paths)
-{ }
+// Static variables
+Paths Resources::paths_;
+std::map<boost::filesystem::path, sf::Texture> Resources::loadedTextures_;
+std::map<boost::filesystem::path, sf::Font> Resources::loadedFonts_;
+std::map<boost::filesystem::path, sf::Image> Resources::loadedImages_;
+
+
+void Resources::initialize(const Paths& paths)
+{
+    paths_ = paths;
+}
 
 sf::Texture Resources::loadTexture(const std::string& relativePath) {
     boost::filesystem::path pathToTexture = paths_.getResourcePath(relativePath);

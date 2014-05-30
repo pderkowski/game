@@ -15,7 +15,7 @@ class Menu {
 public:
     typedef std::function<void()> Callback;
 
-    Menu(std::shared_ptr<sf::RenderWindow>, Resources& resources);
+    Menu(std::shared_ptr<sf::RenderWindow>);
     virtual ~Menu() { }
 
     void addItem(const std::string& itemName, Callback callback);

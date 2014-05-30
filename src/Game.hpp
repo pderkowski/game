@@ -10,7 +10,7 @@
 
 class Game {
 public:
-    Game(int rows, int columns, Resources& resources);
+    Game(int rows, int columns);
 
     void start();
 

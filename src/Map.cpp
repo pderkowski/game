@@ -9,9 +9,9 @@
 #include "MapGenerator.hpp"
 #include "Map.hpp"
 
-Map::Map(int rows, int columns, std::shared_ptr<sf::RenderWindow> target, Resources& resources)
+Map::Map(int rows, int columns, std::shared_ptr<sf::RenderWindow> target)
         : model_(std::make_shared<MapModel>(MapGenerator::generateMap(rows, columns))),
-        mapDrawer_(model_, target, resources),
+        mapDrawer_(model_, target),
         minimapDrawer_(model_, target)
 {
     minimapDrawer_.updateMinimap(mapDrawer_.getDisplayedRectangle());

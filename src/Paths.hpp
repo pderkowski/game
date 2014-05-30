@@ -8,6 +8,7 @@
 
 class Paths {
 public:
+    Paths() = default;
     explicit Paths(const std::string& relativePathToExec);
     boost::filesystem::path getExecutablePath();
     boost::filesystem::path getBasePath();
