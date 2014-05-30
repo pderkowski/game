@@ -3,11 +3,12 @@
 #ifndef LAYER_HPP_
 #define LAYER_HPP_
 
+#include <memory>
 #include "SFML/Graphics.hpp"
 
 class Layer : public sf::Drawable {
 public:
-    explicit Layer(const sf::Texture& texture);
+    explicit Layer(std::shared_ptr<sf::Texture> texture);
     virtual ~Layer() { }
 
     virtual void draw(sf::RenderTarget& target,
@@ -16,7 +17,7 @@ public:
     void addVertices(const sf::VertexArray& vertices);
 
 private:
-    sf::Texture texture_;
+    std::shared_ptr<sf::Texture> texture_;
 
     sf::VertexArray vertices_;
 };

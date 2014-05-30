@@ -4,11 +4,11 @@
 #include <stdexcept>
 #include "Layer.hpp"
 
-Layer::Layer(const sf::Texture& texture)
+Layer::Layer(std::shared_ptr<sf::Texture> texture)
     : texture_(texture),
     vertices_(sf::Quads)
 {
-    texture_.setSmooth(true);
+    texture_->setSmooth(true);
 }
 
 void Layer::addVertices(const sf::VertexArray& vertices) {
@@ -22,6 +22,6 @@ void Layer::addVertices(const sf::VertexArray& vertices) {
 }
 
 void Layer::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-    states.texture = &texture_;
+    states.texture = texture_.get();
     target.draw(vertices_, states);
 }
