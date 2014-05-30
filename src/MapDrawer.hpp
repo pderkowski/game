@@ -11,6 +11,7 @@
 #include "Tile.hpp"
 #include "Coordinates.hpp"
 #include "Layer.hpp"
+#include "TextureCoords.hpp"
 
 class MapDrawer {
 public:
@@ -30,7 +31,9 @@ public:
     sf::FloatRect getDisplayedRectangle() const;
 
 private:
-    void buildLayers();
+    void makeLayers();
+    Layer makeLayer(std::shared_ptr<sf::Texture> texture,
+        const TextureCoords<Tile::Type>& textureCoords);
 
     IntIsoPoint mapPixelToMapCoords(const sf::Vector2i& position);
 

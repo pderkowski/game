@@ -9,6 +9,7 @@
 class TextureCoordsFactory {
 public:
     static TextureCoords<Tile::Type> getTerrainTextureCoords();
+    static TextureCoords<Tile::Type> getLandmarkTextureCoords();
 };
 
 #endif  // TEXTURECOORDSFACTORY_HPP_

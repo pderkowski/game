@@ -28,3 +28,10 @@ TextureCoords<Tile::Type> TextureCoordsFactory::getTerrainTextureCoords() {
     tc.add(Tile::Type::Water, ::makeRectangle(sf::Vector2f(98, 1), 96, 48));
     return tc;
 }
+
+TextureCoords<Tile::Type> TextureCoordsFactory::getLandmarkTextureCoords() {
+    TextureCoords<Tile::Type> tc;
+    tc.add(Tile::Type::Hills, ::makeRectangle(sf::Vector2f(1, 393), 96, 48));
+    tc.add(Tile::Type::Mountains, ::makeRectangle(sf::Vector2f(1, 295), 96, 48));
+    return tc;
+}
