@@ -5,16 +5,16 @@
 
 #include <memory>
 #include <map>
+#include <vector>
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
-#include "Resources.hpp"
 #include "Tile.hpp"
 #include "Coordinates.hpp"
+#include "Layer.hpp"
 
 class MapDrawer {
 public:
-    MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::RenderTarget> target,
-        Resources& resources);
+    MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::RenderTarget> target);
 
     void draw() const;
 
@@ -30,7 +30,7 @@ public:
     sf::FloatRect getDisplayedRectangle() const;
 
 private:
-    void setMapVertices();
+    void buildLayers();
 
     IntIsoPoint mapPixelToMapCoords(const sf::Vector2i& position);
 
@@ -47,9 +47,8 @@ private:
     int tileHeight_;
 
     sf::View mapView_;
-    sf::Texture texture_;
-    std::map<Tile::Type, sf::Vector2f> textureCoords_;
-    sf::VertexArray mapVertices_;
+
+    std::vector<Layer> layers_;
 };
 
 #endif  // MAPDRAWER_HPP_

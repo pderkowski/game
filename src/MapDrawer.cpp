@@ -7,46 +7,39 @@
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
 #include "MapDrawer.hpp"
-#include "Resources.hpp"
 #include "Tile.hpp"
 #include "Coordinates.hpp"
 #include "Utils.hpp"
+#include "TextureCoordsFactory.hpp"
+#include "Resources.hpp"
 
-MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::RenderTarget> target,
-    Resources& resources)
+MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::RenderTarget> target)
         : model_(model),
         target_(target),
         tileWidth_(96),
         tileHeight_(48),
-        mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y)),
-        texture_(resources.loadTexture("tiles/terrain1.png")),
-        textureCoords_{
-            { Tile::Type::Hills, sf::Vector2f(1, 197) },
-            { Tile::Type::Mountains, sf::Vector2f(1, 246) },
-            { Tile::Type::Plains, sf::Vector2f(1, 99) },
-            { Tile::Type::Water, sf::Vector2f(98, 1) }
-        },
-        mapVertices_(sf::Quads, 4 * model->getRowsNo() * 2 * model->getColumnsNo())
+        mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y))
 {
-    texture_.setSmooth(true);
-    setMapVertices();
+    layers_.push_back(Layer(Resources::loadTexture("textures/terrains.png")));
+    buildLayers();
 }
 
 void MapDrawer::setModel(std::shared_ptr<MapModel> model) {
     model_ = model;
     mapView_.reset(sf::FloatRect(0, 0, target_->getSize().x, target_->getSize().y));
-    mapVertices_.resize(4 * model->getRowsNo() * 2 * model->getColumnsNo());
-    setMapVertices();
+    buildLayers();
 }
 
-void MapDrawer::setMapVertices() {
+void MapDrawer::buildLayers() {
+    auto terrains = TextureCoordsFactory::getTerrainTextureCoords();
+
     for (int r = 0; r < model_->getRowsNo(); ++r) {
         for (int c = 0; c < 2 * model_->getColumnsNo(); ++c) {
             IntIsoPoint tileIsoCoords(c, r);
             auto tile = model_->getTile(tileIsoCoords);
             auto spriteCoords = tileIsoCoords.toCartesian();
 
-            sf::Vertex* quad = &mapVertices_[(c + r * 2 * model_->getColumnsNo()) * 4];
+            sf::VertexArray quad(sf::Quads, 4);
 
             sf::Vector2f quadCenter(
                 utils::positiveModulo(spriteCoords.x * tileWidth_ / 2, 2 * getMapWidth()),
@@ -61,21 +54,24 @@ void MapDrawer::setMapVertices() {
             quad[3].position = sf::Vector2f(quadCenter.x - tileWidth_ / 2,
                 quadCenter.y + tileHeight_ / 2);
 
-            sf::Vector2f texTopLeft = textureCoords_.at(tile->type);
+            auto quadTexCoords = terrains.get(tile->type);
 
-            quad[0].texCoords = sf::Vector2f(texTopLeft.x, texTopLeft.y);
-            quad[1].texCoords = sf::Vector2f(texTopLeft.x + tileWidth_, texTopLeft.y);
-            quad[2].texCoords = sf::Vector2f(texTopLeft.x + tileWidth_, texTopLeft.y + tileHeight_);
-            quad[3].texCoords = sf::Vector2f(texTopLeft.x, texTopLeft.y + tileHeight_);
+            quad[0].texCoords = quadTexCoords[0];
+            quad[1].texCoords = quadTexCoords[1];
+            quad[2].texCoords = quadTexCoords[2];
+            quad[3].texCoords = quadTexCoords[3];
+
+            layers_[0].addVertices(quad);
         }
     }
 }
 
 void MapDrawer::draw() const {
-    auto states = sf::RenderStates::Default;
-    states.texture = &texture_;
     target_->setView(mapView_);
-    target_->draw(mapVertices_, states);
+
+    for (const auto& layer : layers_) {
+        target_->draw(layer);
+    }
 }
 
 std::shared_ptr<const sf::RenderTarget> MapDrawer::getTarget() const {
