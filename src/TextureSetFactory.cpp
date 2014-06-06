@@ -18,15 +18,15 @@ sf::VertexArray makeQuad(float width, float height, const sf::Vector2f& texCoord
     const sf::Vector2f& position = sf::Vector2f(0, 0))
 {
     sf::VertexArray rectangle(sf::Quads, 4);
-    rectangle[0].position = position + sf::Vector2f(width / 2, 0);
-    rectangle[1].position = position + sf::Vector2f(width, height / 2);
-    rectangle[2].position = position + sf::Vector2f(width / 2, height);
-    rectangle[3].position = position + sf::Vector2f(0, height / 2);
+    rectangle[0].position = position + sf::Vector2f(0, 0);
+    rectangle[1].position = position + sf::Vector2f(width, 0);
+    rectangle[2].position = position + sf::Vector2f(width, height);
+    rectangle[3].position = position + sf::Vector2f(0, height);
 
-    rectangle[0].texCoords = texCoords + sf::Vector2f(width / 2, 0);
-    rectangle[1].texCoords = texCoords + sf::Vector2f(width, height / 2);
-    rectangle[2].texCoords = texCoords + sf::Vector2f(width / 2, height);
-    rectangle[3].texCoords = texCoords + sf::Vector2f(0, height / 2);
+    rectangle[0].texCoords = texCoords + sf::Vector2f(0, 0);
+    rectangle[1].texCoords = texCoords + sf::Vector2f(width, 0);
+    rectangle[2].texCoords = texCoords + sf::Vector2f(width, height);
+    rectangle[3].texCoords = texCoords + sf::Vector2f(0, height);
 
     return rectangle;
 }
