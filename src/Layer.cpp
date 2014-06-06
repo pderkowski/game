@@ -4,24 +4,28 @@
 #include <stdexcept>
 #include "Layer.hpp"
 
-Layer::Layer(std::shared_ptr<sf::Texture> texture)
-    : texture_(texture),
+Layer::Layer(const TextureSet& textureSet)
+    : textureSet_(textureSet),
     vertices_(sf::Quads)
-{
-    texture_->setSmooth(true);
+{ }
+
+bool Layer::contains(Tile::Type type) const {
+    return textureSet_.contains(type);
 }
 
-void Layer::addVertices(const sf::VertexArray& vertices) {
-    if (vertices.getPrimitiveType() != vertices_.getPrimitiveType()) {
-        throw std::invalid_argument("Wrong primitive type of vertices being added to layer.");
-    } else {
-        for (unsigned i = 0; i < vertices.getVertexCount(); ++i) {
-            vertices_.append(vertices[i]);
-        }
+void Layer::add(std::shared_ptr<const Tile> tile,
+    const std::vector<std::shared_ptr<const Tile>>& neighbors,
+    const sf::Vector2f& position)
+{
+    auto vertices = textureSet_.getVertices(tile, neighbors);
+
+    for (unsigned i = 0; i < vertices.getVertexCount(); ++i) {
+        vertices[i].position += (position - sf::Vector2f(48, 24));
+        vertices_.append(vertices[i]);
     }
 }
 
 void Layer::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-    states.texture = texture_.get();
+    states.texture = textureSet_.getActualTexture().get();
     target.draw(vertices_, states);
 }

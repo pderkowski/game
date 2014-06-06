@@ -62,11 +62,38 @@ bool MapModel::isInBounds(const IntIsoPoint& p) const {
 }
 
 std::shared_ptr<const Tile> MapModel::getTile(const IntIsoPoint& p) const {
-    return tiles_[utils::positiveModulo(p.y, rowsNo_)][utils::positiveModulo(p.x, columnsNo_)];
+    if (!isInBounds(p)) {
+        throw std::range_error("Requested tile is out of range.");
+    }
+    return tiles_[p.y][utils::positiveModulo(p.x, columnsNo_)];
 }
 
 std::shared_ptr<Tile> MapModel::getTile(const IntIsoPoint& p) {
-    return tiles_[utils::positiveModulo(p.y, rowsNo_)][utils::positiveModulo(p.x, columnsNo_)];
+    return std::const_pointer_cast<Tile>(static_cast<const MapModel&>(*this).getTile(p));
 }
 
+std::vector<std::shared_ptr<const Tile>> MapModel::getNeighbors(std::shared_ptr<const Tile> tile) const {
+    std::vector<IntRotPoint> neighborsCoords = {
+        IntRotPoint(tile->coords.x, tile->coords.y - 1),
+        IntRotPoint(tile->coords.x + 1, tile->coords.y - 1),
+        IntRotPoint(tile->coords.x + 1, tile->coords.y),
+        IntRotPoint(tile->coords.x + 1, tile->coords.y + 1),
+        IntRotPoint(tile->coords.x, tile->coords.y + 1),
+        IntRotPoint(tile->coords.x - 1, tile->coords.y + 1),
+        IntRotPoint(tile->coords.x - 1, tile->coords.y),
+        IntRotPoint(tile->coords.x - 1, tile->coords.y - 1) };
+
+    std::vector<std::shared_ptr<const Tile>> neighbors;
+    for (const auto& rotCoord : neighborsCoords) {
+        IntIsoPoint isoCoord(rotCoord.toIsometric());
+        if (isInBounds(isoCoord)) {
+            neighbors.push_back(getTile(isoCoord));
+        } else {
+            auto dummy = std::make_shared<const Tile>(IntRotPoint(-1, -1));
+            neighbors.push_back(dummy);
+        }
+    }
+
+    return neighbors;
+}
 

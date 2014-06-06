@@ -21,7 +21,7 @@ public:
 
     void toggleVisibility();
 
-    IntRotPoint coordinates;
+    IntRotPoint coords;
     Type type;
 
     bool isVisible;

@@ -20,7 +20,7 @@ void Resources::initialize(const Paths& paths)
     paths_ = paths;
 }
 
-std::shared_ptr<sf::Texture> Resources::loadTexture(const std::string& relativePath) {
+std::shared_ptr<const sf::Texture> Resources::loadTexture(const std::string& relativePath) {
     boost::filesystem::path pathToTexture = paths_.getResourcePath(relativePath);
 
     if (loadedTextures_.find(pathToTexture) == loadedTextures_.end()) {
@@ -29,6 +29,7 @@ std::shared_ptr<sf::Texture> Resources::loadTexture(const std::string& relativeP
             throw std::runtime_error("Could not load texture from " + pathToTexture.string());
         }
 
+        texture->setSmooth(true);
         loadedTextures_[pathToTexture] = texture;
     }
 

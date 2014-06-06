@@ -4,13 +4,14 @@
 #include <cmath>
 #include <algorithm>
 #include <map>
+#include <iterator>
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
 #include "MapDrawer.hpp"
 #include "Tile.hpp"
 #include "Coordinates.hpp"
 #include "Utils.hpp"
-#include "TextureCoordsFactory.hpp"
+#include "TextureSetFactory.hpp"
 #include "Resources.hpp"
 
 MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::RenderTarget> target)
@@ -30,55 +31,33 @@ void MapDrawer::setModel(std::shared_ptr<MapModel> model) {
 }
 
 void MapDrawer::makeLayers() {
-    auto terrains = TextureCoordsFactory::getTerrainTextureCoords();
-    auto landmarks = TextureCoordsFactory::getLandmarkTextureCoords();
-
     layers_.clear();
-    layers_.push_back(makeLayer(Resources::loadTexture("textures/terrains.png"), terrains));
-    layers_.push_back(makeLayer(Resources::loadTexture("textures/landmarks.png"), landmarks));
-}
-
-Layer MapDrawer::makeLayer(std::shared_ptr<sf::Texture> texture,
-        const TextureCoords<Tile::Type>& textureCoords)
-{
-    Layer layer(texture);
+    layers_.push_back(Layer(TextureSetFactory::getTerrainTextureSet()));
+    layers_.push_back(Layer(TextureSetFactory::getLandmarkTextureSet()));
 
     for (int r = 0; r < model_->getRowsNo(); ++r) {
-        for (int c = 0; c < 2 * model_->getColumnsNo(); ++c) {
-            IntIsoPoint tileIsoCoords(c, r);
-            auto tile = model_->getTile(tileIsoCoords);
-
-            if (textureCoords.contains(tile->type)) {
-                auto tileCartCoords = tileIsoCoords.toCartesian();
-
-                sf::Vector2f quadCenter(
-                    utils::positiveModulo(tileCartCoords.x * tileWidth_ / 2, 2 * getMapWidth()),
-                    tileCartCoords.y * tileHeight_ / 2);
-
-                sf::VertexArray quad(sf::Quads, 4);
-
-                quad[0].position = sf::Vector2f(quadCenter.x - tileWidth_ / 2,
-                    quadCenter.y - tileHeight_ / 2);
-                quad[1].position = sf::Vector2f(quadCenter.x + tileWidth_ / 2,
-                    quadCenter.y - tileHeight_ / 2);
-                quad[2].position = sf::Vector2f(quadCenter.x + tileWidth_ / 2,
-                    quadCenter.y + tileHeight_ / 2);
-                quad[3].position = sf::Vector2f(quadCenter.x - tileWidth_ / 2,
-                    quadCenter.y + tileHeight_ / 2);
-
-                auto quadTexCoords = textureCoords.get(tile->type);
-
-                quad[0].texCoords = quadTexCoords[0];
-                quad[1].texCoords = quadTexCoords[1];
-                quad[2].texCoords = quadTexCoords[2];
-                quad[3].texCoords = quadTexCoords[3];
-
-                layer.addVertices(quad);
-            }
+        for (int c = 0; c < model_->getColumnsNo(); ++c) {
+            auto tile = model_->getTile(IntIsoPoint(c, r));
+            addTileToLayers(tile);
         }
     }
+}
 
-    return layer;
+void MapDrawer::addTileToLayers(std::shared_ptr<const Tile> tile) {
+    for (auto& layer : layers_) {
+        if (layer.contains(tile->type)) {
+            auto tileCartCoords = tile->coords.toCartesian();
+            sf::Vector2f tilePosition(
+                utils::positiveModulo(tileCartCoords.x * tileWidth_ / 2, 2 * getMapWidth()),
+                tileCartCoords.y * tileHeight_ / 2);
+            sf::Vector2f dualTilePosition(
+                utils::positiveModulo(tilePosition.x + getMapWidth(), 2 * getMapWidth()),
+                tilePosition.y);
+
+            layer.add(tile, model_->getNeighbors(tile), tilePosition);
+            layer.add(tile, model_->getNeighbors(tile), dualTilePosition);
+        }
+    }
 }
 
 void MapDrawer::draw() const {

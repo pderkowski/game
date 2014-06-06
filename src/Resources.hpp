@@ -13,7 +13,7 @@
 class Resources {
 public:
     static void initialize(const Paths& paths);
-    static std::shared_ptr<sf::Texture> loadTexture(const std::string& relativePath);
+    static std::shared_ptr<const sf::Texture> loadTexture(const std::string& relativePath);
     static sf::Font loadFont(const std::string& relativePath);
     static sf::Image loadImage(const std::string& relativePath);
 

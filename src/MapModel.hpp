@@ -27,6 +27,8 @@ public:
     std::shared_ptr<const Tile> getTile(const IntIsoPoint& p) const;
     std::shared_ptr<Tile> getTile(const IntIsoPoint& p);
 
+    std::vector<std::shared_ptr<const Tile>> getNeighbors(std::shared_ptr<const Tile> tile) const;
+
 private:
     int rowsNo_;
     int columnsNo_;

@@ -5,19 +5,23 @@
 
 #include <memory>
 #include "SFML/Graphics.hpp"
+#include "TextureSet.hpp"
 
 class Layer : public sf::Drawable {
 public:
-    explicit Layer(std::shared_ptr<sf::Texture> texture);
+    explicit Layer(const TextureSet& textureSet);
     virtual ~Layer() { }
 
     virtual void draw(sf::RenderTarget& target,
         sf::RenderStates states = sf::RenderStates::Default) const;
 
-    void addVertices(const sf::VertexArray& vertices);
+    bool contains(Tile::Type type) const;
+    void add(std::shared_ptr<const Tile> tile,
+        const std::vector<std::shared_ptr<const Tile>>& neighbors,
+        const sf::Vector2f& tileCenter);
 
 private:
-    std::shared_ptr<sf::Texture> texture_;
+    TextureSet textureSet_;
 
     sf::VertexArray vertices_;
 };
