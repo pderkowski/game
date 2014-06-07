@@ -8,16 +8,19 @@
 
 class TextureSetFactory {
 public:
-    static TextureSet getTerrainTextureSet();
-    static TextureSet getLandmarkTextureSet();
+    static TextureSet getBaseTextureSet();
+    static TextureSet getBlendTextureSet();
+    static TextureSet getOverlayTextureSet();
 
 private:
-    static TextureMatcher makeHillsTerrainMatcher();
-    static TextureMatcher makeMountainsTerrainMatcher();
-    static TextureMatcher makePlainsTerrainMatcher();
-    static TextureMatcher makeWaterMatcher();
-    static TextureMatcher makeHillsLandmarkMatcher();
-    static TextureMatcher makeMountainsLandmarkMatcher();
+    static TextureMatcher makeHillsBaseMatcher();
+    static TextureMatcher makeMountainsBaseMatcher();
+    static TextureMatcher makePlainsBaseMatcher();
+    static TextureMatcher makeWaterBlendMatcher();
+    static TextureMatcher makePlainsBlendMatcher();
+    static TextureMatcher makeWaterBaseMatcher();
+    static TextureMatcher makeHillsOverlayMatcher();
+    static TextureMatcher makeMountainsOverlayMatcher();
 };
 
 #endif  // TEXTURESETFACTORY_HPP_

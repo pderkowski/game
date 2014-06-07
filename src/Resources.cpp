@@ -29,7 +29,7 @@ std::shared_ptr<const sf::Texture> Resources::loadTexture(const std::string& rel
             throw std::runtime_error("Could not load texture from " + pathToTexture.string());
         }
 
-        texture->setSmooth(true);
+        // texture->setSmooth(true);
         loadedTextures_[pathToTexture] = texture;
     }
 

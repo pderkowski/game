@@ -32,8 +32,9 @@ void MapDrawer::setModel(std::shared_ptr<MapModel> model) {
 
 void MapDrawer::makeLayers() {
     layers_.clear();
-    layers_.push_back(Layer(TextureSetFactory::getTerrainTextureSet()));
-    layers_.push_back(Layer(TextureSetFactory::getLandmarkTextureSet()));
+    layers_.push_back(Layer(TextureSetFactory::getBaseTextureSet()));
+    layers_.push_back(Layer(TextureSetFactory::getBlendTextureSet()));
+    layers_.push_back(Layer(TextureSetFactory::getOverlayTextureSet()));
 
     for (int r = 0; r < model_->getRowsNo(); ++r) {
         for (int c = 0; c < model_->getColumnsNo(); ++c) {
