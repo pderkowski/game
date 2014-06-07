@@ -39,7 +39,7 @@ TextureSet TextureSetFactory::getBaseTextureSet() {
 
     ts.add(Tile::Type::Water, makeWaterBaseMatcher());
     ts.add(Tile::Type::Hills, makeHillsBaseMatcher());
-    ts.add(Tile::Type::Mountains, makeMountainsBaseMatcher());
+    ts.add(Tile::Type::Mountains, makeHillsBaseMatcher());
     ts.add(Tile::Type::Plains, makePlainsBaseMatcher());
 
     return ts;
@@ -65,15 +65,6 @@ TextureSet TextureSetFactory::getOverlayTextureSet() {
 
 TextureMatcher TextureSetFactory::makeHillsBaseMatcher() {
     TextureMatcher tm(Tile::Type::Hills);
-
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(1, 197)));
-
-    return tm;
-}
-
-TextureMatcher TextureSetFactory::makeMountainsBaseMatcher() {
-    TextureMatcher tm(Tile::Type::Mountains);
 
     tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(1, 197)));
@@ -116,6 +107,21 @@ TextureMatcher TextureSetFactory::makePlainsBlendMatcher() {
         ::makeQuad(48, 24, sf::Vector2f(50, 76), sf::Vector2f(48, 24)));
     tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, DIFF, ANY }),
         ::makeQuad(48, 24, sf::Vector2f(1, 76), sf::Vector2f(0, 24)));
+
+    return tm;
+}
+
+TextureMatcher TextureSetFactory::makeHillsBlendMatcher() {
+    TextureMatcher tm(Tile::Type::Hills);
+
+    tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
+        ::makeQuad(48, 24, sf::Vector2f(1, 101)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, DIFF, ANY, ANY, ANY, ANY, ANY }),
+        ::makeQuad(48, 24, sf::Vector2f(50, 101), sf::Vector2f(48, 0)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, DIFF, ANY, ANY, ANY }),
+        ::makeQuad(48, 24, sf::Vector2f(50, 126), sf::Vector2f(48, 24)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, DIFF, ANY }),
+        ::makeQuad(48, 24, sf::Vector2f(1, 126), sf::Vector2f(0, 24)));
 
     return tm;
 }

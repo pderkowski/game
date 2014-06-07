@@ -14,11 +14,11 @@ public:
 
 private:
     static TextureMatcher makeHillsBaseMatcher();
-    static TextureMatcher makeMountainsBaseMatcher();
     static TextureMatcher makePlainsBaseMatcher();
+    static TextureMatcher makeWaterBaseMatcher();
     static TextureMatcher makeWaterBlendMatcher();
     static TextureMatcher makePlainsBlendMatcher();
-    static TextureMatcher makeWaterBaseMatcher();
+    static TextureMatcher makeHillsBlendMatcher();
     static TextureMatcher makeHillsOverlayMatcher();
     static TextureMatcher makeMountainsOverlayMatcher();
 };
