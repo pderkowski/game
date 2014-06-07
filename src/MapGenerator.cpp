@@ -5,7 +5,6 @@
 #include <memory>
 #include <cmath>
 #include "MapModel.hpp"
-#include "MapConstructor.hpp"
 #include "MapGenerator.hpp"
 #include "NoiseGenerator.hpp"
 #include "Gradient.hpp"
@@ -22,9 +21,4 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
     gradient.addPoint(0.96, Tile::Type::Hills);
     gradient.addPoint(0.995, Tile::Type::Mountains);
     return MapModel(probabilityMap, gradient);
-
-    // MapConstructor constructor(rows, columns, generator);
-    // constructor.spawnContinent(2000);
-    // constructor.spawnContinent(600);
-    // return constructor.getMapModel();
 }
