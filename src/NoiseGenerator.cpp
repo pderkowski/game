@@ -8,10 +8,12 @@
 #include "Coordinates.hpp"
 #include "Utils.hpp"
 
-HeightMap NoiseGenerator::generateHeightMap(unsigned rows, unsigned columns, unsigned seed) {
+HeightMap NoiseGenerator::generateHeightMap(unsigned rows, unsigned columns, unsigned seed,
+    double persistence)
+{
     noise::module::Perlin perlinModule;
     perlinModule.SetSeed(seed);
-    perlinModule.SetPersistence(0.5);
+    perlinModule.SetPersistence(persistence);
     noise::utils::NoiseMap noiseMap;
     noise::utils::NoiseMapBuilderCylinder noiseMapBuilder;
     noiseMapBuilder.SetSourceModule(perlinModule);

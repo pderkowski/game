@@ -7,7 +7,6 @@
 #include <memory>
 #include <functional>
 #include "Tile.hpp"
-#include "Gradient.hpp"
 #include "HeightMap.hpp"
 #include "Coordinates.hpp"
 
@@ -16,8 +15,6 @@ public:
     typedef std::function<Tile::Type(double)> HeightToTileConverter;
 
     MapModel(int rowsNo, int columnsNo);
-    MapModel(const HeightMap& heightMap, HeightToTileConverter converter);
-    MapModel(const HeightMap& heightMap, const Gradient& gradient);
 
     int getRowsNo() const;
     int getColumnsNo() const;
@@ -28,6 +25,9 @@ public:
     std::shared_ptr<Tile> getTile(const IntIsoPoint& p);
 
     std::vector<std::shared_ptr<const Tile>> getNeighbors(std::shared_ptr<const Tile> tile) const;
+    std::vector<std::shared_ptr<const Tile>> getNeighbors(const Tile& tile) const;
+
+    void changeTiles(std::function<void(Tile&)> transformation);
 
 private:
     int rowsNo_;

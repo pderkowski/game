@@ -4,7 +4,6 @@
 #define HEIGHTMAP_HPP_
 
 #include <functional>
-#include <tuple>
 #include <vector>
 
 class HeightMap {
@@ -18,8 +17,11 @@ public:
 
     unsigned getRowsNo() const;
     unsigned getColumnsNo() const;
+    unsigned getSize() const;
 
-    std::vector<std::tuple<unsigned, unsigned, double>> getListOfCells() const;
+    double min() const;
+    double max() const;
+    double getNth(unsigned n) const;
 
 private:
     unsigned rowsNo_;

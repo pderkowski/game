@@ -1,9 +1,10 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <iostream>
+#include <limits>
 #include <vector>
 #include <functional>
-#include <tuple>
+#include <algorithm>
 #include "HeightMap.hpp"
 
 HeightMap::HeightMap(unsigned rowsNo, unsigned columnsNo)
@@ -35,14 +36,48 @@ unsigned HeightMap::getColumnsNo() const {
     return columnsNo_;
 }
 
-std::vector<std::tuple<unsigned, unsigned, double>> HeightMap::getListOfCells() const {
-    std::vector<std::tuple<unsigned, unsigned, double>> listOfCells;
+unsigned HeightMap::getSize() const {
+    return rowsNo_ * columnsNo_;
+}
 
-    for (unsigned r = 0; r < rowsNo_; ++r) {
-        for (unsigned c = 0; c < columnsNo_; ++c) {
-            listOfCells.push_back(std::make_tuple(r, c, map_[r][c]));
+double HeightMap::min() const {
+    double min = std::numeric_limits<double>::max();
+
+    for (const auto& row : map_) {
+        for (const auto& cell : row) {
+            min = std::min(min, cell);
         }
     }
 
-    return listOfCells;
+    return min;
+}
+
+double HeightMap::max() const {
+    double max = std::numeric_limits<double>::min();
+
+    for (const auto& row : map_) {
+        for (const auto& cell : row) {
+            max = std::max(max, cell);
+        }
+    }
+
+    return max;
+}
+
+double HeightMap::getNth(unsigned n) const {
+    if (n >= rowsNo_ * columnsNo_) {
+        return max();
+    } else {
+        std::vector<double> heights;
+        heights.reserve(getSize());
+
+        for (const auto& row : map_) {
+            for (const auto& cell : row) {
+                heights.push_back(cell);
+            }
+        }
+
+        std::sort(heights.begin(), heights.end());
+        return heights[n];
+    }
 }

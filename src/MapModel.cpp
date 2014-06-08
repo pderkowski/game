@@ -8,7 +8,6 @@
 #include "MapModel.hpp"
 #include "Tile.hpp"
 #include "HeightMap.hpp"
-#include "Gradient.hpp"
 #include "Coordinates.hpp"
 #include "Utils.hpp"
 
@@ -20,32 +19,6 @@ MapModel::MapModel(int rowsNo, int columnsNo)
         for (int c = 0; c < columnsNo; ++c) {
             tiles_[r][c] = std::make_shared<Tile>(IntRotPoint(IntIsoPoint(c, r).toRotated()));
         }
-    }
-}
-
-MapModel::MapModel(const HeightMap& heightMap, HeightToTileConverter converter)
-    : MapModel(heightMap.getRowsNo(), heightMap.getColumnsNo())
-{
-    for (int r = 0; r < rowsNo_; ++r) {
-        for (int c = 0; c < columnsNo_; ++c) {
-           tiles_[r][c]->type = converter(heightMap(r, c));
-        }
-    }
-}
-
-MapModel::MapModel(const HeightMap& heightMap, const Gradient& gradient)
-    : MapModel(heightMap.getRowsNo(), heightMap.getColumnsNo())
-{
-    auto cells = heightMap.getListOfCells();
-    std::sort(cells.begin(), cells.end(),
-        [] (const std::tuple<unsigned, unsigned, double>& lhs,
-            const std::tuple<unsigned, unsigned, double>& rhs)
-        { return std::get<2>(lhs) < std::get<2>(rhs); });
-
-    for (unsigned cell = 0; cell < cells.size(); ++cell) {
-        double gradientPoint = static_cast<double>(cell) / cells.size();
-        tiles_[std::get<0>(cells[cell])][std::get<1>(cells[cell])]->type
-            = gradient.getValue(gradientPoint);
     }
 }
 
@@ -73,15 +46,19 @@ std::shared_ptr<Tile> MapModel::getTile(const IntIsoPoint& p) {
 }
 
 std::vector<std::shared_ptr<const Tile>> MapModel::getNeighbors(std::shared_ptr<const Tile> tile) const {
+    return getNeighbors(*tile);
+}
+
+std::vector<std::shared_ptr<const Tile>> MapModel::getNeighbors(const Tile& tile) const {
     std::vector<IntRotPoint> neighborsCoords = {
-        IntRotPoint(tile->coords.x, tile->coords.y - 1),
-        IntRotPoint(tile->coords.x + 1, tile->coords.y - 1),
-        IntRotPoint(tile->coords.x + 1, tile->coords.y),
-        IntRotPoint(tile->coords.x + 1, tile->coords.y + 1),
-        IntRotPoint(tile->coords.x, tile->coords.y + 1),
-        IntRotPoint(tile->coords.x - 1, tile->coords.y + 1),
-        IntRotPoint(tile->coords.x - 1, tile->coords.y),
-        IntRotPoint(tile->coords.x - 1, tile->coords.y - 1) };
+        IntRotPoint(tile.coords.x, tile.coords.y - 1),
+        IntRotPoint(tile.coords.x + 1, tile.coords.y - 1),
+        IntRotPoint(tile.coords.x + 1, tile.coords.y),
+        IntRotPoint(tile.coords.x + 1, tile.coords.y + 1),
+        IntRotPoint(tile.coords.x, tile.coords.y + 1),
+        IntRotPoint(tile.coords.x - 1, tile.coords.y + 1),
+        IntRotPoint(tile.coords.x - 1, tile.coords.y),
+        IntRotPoint(tile.coords.x - 1, tile.coords.y - 1) };
 
     std::vector<std::shared_ptr<const Tile>> neighbors;
     for (const auto& rotCoord : neighborsCoords) {
@@ -97,3 +74,10 @@ std::vector<std::shared_ptr<const Tile>> MapModel::getNeighbors(std::shared_ptr<
     return neighbors;
 }
 
+void MapModel::changeTiles(std::function<void(Tile&)> transformation) {
+    for (const auto& row : tiles_) {
+        for (const auto& tilePtr : row) {
+            transformation(*tilePtr);
+        }
+    }
+}
