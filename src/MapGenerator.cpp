@@ -20,9 +20,9 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
 
     const double waterLevel = landMap.min();
     const double landLevel = landMap.getNth(0.75 * landMap.getSize());
-    const double hillLevel = hillMap.getNth(0.90 * hillMap.getSize());
+    const double hillLevel = hillMap.getNth(0.85 * hillMap.getSize());
     const double mountainLevelOnPlains = mountainMap.getNth(0.99 * mountainMap.getSize());
-    const double mountainLevelOnHills = mountainMap.getNth(0.90 * mountainMap.getSize());
+    const double mountainLevelOnHills = mountainMap.getNth(0.80 * mountainMap.getSize());
 
     return MapConstructor(landMap)
         .setTypeMask({ Tile::Type::Empty })
