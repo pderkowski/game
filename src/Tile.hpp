@@ -12,6 +12,7 @@ public:
         Water,
         Grassland,
         Plains,
+        Forest,
         Desert,
         Hills,
         Mountains,

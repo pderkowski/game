@@ -19,6 +19,7 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
     auto humidityMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 2, 0.6);
     auto hillMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 4);
     auto mountainMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 8, 0.4);
+    auto forestMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 4, 0.8);
 
     const double waterLevel = landMap.min();
     const double landLevel = landMap.getNth(0.70 * landMap.getSize());
@@ -27,6 +28,7 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
     const double hillLevel = hillMap.getNth(0.85 * hillMap.getSize());
     const double mountainLevelOnPlains = mountainMap.getNth(0.99 * mountainMap.getSize());
     const double mountainLevelOnHills = mountainMap.getNth(0.80 * mountainMap.getSize());
+    const double forestLevel = forestMap.getNth(0.50 * forestMap.getSize());
 
     const std::vector<Tile::Type> landTypes = { Tile::Type::Grassland, Tile::Type::Plains,
         Tile::Type::Desert, Tile::Type::Hills, Tile::Type::Mountains };
@@ -46,5 +48,8 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
         .setType(Tile::Type::Mountains, mountainLevelOnPlains)
         .setTypeMask({ Tile::Type::Hills })
         .setType(Tile::Type::Mountains, mountainLevelOnHills)
+        .setSource(forestMap)
+        .setTypeMask({ Tile::Type::Plains, Tile::Type::Grassland })
+        .setType(Tile::Type::Forest, forestLevel)
         .construct();
 }

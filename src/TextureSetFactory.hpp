@@ -17,16 +17,19 @@ private:
     static TextureMatcher makeMountainsBaseMatcher();
     static TextureMatcher makeGrasslandBaseMatcher();
     static TextureMatcher makePlainsBaseMatcher();
+    static TextureMatcher makeForestBaseMatcher();
     static TextureMatcher makeDesertBaseMatcher();
     static TextureMatcher makeWaterBaseMatcher();
 
     static TextureMatcher makeWaterBlendMatcher();
     static TextureMatcher makeGrasslandBlendMatcher();
     static TextureMatcher makePlainsBlendMatcher();
+    static TextureMatcher makeForestBlendMatcher();
     static TextureMatcher makeDesertBlendMatcher();
     static TextureMatcher makeHillsBlendMatcher();
     static TextureMatcher makeMountainsBlendMatcher();
 
+    static TextureMatcher makeForestOverlayMatcher();
     static TextureMatcher makeHillsOverlayMatcher();
     static TextureMatcher makeMountainsOverlayMatcher();
 };
