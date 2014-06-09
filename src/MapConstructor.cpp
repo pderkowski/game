@@ -44,6 +44,18 @@ MapConstructor& MapConstructor::setType(Tile::Type type, double threshold) {
     return *this;
 }
 
+MapConstructor& MapConstructor::setType(Tile::Type type, std::function<bool(double)> predicate) {
+        model_.changeTiles([&] (Tile& tile) {
+        if (isTypeModifiable(tile.type)) {
+            IntIsoPoint coords(tile.coords.toIsometric());
+            if (predicate(heightMap_(coords.y, coords.x)))
+                tile.type = type;
+        }
+    });
+
+    return *this;
+}
+
 bool MapConstructor::isTypeModifiable(Tile::Type type) const {
     return std::find(typeMask_.begin(), typeMask_.end(), type) != typeMask_.end();
 }

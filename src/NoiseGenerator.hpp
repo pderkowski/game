@@ -8,7 +8,7 @@
 class NoiseGenerator {
 public:
     static HeightMap generateHeightMap(unsigned rows, unsigned columns, unsigned seed,
-        double persistence);
+        double frequency = 1.0, double persistence = 0.5);
 };
 
 #endif  // NOISEGENERATOR_HPP_

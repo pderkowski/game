@@ -10,7 +10,9 @@ public:
     enum Type {
         Empty = 0,  // don't assign other values
         Water,
+        Grassland,
         Plains,
+        Desert,
         Hills,
         Mountains,
         NumberOfTileTypes  // this has to be the last one in this enum

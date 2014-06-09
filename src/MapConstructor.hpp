@@ -4,6 +4,7 @@
 #define MAPCONSTRUCTOR_HPP_
 
 #include <vector>
+#include <functional>
 #include "Tile.hpp"
 #include "MapModel.hpp"
 #include "HeightMap.hpp"
@@ -21,6 +22,7 @@ public:
     MapModel construct() const;
 
     MapConstructor& setType(Tile::Type type, double threshold);
+    MapConstructor& setType(Tile::Type type, std::function<bool(double)> predicate);
 
 private:
     bool isTypeModifiable(Tile::Type type) const;
