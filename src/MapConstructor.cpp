@@ -2,6 +2,9 @@
 
 #include <stdexcept>
 #include <vector>
+#include <map>
+#include <memory>
+#include <random>
 #include <algorithm>
 #include "Tile.hpp"
 #include "HeightMap.hpp"
@@ -28,6 +31,57 @@ MapConstructor& MapConstructor::setTypeMask(const std::vector<Tile::Type>& types
     return *this;
 }
 
+MapConstructor& MapConstructor::spawnRivers(std::map<Tile::Type, double> probabilities,
+    std::shared_ptr<std::default_random_engine> generator)
+{
+    model_.changeTiles([&] (Tile& tile) {
+        if (isTypeModifiable(tile.type) && probabilities.count(tile.type)) {
+            IntIsoPoint coords(tile.coords.toIsometric());
+            if (((*generator)() % 1000) / 1000.0 < probabilities.at(tile.type) * heightMap_(coords.y, coords.x))
+                tile.type = Tile::Type::River;
+        }
+    });
+
+    return *this;
+}
+
+MapConstructor& MapConstructor::createRiverFlow() {
+    auto sources = model_.getTiles(Tile::Type::River);
+
+    for (const auto& source : sources) {
+        for (auto lowestNeighbor = findLowestNeighbor(source);
+            lowestNeighbor->type != Tile::Type::Water && lowestNeighbor->type != Tile::Tile::River;
+            lowestNeighbor = findLowestNeighbor(lowestNeighbor))
+        {
+            lowestNeighbor->type = Tile::Type::River;
+        }
+    }
+
+    return *this;
+}
+
+std::shared_ptr<Tile> MapConstructor::findLowestNeighbor(std::shared_ptr<const Tile> tile) const {
+    std::shared_ptr<const Tile> res;
+
+    auto neighbors = model_.getAdjacentNeighbors(tile);
+    for (const auto& neighbor : neighbors) {
+        if (model_.isInBounds(neighbor) && *neighbor != *tile) {
+            if (!res) {
+                res = neighbor;
+            } else {
+                const IntIsoPoint resCoords(res->coords.toIsometric());
+                const IntIsoPoint neighCoords(neighbor->coords.toIsometric());
+                res = (heightMap_(resCoords.y, resCoords.x) < heightMap_(neighCoords.y, neighCoords.x))?
+                    res : neighbor;
+            }
+
+        }
+    }
+
+    return std::const_pointer_cast<Tile>(res);
+}
+
+
 MapModel MapConstructor::construct() const {
     return model_;
 }
@@ -37,18 +91,6 @@ MapConstructor& MapConstructor::setType(Tile::Type type, double threshold) {
         if (isTypeModifiable(tile.type)) {
             IntIsoPoint coords(tile.coords.toIsometric());
             if (heightMap_(coords.y, coords.x) >= threshold)
-                tile.type = type;
-        }
-    });
-
-    return *this;
-}
-
-MapConstructor& MapConstructor::setType(Tile::Type type, std::function<bool(double)> predicate) {
-        model_.changeTiles([&] (Tile& tile) {
-        if (isTypeModifiable(tile.type)) {
-            IntIsoPoint coords(tile.coords.toIsometric());
-            if (predicate(heightMap_(coords.y, coords.x)))
                 tile.type = type;
         }
     });

@@ -21,6 +21,9 @@ struct CartPoint {
     double y;
 };
 
+bool operator == (const CartPoint& lhs, const CartPoint& rhs);
+bool operator != (const CartPoint& lhs, const CartPoint& rhs);
+
 struct IntCartPoint {
     IntCartPoint(int x, int y);
     explicit IntCartPoint(const CartPoint& p);
@@ -31,6 +34,9 @@ struct IntCartPoint {
     int x;
     int y;
 };
+
+bool operator == (const IntCartPoint& lhs, const IntCartPoint& rhs);
+bool operator != (const IntCartPoint& lhs, const IntCartPoint& rhs);
 
 struct IsoPoint {
     IsoPoint(double x, double y);
@@ -43,6 +49,9 @@ struct IsoPoint {
     double y;
 };
 
+bool operator == (const IsoPoint& lhs, const IsoPoint& rhs);
+bool operator != (const IsoPoint& lhs, const IsoPoint& rhs);
+
 struct IntIsoPoint {
     IntIsoPoint(int x, int y);
     explicit IntIsoPoint(const IsoPoint& p);
@@ -53,6 +62,9 @@ struct IntIsoPoint {
     int x;
     int y;
 };
+
+bool operator == (const IntIsoPoint& lhs, const IntIsoPoint& rhs);
+bool operator != (const IntIsoPoint& lhs, const IntIsoPoint& rhs);
 
 struct RotPoint {
     RotPoint(double x, double y);
@@ -65,6 +77,9 @@ struct RotPoint {
     double y;
 };
 
+bool operator == (const RotPoint& lhs, const RotPoint& rhs);
+bool operator != (const RotPoint& lhs, const RotPoint& rhs);
+
 struct IntRotPoint {
     IntRotPoint(int x, int y);
     explicit IntRotPoint(const RotPoint& p);
@@ -75,5 +90,8 @@ struct IntRotPoint {
     int x;
     int y;
 };
+
+bool operator == (const IntRotPoint& lhs, const IntRotPoint& rhs);
+bool operator != (const IntRotPoint& lhs, const IntRotPoint& rhs);
 
 #endif  // COORDINATES_HPP_

@@ -14,3 +14,11 @@ Tile::Tile(const IntRotPoint& coords, Type type)
 void Tile::toggleVisibility() {
     isVisible = !isVisible;
 }
+
+bool operator == (const Tile& lhs, const Tile& rhs) {
+    return lhs.coords == rhs.coords;
+}
+
+bool operator != (const Tile& lhs, const Tile& rhs) {
+    return lhs.coords != rhs.coords;
+}

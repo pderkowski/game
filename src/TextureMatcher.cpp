@@ -1,15 +1,16 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <vector>
+#include <algorithm>
 #include "SFML/Graphics.hpp"
 #include "TextureMatcher.hpp"
 
 TextureMatcher::TextureMatcher()
-    : matchedTileType_(Tile::Type::Empty)
+    : matchedTileTypes_({ Tile::Type::Empty })
 { }
 
-TextureMatcher::TextureMatcher(Tile::Type matchedTileType)
-    : matchedTileType_(matchedTileType)
+TextureMatcher::TextureMatcher(const std::vector<Tile::Type>& matchedTileTypes)
+    : matchedTileTypes_(matchedTileTypes)
 { }
 
 void TextureMatcher::addMatching(const Matching& matching, const sf::VertexArray& textureVertices)
@@ -43,12 +44,12 @@ bool TextureMatcher::doMatch(const std::vector<std::shared_ptr<const Tile>>& nei
             case TileMatcher::Any:
                 break;
             case TileMatcher::Same:
-                if (neighbors[i]->type == matchedTileType_ || neighbors[i]->type == Tile::Type::Empty)
+                if (std::count(matchedTileTypes_.begin(), matchedTileTypes_.end(), neighbors[i]->type))
                     break;
                 else
                     return false;
             case TileMatcher::Different:
-                if (neighbors[i]->type != matchedTileType_ && neighbors[i]->type != Tile::Type::Empty)
+                if (!std::count(matchedTileTypes_.begin(), matchedTileTypes_.end(), neighbors[i]->type))
                     break;
                 else
                     return false;

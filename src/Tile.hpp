@@ -13,13 +13,14 @@ public:
         Grassland,
         Plains,
         Forest,
+        River,
         Desert,
         Hills,
         Mountains,
         NumberOfTileTypes  // this has to be the last one in this enum
     };
 
-    Tile(const IntRotPoint& coordinates);
+    explicit Tile(const IntRotPoint& coordinates);
     Tile(const IntRotPoint& coordinates, Type type);
 
     void toggleVisibility();
@@ -29,5 +30,8 @@ public:
 
     bool isVisible;
 };
+
+bool operator == (const Tile& lhs, const Tile& rhs);
+bool operator != (const Tile& lhs, const Tile& rhs);
 
 #endif  // TILE_HPP_

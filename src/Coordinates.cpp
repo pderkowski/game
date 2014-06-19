@@ -48,6 +48,14 @@ RotPoint CartPoint::toRotated() const {
     return ::cartesian_rotated(*this);
 }
 
+bool operator == (const CartPoint& lhs, const CartPoint& rhs) {
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
+bool operator != (const CartPoint& lhs, const CartPoint& rhs) {
+    return lhs.x != rhs.x || lhs.y != rhs.y;
+}
+
 
 IntCartPoint::IntCartPoint(int x, int y)
     : x(x), y(y)
@@ -63,6 +71,14 @@ IsoPoint IntCartPoint::toIsometric() const {
 
 RotPoint IntCartPoint::toRotated() const {
     return ::cartesian_rotated(*this);
+}
+
+bool operator == (const IntCartPoint& lhs, const IntCartPoint& rhs) {
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
+bool operator != (const IntCartPoint& lhs, const IntCartPoint& rhs) {
+    return lhs.x != rhs.x || lhs.y != rhs.y;
 }
 
 
@@ -82,6 +98,14 @@ RotPoint IsoPoint::toRotated() const {
     return ::isometric_rotated(*this);
 }
 
+bool operator == (const IsoPoint& lhs, const IsoPoint& rhs) {
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
+bool operator != (const IsoPoint& lhs, const IsoPoint& rhs) {
+    return lhs.x != rhs.x || lhs.y != rhs.y;
+}
+
 
 IntIsoPoint::IntIsoPoint(int x, int y)
     : x(x), y(y)
@@ -97,6 +121,14 @@ CartPoint IntIsoPoint::toCartesian() const {
 
 RotPoint IntIsoPoint::toRotated() const {
     return ::isometric_rotated(*this);
+}
+
+bool operator == (const IntIsoPoint& lhs, const IntIsoPoint& rhs) {
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
+bool operator != (const IntIsoPoint& lhs, const IntIsoPoint& rhs) {
+    return lhs.x != rhs.x || lhs.y != rhs.y;
 }
 
 
@@ -116,6 +148,14 @@ IsoPoint RotPoint::toIsometric() const {
     return ::rotated_isometric(*this);
 }
 
+bool operator == (const RotPoint& lhs, const RotPoint& rhs) {
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
+bool operator != (const RotPoint& lhs, const RotPoint& rhs) {
+    return lhs.x != rhs.x || lhs.y != rhs.y;
+}
+
 
 IntRotPoint::IntRotPoint(int x, int y)
     : x(x), y(y)
@@ -131,5 +171,13 @@ CartPoint IntRotPoint::toCartesian() const {
 
 IsoPoint IntRotPoint::toIsometric() const {
     return ::rotated_isometric(*this);
+}
+
+bool operator == (const IntRotPoint& lhs, const IntRotPoint& rhs) {
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
+bool operator != (const IntRotPoint& lhs, const IntRotPoint& rhs) {
+    return lhs.x != rhs.x || lhs.y != rhs.y;
 }
 

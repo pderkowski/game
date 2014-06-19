@@ -42,6 +42,7 @@ TextureSet TextureSetFactory::getBaseTextureSet() {
     ts.add(Tile::Type::Mountains, makeMountainsBaseMatcher());
     ts.add(Tile::Type::Grassland, makeGrasslandBaseMatcher());
     ts.add(Tile::Type::Plains, makePlainsBaseMatcher());
+    ts.add(Tile::Type::River, makeRiverBaseMatcher());
     ts.add(Tile::Type::Forest, makeForestBaseMatcher());
     ts.add(Tile::Type::Desert, makeDesertBaseMatcher());
 
@@ -53,6 +54,7 @@ TextureSet TextureSetFactory::getBlendTextureSet() {
 
     ts.add(Tile::Type::Water, makeWaterBlendMatcher());
     ts.add(Tile::Type::Plains, makePlainsBlendMatcher());
+    ts.add(Tile::Type::River, makeRiverBlendMatcher());
     ts.add(Tile::Type::Forest, makeForestBlendMatcher());
     ts.add(Tile::Type::Grassland, makeGrasslandBlendMatcher());
     ts.add(Tile::Type::Desert, makeDesertBlendMatcher());
@@ -68,12 +70,13 @@ TextureSet TextureSetFactory::getOverlayTextureSet() {
     ts.add(Tile::Type::Forest, makeForestOverlayMatcher());
     ts.add(Tile::Type::Hills, makeHillsOverlayMatcher());
     ts.add(Tile::Type::Mountains, makeMountainsOverlayMatcher());
+    ts.add(Tile::Type::River, makeRiverOverlayMatcher());
 
     return ts;
 }
 
 TextureMatcher TextureSetFactory::makeHillsBaseMatcher() {
-    TextureMatcher tm(Tile::Type::Hills);
+    TextureMatcher tm;
 
     tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(1, 197)));
@@ -82,7 +85,7 @@ TextureMatcher TextureSetFactory::makeHillsBaseMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makeMountainsBaseMatcher() {
-    TextureMatcher tm(Tile::Type::Mountains);
+    TextureMatcher tm;
 
     tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(1, 197)));
@@ -91,7 +94,16 @@ TextureMatcher TextureSetFactory::makeMountainsBaseMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makeGrasslandBaseMatcher() {
-    TextureMatcher tm(Tile::Type::Grassland);
+    TextureMatcher tm;
+
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(1, 99)));
+
+    return tm;
+}
+
+TextureMatcher TextureSetFactory::makeRiverBaseMatcher() {
+    TextureMatcher tm;
 
     tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(1, 99)));
@@ -100,7 +112,7 @@ TextureMatcher TextureSetFactory::makeGrasslandBaseMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makePlainsBaseMatcher() {
-    TextureMatcher tm(Tile::Type::Plains);
+    TextureMatcher tm;
 
     tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(1, 50)));
@@ -109,7 +121,7 @@ TextureMatcher TextureSetFactory::makePlainsBaseMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makeForestBaseMatcher() {
-    TextureMatcher tm(Tile::Type::Forest);
+    TextureMatcher tm;
 
     tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(1, 50)));
@@ -118,7 +130,7 @@ TextureMatcher TextureSetFactory::makeForestBaseMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makeDesertBaseMatcher() {
-    TextureMatcher tm(Tile::Type::Desert);
+    TextureMatcher tm;
 
     tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(1, 1)));
@@ -127,7 +139,7 @@ TextureMatcher TextureSetFactory::makeDesertBaseMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makeWaterBlendMatcher() {
-    TextureMatcher tm(Tile::Type::Water);
+    TextureMatcher tm({ Tile::Type::Water, Tile::Type::Empty });
 
     tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(48, 24, sf::Vector2f(1, 1)));
@@ -142,7 +154,22 @@ TextureMatcher TextureSetFactory::makeWaterBlendMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makeGrasslandBlendMatcher() {
-    TextureMatcher tm(Tile::Type::Grassland);
+    TextureMatcher tm({ Tile::Type::Grassland, Tile::Type::Empty });
+
+    tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
+        ::makeQuad(48, 24, sf::Vector2f(1, 51)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, DIFF, ANY, ANY, ANY, ANY, ANY }),
+        ::makeQuad(48, 24, sf::Vector2f(50, 51), sf::Vector2f(48, 0)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, DIFF, ANY, ANY, ANY }),
+        ::makeQuad(48, 24, sf::Vector2f(50, 76), sf::Vector2f(48, 24)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, DIFF, ANY }),
+        ::makeQuad(48, 24, sf::Vector2f(1, 76), sf::Vector2f(0, 24)));
+
+    return tm;
+}
+
+TextureMatcher TextureSetFactory::makeRiverBlendMatcher() {
+    TextureMatcher tm({ Tile::Type::River, Tile::Type::Empty });
 
     tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(48, 24, sf::Vector2f(1, 51)));
@@ -157,7 +184,7 @@ TextureMatcher TextureSetFactory::makeGrasslandBlendMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makePlainsBlendMatcher() {
-    TextureMatcher tm(Tile::Type::Plains);
+    TextureMatcher tm({ Tile::Type::Plains, Tile::Type::Empty });
 
     tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(48, 24, sf::Vector2f(1, 151)));
@@ -172,7 +199,7 @@ TextureMatcher TextureSetFactory::makePlainsBlendMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makeForestBlendMatcher() {
-    TextureMatcher tm(Tile::Type::Forest);
+    TextureMatcher tm({ Tile::Type::Forest, Tile::Type::Empty });
 
     tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(48, 24, sf::Vector2f(1, 151)));
@@ -187,7 +214,7 @@ TextureMatcher TextureSetFactory::makeForestBlendMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makeDesertBlendMatcher() {
-    TextureMatcher tm(Tile::Type::Desert);
+    TextureMatcher tm({ Tile::Type::Desert, Tile::Type::Empty });
 
     tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(48, 24, sf::Vector2f(99, 1)));
@@ -202,7 +229,7 @@ TextureMatcher TextureSetFactory::makeDesertBlendMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makeHillsBlendMatcher() {
-    TextureMatcher tm(Tile::Type::Hills);
+    TextureMatcher tm({ Tile::Type::Hills, Tile::Type::Empty });
 
     tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(48, 24, sf::Vector2f(1, 101)));
@@ -217,7 +244,7 @@ TextureMatcher TextureSetFactory::makeHillsBlendMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makeMountainsBlendMatcher() {
-    TextureMatcher tm(Tile::Type::Mountains);
+    TextureMatcher tm({ Tile::Type::Mountains, Tile::Type::Empty });
 
     tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(48, 24, sf::Vector2f(1, 101)));
@@ -232,7 +259,7 @@ TextureMatcher TextureSetFactory::makeMountainsBlendMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makeWaterBaseMatcher() {
-    TextureMatcher tm(Tile::Type::Water);
+    TextureMatcher tm({ Tile::Type::Water, Tile::Type::Empty });
 
     tm.addMatching(TextureMatcher::Matching({ SAME, SAME, SAME, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(48, 24, sf::Vector2f(1, 645), sf::Vector2f(25, 0)));
@@ -309,38 +336,77 @@ TextureMatcher TextureSetFactory::makeWaterBaseMatcher() {
     return tm;
 }
 
+TextureMatcher TextureSetFactory::makeRiverOverlayMatcher() {
+    TextureMatcher tm({ Tile::Type::River, Tile::Type::Water, Tile::Type::Empty });
+
+    tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, DIFF, ANY, DIFF, ANY, DIFF, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(1, 99)));
+    tm.addMatching(TextureMatcher::Matching({ SAME, ANY, DIFF, ANY, DIFF, ANY, DIFF, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(98, 99)));
+    tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, DIFF, ANY, DIFF, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(195, 99)));
+    tm.addMatching(TextureMatcher::Matching({ SAME, ANY, DIFF, ANY, DIFF, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(292, 99)));
+    tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, DIFF, ANY, SAME, ANY, DIFF, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(389, 99)));
+    tm.addMatching(TextureMatcher::Matching({ SAME, ANY, DIFF, ANY, SAME, ANY, DIFF, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(486, 99)));
+    tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, DIFF, ANY, SAME, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(583, 99)));
+    tm.addMatching(TextureMatcher::Matching({ SAME, ANY, DIFF, ANY, SAME, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(680, 99)));
+    tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, SAME, ANY, DIFF, ANY, DIFF, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(1, 148)));
+    tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, DIFF, ANY, DIFF, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(98, 148)));
+    tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, SAME, ANY, DIFF, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(195, 148)));
+    tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, DIFF, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(292, 148)));
+    tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, SAME, ANY, SAME, ANY, DIFF, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(389, 148)));
+    tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, SAME, ANY, DIFF, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(486, 148)));
+    tm.addMatching(TextureMatcher::Matching({ DIFF, ANY, SAME, ANY, SAME, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(583, 148)));
+    tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, SAME, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(680, 148)));
+
+    return tm;
+}
+
 TextureMatcher TextureSetFactory::makeForestOverlayMatcher() {
-    TextureMatcher tm(Tile::Type::Forest);
+    TextureMatcher tm({ Tile::Type::Forest, Tile::Type::Empty });
 
     tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(1, 197)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(98, 197)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, SAME, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(195, 197)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, SAME, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(292, 197)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, ANY, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(389, 197)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, ANY, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(486, 197)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, SAME, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(583, 197)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, SAME, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(680, 197)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(1, 246)));
+        ::makeQuad(96, 48, sf::Vector2f(98, 197)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(195, 197)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, ANY, ANY, ANY, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(98, 246)));
+        ::makeQuad(96, 48, sf::Vector2f(292, 197)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, SAME, ANY, ANY, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(389, 197)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, ANY, ANY, SAME, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(195, 246)));
+        ::makeQuad(96, 48, sf::Vector2f(486, 197)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, SAME, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(583, 197)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, ANY, ANY, SAME, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(292, 246)));
+        ::makeQuad(96, 48, sf::Vector2f(680, 197)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, ANY, ANY, ANY, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(1, 246)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, ANY, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(389, 246)));
+        ::makeQuad(96, 48, sf::Vector2f(98, 246)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, ANY, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(195, 246)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, ANY, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(486, 246)));
+        ::makeQuad(96, 48, sf::Vector2f(292, 246)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, SAME, ANY, ANY, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(389, 246)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, SAME, ANY, ANY, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(486, 246)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, SAME, ANY, SAME, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(583, 246)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, SAME, ANY, SAME, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(680, 246)));
@@ -349,37 +415,37 @@ TextureMatcher TextureSetFactory::makeForestOverlayMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makeHillsOverlayMatcher() {
-    TextureMatcher tm(Tile::Type::Hills);
+    TextureMatcher tm({ Tile::Type::Hills, Tile::Type::Empty });
 
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
+tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(1, 393)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(98, 393)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, SAME, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(195, 393)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, SAME, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(292, 393)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, ANY, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(389, 393)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, ANY, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(486, 393)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, SAME, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(583, 393)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, SAME, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(680, 393)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(1, 442)));
+        ::makeQuad(96, 48, sf::Vector2f(98, 393)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(195, 393)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, ANY, ANY, ANY, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(98, 442)));
+        ::makeQuad(96, 48, sf::Vector2f(292, 393)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, SAME, ANY, ANY, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(389, 393)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, ANY, ANY, SAME, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(195, 442)));
+        ::makeQuad(96, 48, sf::Vector2f(486, 393)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, SAME, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(583, 393)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, ANY, ANY, SAME, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(292, 442)));
+        ::makeQuad(96, 48, sf::Vector2f(680, 393)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, ANY, ANY, ANY, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(1, 442)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, ANY, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(389, 442)));
+        ::makeQuad(96, 48, sf::Vector2f(98, 442)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, ANY, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(195, 442)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, ANY, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(486, 442)));
+        ::makeQuad(96, 48, sf::Vector2f(292, 442)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, SAME, ANY, ANY, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(389, 442)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, SAME, ANY, ANY, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(486, 442)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, SAME, ANY, SAME, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(583, 442)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, SAME, ANY, SAME, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(680, 442)));
@@ -388,37 +454,37 @@ TextureMatcher TextureSetFactory::makeHillsOverlayMatcher() {
 }
 
 TextureMatcher TextureSetFactory::makeMountainsOverlayMatcher() {
-    TextureMatcher tm(Tile::Type::Mountains);
+    TextureMatcher tm({ Tile::Type::Mountains, Tile::Type::Empty });
 
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
+tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(1, 295)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(98, 295)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, SAME, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(195, 295)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, SAME, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(292, 295)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, ANY, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(389, 295)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, ANY, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(486, 295)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, SAME, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(583, 295)));
-    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, SAME, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(680, 295)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, ANY, ANY, ANY, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(1, 344)));
+        ::makeQuad(96, 48, sf::Vector2f(98, 295)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, ANY, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(195, 295)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, ANY, ANY, ANY, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(98, 344)));
+        ::makeQuad(96, 48, sf::Vector2f(292, 295)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, SAME, ANY, ANY, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(389, 295)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, ANY, ANY, SAME, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(195, 344)));
+        ::makeQuad(96, 48, sf::Vector2f(486, 295)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, ANY, ANY, SAME, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(583, 295)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, ANY, ANY, SAME, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(292, 344)));
+        ::makeQuad(96, 48, sf::Vector2f(680, 295)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, ANY, ANY, ANY, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(1, 344)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, ANY, ANY, ANY, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(389, 344)));
+        ::makeQuad(96, 48, sf::Vector2f(98, 344)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, ANY, ANY, SAME, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(195, 344)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, ANY, ANY, SAME, ANY }),
-        ::makeQuad(96, 48, sf::Vector2f(486, 344)));
+        ::makeQuad(96, 48, sf::Vector2f(292, 344)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, SAME, ANY, ANY, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(389, 344)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, SAME, ANY, ANY, ANY }),
+        ::makeQuad(96, 48, sf::Vector2f(486, 344)));
+    tm.addMatching(TextureMatcher::Matching({ ANY, ANY, SAME, ANY, SAME, ANY, SAME, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(583, 344)));
     tm.addMatching(TextureMatcher::Matching({ SAME, ANY, SAME, ANY, SAME, ANY, SAME, ANY }),
         ::makeQuad(96, 48, sf::Vector2f(680, 344)));

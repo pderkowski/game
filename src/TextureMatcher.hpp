@@ -20,7 +20,7 @@ public:
     typedef std::vector<TileMatcher> Matching;
 
     TextureMatcher();
-    TextureMatcher(Tile::Type matchedTileType);
+    explicit TextureMatcher(const std::vector<Tile::Type>& matchedTileTypes);
 
     void addMatching(const Matching& matching, const sf::VertexArray& textureVertices);
     sf::VertexArray match(const std::vector<std::shared_ptr<const Tile>>& neighbors) const;
@@ -30,7 +30,7 @@ private:
         const Matching& matching) const;
 
     std::map<Matching, sf::VertexArray> matchings_;
-    Tile::Type matchedTileType_;
+    std::vector<Tile::Type> matchedTileTypes_;
 };
 
 #endif  // TEXTUREMATCHER_HPP_

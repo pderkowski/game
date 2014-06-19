@@ -48,6 +48,12 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
         .setType(Tile::Type::Mountains, mountainLevelOnPlains)
         .setTypeMask({ Tile::Type::Hills })
         .setType(Tile::Type::Mountains, mountainLevelOnHills)
+        .setSource(humidityMap)
+        .setTypeMask({ Tile::Type::Mountains, Tile::Type::Hills, Tile::Type::Grassland })
+        .spawnRivers({ { Tile::Type::Mountains, 0.2 }, { Tile::Type::Hills, 0.1 },
+            { Tile::Type::Hills, 0.05 } }, generator)
+        .setSource(landMap)
+        .createRiverFlow()
         .setSource(forestMap)
         .setTypeMask({ Tile::Type::Plains, Tile::Type::Grassland })
         .setType(Tile::Type::Forest, forestLevel)

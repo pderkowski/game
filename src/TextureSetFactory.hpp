@@ -19,6 +19,7 @@ private:
     static TextureMatcher makePlainsBaseMatcher();
     static TextureMatcher makeForestBaseMatcher();
     static TextureMatcher makeDesertBaseMatcher();
+    static TextureMatcher makeRiverBaseMatcher();
     static TextureMatcher makeWaterBaseMatcher();
 
     static TextureMatcher makeWaterBlendMatcher();
@@ -28,10 +29,12 @@ private:
     static TextureMatcher makeDesertBlendMatcher();
     static TextureMatcher makeHillsBlendMatcher();
     static TextureMatcher makeMountainsBlendMatcher();
+    static TextureMatcher makeRiverBlendMatcher();
 
     static TextureMatcher makeForestOverlayMatcher();
     static TextureMatcher makeHillsOverlayMatcher();
     static TextureMatcher makeMountainsOverlayMatcher();
+    static TextureMatcher makeRiverOverlayMatcher();
 };
 
 #endif  // TEXTURESETFACTORY_HPP_

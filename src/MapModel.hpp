@@ -20,12 +20,18 @@ public:
     int getColumnsNo() const;
 
     bool isInBounds(const IntIsoPoint& p) const;
+    bool isInBounds(std::shared_ptr<const Tile> tile) const;
 
     std::shared_ptr<const Tile> getTile(const IntIsoPoint& p) const;
     std::shared_ptr<Tile> getTile(const IntIsoPoint& p);
 
+    std::vector<std::shared_ptr<const Tile>> getTiles(Tile::Type type) const;
+
     std::vector<std::shared_ptr<const Tile>> getNeighbors(std::shared_ptr<const Tile> tile) const;
     std::vector<std::shared_ptr<const Tile>> getNeighbors(const Tile& tile) const;
+
+    std::vector<std::shared_ptr<const Tile>> getAdjacentNeighbors(std::shared_ptr<const Tile> tile) const;
+    std::vector<std::shared_ptr<const Tile>> getAdjacentNeighbors(const Tile& tile) const;
 
     void changeTiles(std::function<void(Tile&)> transformation);
 
