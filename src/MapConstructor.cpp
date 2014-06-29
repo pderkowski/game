@@ -11,8 +11,11 @@
 #include "MapModel.hpp"
 #include "MapConstructor.hpp"
 
-MapConstructor::MapConstructor(const HeightMap& heightMap)
-    : heightMap_(heightMap), model_(heightMap.getRowsNo(), heightMap.getColumnsNo())
+MapConstructor::MapConstructor(const HeightMap& heightMap,
+    std::shared_ptr<std::default_random_engine> generator)
+        : heightMap_(heightMap),
+        model_(heightMap.getRowsNo(), heightMap.getColumnsNo()),
+        generator_(generator)
 { }
 
 MapConstructor& MapConstructor::setSource(const HeightMap& heightMap) {
@@ -31,14 +34,12 @@ MapConstructor& MapConstructor::setTypeMask(const std::vector<Tile::Type>& types
     return *this;
 }
 
-MapConstructor& MapConstructor::spawnRivers(std::map<Tile::Type, double> probabilities,
-    std::shared_ptr<std::default_random_engine> generator)
-{
+MapConstructor& MapConstructor::spawnRivers(std::map<Tile::Type, double> probabilities) {
     model_.changeTiles([&] (Tile& tile) {
         if (isTypeModifiable(tile.type) && probabilities.count(tile.type)) {
-            IntIsoPoint coords(tile.coords.toIsometric());
-            if (((*generator)() % 1000) / 1000.0 < probabilities.at(tile.type) * heightMap_(coords.y, coords.x))
+            if (((*generator_)() % 1000) / 1000.0 < probabilities.at(tile.type)) {
                 tile.type = Tile::Type::River;
+            }
         }
     });
 
@@ -49,15 +50,36 @@ MapConstructor& MapConstructor::createRiverFlow() {
     auto sources = model_.getTiles(Tile::Type::River);
 
     for (const auto& source : sources) {
-        for (auto lowestNeighbor = findLowestNeighbor(source);
+        for (auto lowestNeighbor = findLowestNeighbor(source), current = std::const_pointer_cast<Tile>(source);
             lowestNeighbor->type != Tile::Type::Water && lowestNeighbor->type != Tile::Tile::River;
+            current = lowestNeighbor,
             lowestNeighbor = findLowestNeighbor(lowestNeighbor))
         {
-            lowestNeighbor->type = Tile::Type::River;
+            const IntIsoPoint currentCoords(current->coords.toIsometric());
+            const IntIsoPoint neighCoords(lowestNeighbor->coords.toIsometric());
+
+            if (heightMap_(neighCoords.y, neighCoords.x)
+                <= heightMap_(currentCoords.y, currentCoords.x))
+            {
+                lowestNeighbor->type = Tile::Type::River;
+            } else {
+                spawnLake(current);
+                break;
+            }
         }
     }
 
     return *this;
+}
+
+void MapConstructor::spawnLake(std::shared_ptr<Tile> source) {
+    unsigned maxSize = 1 + (*generator_)() % 5;
+
+    for (unsigned i = 0; i < maxSize; ++i) {
+        source->type = Tile::Type::Water;
+        auto neighbors = model_.getAdjacentNeighbors(source);
+        source = std::const_pointer_cast<Tile>(neighbors[(*generator_)() % neighbors.size()]);
+    }
 }
 
 std::shared_ptr<Tile> MapConstructor::findLowestNeighbor(std::shared_ptr<const Tile> tile) const {

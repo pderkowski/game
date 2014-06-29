@@ -33,7 +33,7 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
     const std::vector<Tile::Type> landTypes = { Tile::Type::Grassland, Tile::Type::Plains,
         Tile::Type::Desert, Tile::Type::Hills, Tile::Type::Mountains };
 
-    return MapConstructor(landMap)
+    return MapConstructor(landMap, generator)
         .setTypeMask({ Tile::Type::Empty })
         .setType(Tile::Type::Water, waterLevel)
         .setTypeMask({ Tile::Type::Water })
@@ -48,10 +48,10 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
         .setType(Tile::Type::Mountains, mountainLevelOnPlains)
         .setTypeMask({ Tile::Type::Hills })
         .setType(Tile::Type::Mountains, mountainLevelOnHills)
-        .setSource(humidityMap)
         .setTypeMask({ Tile::Type::Mountains, Tile::Type::Hills, Tile::Type::Grassland })
-        .spawnRivers({ { Tile::Type::Mountains, 0.2 }, { Tile::Type::Hills, 0.1 },
-            { Tile::Type::Hills, 0.05 } }, generator)
+        .spawnRivers({ { Tile::Type::Mountains, 0.1 },
+            { Tile::Type::Hills, 0.05 },
+            { Tile::Type::Hills, 0.025 } })
         .setSource(landMap)
         .createRiverFlow()
         .setSource(forestMap)
