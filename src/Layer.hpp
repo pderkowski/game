@@ -15,7 +15,6 @@ public:
     virtual void draw(sf::RenderTarget& target,
         sf::RenderStates states = sf::RenderStates::Default) const;
 
-    bool contains(Tile::Type type) const;
     void add(std::shared_ptr<const Tile> tile,
         const std::vector<std::shared_ptr<const Tile>>& neighbors,
         const sf::Vector2f& tileCenter);

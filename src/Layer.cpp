@@ -3,15 +3,12 @@
 #include "SFML/Graphics.hpp"
 #include <stdexcept>
 #include "Layer.hpp"
+#include <iostream>
 
 Layer::Layer(const TextureSet& textureSet)
     : textureSet_(textureSet),
     vertices_(sf::Quads)
 { }
-
-bool Layer::contains(Tile::Type type) const {
-    return textureSet_.contains(type);
-}
 
 void Layer::add(std::shared_ptr<const Tile> tile,
     const std::vector<std::shared_ptr<const Tile>>& neighbors,

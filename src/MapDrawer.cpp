@@ -46,18 +46,16 @@ void MapDrawer::makeLayers() {
 
 void MapDrawer::addTileToLayers(std::shared_ptr<const Tile> tile) {
     for (auto& layer : layers_) {
-        if (layer.contains(tile->type)) {
-            auto tileCartCoords = tile->coords.toCartesian();
-            sf::Vector2f tilePosition(
-                utils::positiveModulo(tileCartCoords.x * tileWidth_ / 2, 2 * getMapWidth()),
-                tileCartCoords.y * tileHeight_ / 2);
-            sf::Vector2f dualTilePosition(
-                utils::positiveModulo(tilePosition.x + getMapWidth(), 2 * getMapWidth()),
-                tilePosition.y);
+        auto tileCartCoords = tile->coords.toCartesian();
+        sf::Vector2f tilePosition(
+            utils::positiveModulo(tileCartCoords.x * tileWidth_ / 2, 2 * getMapWidth()),
+            tileCartCoords.y * tileHeight_ / 2);
+        sf::Vector2f dualTilePosition(
+            utils::positiveModulo(tilePosition.x + getMapWidth(), 2 * getMapWidth()),
+            tilePosition.y);
 
-            layer.add(tile, model_->getNeighbors(tile), tilePosition);
-            layer.add(tile, model_->getNeighbors(tile), dualTilePosition);
-        }
+        layer.add(tile, model_->getNeighbors(tile), tilePosition);
+        layer.add(tile, model_->getNeighbors(tile), dualTilePosition);
     }
 }
 
