@@ -26,33 +26,32 @@ TileMatcher::TileMatcher(std::function<bool(std::shared_ptr<const Tile>)> predic
 
 
 TileTypeMatcher::TileTypeMatcher(Tile::Type type)
-    : Matcher([&] (std::shared_ptr<const Tile> tile,
+    : Matcher([type] (std::shared_ptr<const Tile> tile,
         __attribute__((unused)) const std::vector<std::shared_ptr<const Tile>>& neighbors)
     {
-        return tile->type == type_;
-    }),
-    type_(type)
+        return tile->type == type;
+    })
 { }
 
 
 NeighborTypesMatcher::NeighborTypesMatcher(Tile::Type type, const NeighborTypes& neighborTypes)
-    : Matcher([&] (std::shared_ptr<const Tile> tile,
+    : Matcher([type, neighborTypes] (std::shared_ptr<const Tile> tile,
         const std::vector<std::shared_ptr<const Tile>>& neighbors)
     {
-        if (tile->type != type_ || neighbors.size() != neighborTypes_.size())
+        if (tile->type != type || neighbors.size() != neighborTypes.size())
             return false;
 
-        for (unsigned i = 0; i < neighborTypes_.size(); ++i) {
-            switch (neighborTypes_[i]) {
+        for (unsigned i = 0; i < neighborTypes.size(); ++i) {
+            switch (neighborTypes[i]) {
                 case Any:
                     break;
                 case Same:
-                    if (neighbors[i]->type == type_)
+                    if (neighbors[i]->type == type)
                         break;
                     else
                         return false;
                 case Different:
-                    if (neighbors[i]->type != type_)
+                    if (neighbors[i]->type != type)
                         break;
                     else
                         return false;
@@ -60,7 +59,5 @@ NeighborTypesMatcher::NeighborTypesMatcher(Tile::Type type, const NeighborTypes&
         }
 
         return true;
-    }),
-    type_(type),
-    neighborTypes_(neighborTypes)
+    })
 { }

@@ -37,9 +37,6 @@ public:
     TileTypeMatcher(const TileTypeMatcher&&) = delete;
 
     virtual ~TileTypeMatcher() { }
-
-private:
-    Tile::Type type_;
 };
 
 
@@ -58,10 +55,6 @@ public:
     NeighborTypesMatcher(const NeighborTypesMatcher&&) = delete;
 
     virtual ~NeighborTypesMatcher() { }
-
-private:
-    Tile::Type type_;
-    NeighborTypes neighborTypes_;
 };
 
 #endif  // MATCHER_HPP_

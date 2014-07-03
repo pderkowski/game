@@ -14,9 +14,9 @@ Game::Game(int rows, int columns)
         map_(rows, columns, window_),
         menu_(window_)
 {
-    menu_.addItem("Return", [&] () { toggleMenu(); });
-    menu_.addItem("New game", [&] () { restart(); });
-    menu_.addItem("Quit game", [&] () { quit(); });
+    menu_.addItem("Return", [this] () { toggleMenu(); });
+    menu_.addItem("New game", [this] () { restart(); });
+    menu_.addItem("Quit game", [this] () { quit(); });
 }
 
 void Game::start() {
