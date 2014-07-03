@@ -35,6 +35,7 @@ void MapDrawer::makeLayers() {
     layers_.push_back(Layer(TextureSetFactory::getBaseTextureSet()));
     layers_.push_back(Layer(TextureSetFactory::getBlendTextureSet()));
     layers_.push_back(Layer(TextureSetFactory::getOverlayTextureSet()));
+    layers_.push_back(Layer(TextureSetFactory::getAttributeTextureSet()));
 
     for (int r = 0; r < model_->getRowsNo(); ++r) {
         for (int c = 0; c < model_->getColumnsNo(); ++c) {

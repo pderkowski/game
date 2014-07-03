@@ -60,6 +60,11 @@ const sf::VertexArray textures::landmarks::river_t1r1b1l0 = makeQuad(96, 48, sf:
 const sf::VertexArray textures::landmarks::river_t0r1b1l1 = makeQuad(96, 48, sf::Vector2f(583, 148));
 const sf::VertexArray textures::landmarks::river_t1r1b1l1 = makeQuad(96, 48, sf::Vector2f(680, 148));
 
+const sf::VertexArray textures::landmarks::river_estuary_r = makeQuad(96, 48, sf::Vector2f(1, 491));
+const sf::VertexArray textures::landmarks::river_estuary_b = makeQuad(96, 48, sf::Vector2f(98, 491));
+const sf::VertexArray textures::landmarks::river_estuary_l = makeQuad(96, 48, sf::Vector2f(195, 491));
+const sf::VertexArray textures::landmarks::river_estuary_t = makeQuad(96, 48, sf::Vector2f(292, 491));
+
 const sf::VertexArray textures::landmarks::forest_t0r0b0l0 = makeQuad(96, 48, sf::Vector2f(1, 197));
 const sf::VertexArray textures::landmarks::forest_t1r0b0l0 = makeQuad(96, 48, sf::Vector2f(98, 197));
 const sf::VertexArray textures::landmarks::forest_t0r0b0l1 = makeQuad(96, 48, sf::Vector2f(195, 197));

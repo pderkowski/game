@@ -239,102 +239,6 @@ TextureSet TextureSetFactory::getBlendTextureSet() {
 TextureSet TextureSetFactory::getOverlayTextureSet() {
     TextureSet ts(Resources::loadTexture("textures/landmarks.png"));
 
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && !river->hasDirection(TOP) && !river->hasDirection(RIGHT)
-            && !river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
-    })), textures::landmarks::river_t0r0b0l0);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && river->hasDirection(TOP) && !river->hasDirection(RIGHT)
-            && !river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
-        })), textures::landmarks::river_t1r0b0l0);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && !river->hasDirection(TOP) && !river->hasDirection(RIGHT)
-            && !river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
-        })), textures::landmarks::river_t0r0b0l1);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && river->hasDirection(TOP) && !river->hasDirection(RIGHT)
-            && !river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
-        })), textures::landmarks::river_t1r0b0l1);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && !river->hasDirection(TOP) && !river->hasDirection(RIGHT)
-            && river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
-        })), textures::landmarks::river_t0r0b1l0);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && river->hasDirection(TOP) && !river->hasDirection(RIGHT)
-            && river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
-        })), textures::landmarks::river_t1r0b1l0);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && !river->hasDirection(TOP) && !river->hasDirection(RIGHT)
-            && river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
-        })), textures::landmarks::river_t0r0b1l1);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && river->hasDirection(TOP) && !river->hasDirection(RIGHT)
-            && river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
-        })), textures::landmarks::river_t1r0b1l1);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && !river->hasDirection(TOP) && river->hasDirection(RIGHT)
-            && !river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
-        })), textures::landmarks::river_t0r1b0l0);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && river->hasDirection(TOP) && river->hasDirection(RIGHT)
-            && !river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
-        })), textures::landmarks::river_t1r1b0l0);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && !river->hasDirection(TOP) && river->hasDirection(RIGHT)
-            && !river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
-        })), textures::landmarks::river_t0r1b0l1);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && river->hasDirection(TOP) && river->hasDirection(RIGHT)
-            && !river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
-        })), textures::landmarks::river_t1r1b0l1);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && !river->hasDirection(TOP) && river->hasDirection(RIGHT)
-            && river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
-        })), textures::landmarks::river_t0r1b1l0);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && river->hasDirection(TOP) && river->hasDirection(RIGHT)
-            && river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
-        })), textures::landmarks::river_t1r1b1l0);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && !river->hasDirection(TOP) && river->hasDirection(RIGHT)
-            && river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
-        })), textures::landmarks::river_t0r1b1l1);
-
-    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
-        const auto river = tile->attributes.river;
-        return river && river->hasDirection(TOP) && river->hasDirection(RIGHT)
-            && river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
-        })), textures::landmarks::river_t1r1b1l1);
-
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Tile::Type::Forest,
             { ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY })),
         textures::landmarks::forest_t0r0b0l0);
@@ -481,6 +385,129 @@ TextureSet TextureSetFactory::getOverlayTextureSet() {
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Tile::Type::Mountains,
             { SAME, ANY, SAME, ANY, SAME, ANY, SAME, ANY })),
         textures::landmarks::mountains_t1r1b1l1);
+
+    return ts;
+}
+
+TextureSet TextureSetFactory::getAttributeTextureSet() {
+    TextureSet ts(Resources::loadTexture("textures/landmarks.png"));
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && !river->hasDirection(TOP) && !river->hasDirection(RIGHT)
+            && !river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
+    })), textures::landmarks::river_t0r0b0l0);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && river->hasDirection(TOP) && !river->hasDirection(RIGHT)
+            && !river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
+    })), textures::landmarks::river_t1r0b0l0);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && !river->hasDirection(TOP) && !river->hasDirection(RIGHT)
+            && !river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
+    })), textures::landmarks::river_t0r0b0l1);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && river->hasDirection(TOP) && !river->hasDirection(RIGHT)
+            && !river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
+    })), textures::landmarks::river_t1r0b0l1);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && !river->hasDirection(TOP) && !river->hasDirection(RIGHT)
+            && river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
+    })), textures::landmarks::river_t0r0b1l0);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && river->hasDirection(TOP) && !river->hasDirection(RIGHT)
+            && river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
+    })), textures::landmarks::river_t1r0b1l0);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && !river->hasDirection(TOP) && !river->hasDirection(RIGHT)
+            && river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
+    })), textures::landmarks::river_t0r0b1l1);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && river->hasDirection(TOP) && !river->hasDirection(RIGHT)
+            && river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
+    })), textures::landmarks::river_t1r0b1l1);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && !river->hasDirection(TOP) && river->hasDirection(RIGHT)
+            && !river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
+    })), textures::landmarks::river_t0r1b0l0);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && river->hasDirection(TOP) && river->hasDirection(RIGHT)
+            && !river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
+    })), textures::landmarks::river_t1r1b0l0);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && !river->hasDirection(TOP) && river->hasDirection(RIGHT)
+            && !river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
+    })), textures::landmarks::river_t0r1b0l1);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && river->hasDirection(TOP) && river->hasDirection(RIGHT)
+            && !river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
+    })), textures::landmarks::river_t1r1b0l1);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && !river->hasDirection(TOP) && river->hasDirection(RIGHT)
+            && river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
+    })), textures::landmarks::river_t0r1b1l0);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && river->hasDirection(TOP) && river->hasDirection(RIGHT)
+            && river->hasDirection(BOTTOM) && !river->hasDirection(LEFT);
+    })), textures::landmarks::river_t1r1b1l0);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && !river->hasDirection(TOP) && river->hasDirection(RIGHT)
+            && river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
+    })), textures::landmarks::river_t0r1b1l1);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type != Tile::Type::Water && river && river->hasDirection(TOP) && river->hasDirection(RIGHT)
+            && river->hasDirection(BOTTOM) && river->hasDirection(LEFT);
+    })), textures::landmarks::river_t1r1b1l1);
+
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type == Tile::Type::Water && river && river->hasDirection(TOP);
+    })), textures::landmarks::river_estuary_t);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type == Tile::Type::Water && river && river->hasDirection(RIGHT);
+    })), textures::landmarks::river_estuary_r);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type == Tile::Type::Water && river && river->hasDirection(BOTTOM);
+    })), textures::landmarks::river_estuary_b);
+
+    ts.add(std::shared_ptr<const Matcher>(new TileMatcher([] (std::shared_ptr<const Tile> tile) {
+        const auto river = tile->attributes.river;
+        return tile->type == Tile::Type::Water && river && river->hasDirection(LEFT);
+    })), textures::landmarks::river_estuary_l);
 
     return ts;
 }

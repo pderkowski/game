@@ -66,6 +66,11 @@ extern const sf::VertexArray river_t1r1b1l0;
 extern const sf::VertexArray river_t0r1b1l1;
 extern const sf::VertexArray river_t1r1b1l1;
 
+extern const sf::VertexArray river_estuary_t;
+extern const sf::VertexArray river_estuary_b;
+extern const sf::VertexArray river_estuary_r;
+extern const sf::VertexArray river_estuary_l;
+
 extern const sf::VertexArray forest_t0r0b0l0;
 extern const sf::VertexArray forest_t1r0b0l0;
 extern const sf::VertexArray forest_t0r0b0l1;
