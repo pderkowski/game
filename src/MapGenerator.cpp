@@ -15,7 +15,7 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
     static auto generator = std::make_shared<std::default_random_engine>(
         std::chrono::system_clock::now().time_since_epoch().count());
 
-    auto landMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 1);
+    auto landMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 1, 0.6);
     auto humidityMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 2, 0.6);
     auto hillMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 4);
     auto mountainMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 8, 0.4);
@@ -49,9 +49,7 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
         .setTypeMask({ Tile::Type::Hills })
         .setType(Tile::Type::Mountains, mountainLevelOnHills)
         .setTypeMask({ Tile::Type::Mountains, Tile::Type::Hills, Tile::Type::Grassland })
-        .spawnRivers({ { Tile::Type::Mountains, 0.1 },
-            { Tile::Type::Hills, 0.05 },
-            { Tile::Type::Hills, 0.025 } })
+        .spawnRivers(0.025)
         .setSource(landMap)
         .createRiverFlow()
         .setSource(forestMap)

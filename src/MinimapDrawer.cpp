@@ -20,7 +20,6 @@ MinimapDrawer::MinimapDrawer(std::shared_ptr<const MapModel> model,
             { Tile::Type::Hills, sf::Color(198, 148, 4) },
             { Tile::Type::Plains, sf::Color(77, 173, 36) },
             { Tile::Type::Forest, sf::Color(77, 173, 36) },
-            { Tile::Type::River, sf::Color(77, 173, 36) },
             { Tile::Type::Desert, sf::Color(224, 192, 121) },
             { Tile::Type::Grassland, sf::Color(77, 173, 36) },
             { Tile::Type::Mountains, sf::Color(101, 61, 1) }

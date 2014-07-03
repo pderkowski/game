@@ -18,8 +18,15 @@ public:
     virtual bool match(std::shared_ptr<const Tile> tile,
         const std::vector<std::shared_ptr<const Tile>>& neighbors) const;
 
-private:
+protected:
     Predicate predicate_;
+};
+
+
+class TileMatcher : public Matcher {
+public:
+    TileMatcher(std::function<bool(std::shared_ptr<const Tile>)> predicate);
+    virtual ~TileMatcher() { }
 };
 
 

@@ -51,12 +51,26 @@ std::shared_ptr<Tile> MapModel::getTile(const IntIsoPoint& p) {
     return std::const_pointer_cast<Tile>(static_cast<const MapModel&>(*this).getTile(p));
 }
 
-std::vector<std::shared_ptr<const Tile>> MapModel::getTiles(Tile::Type type) const {
+std::vector<std::shared_ptr<const Tile>> MapModel::getTilesByType(Tile::Type type) const {
     std::vector<std::shared_ptr<const Tile>> res;
 
     for (const auto& row : tiles_) {
         for (const auto& tilePtr : row) {
             if (tilePtr->type == type) {
+                res.push_back(tilePtr);
+            }
+        }
+    }
+
+    return res;
+}
+
+std::vector<std::shared_ptr<const Tile>> MapModel::getTiles(std::function<bool(const Tile&)> selector) const {
+    std::vector<std::shared_ptr<const Tile>> res;
+
+    for (const auto& row : tiles_) {
+        for (const auto& tilePtr : row) {
+            if (selector(*tilePtr)) {
                 res.push_back(tilePtr);
             }
         }
@@ -86,7 +100,7 @@ std::vector<std::shared_ptr<const Tile>> MapModel::getNeighbors(const Tile& tile
         if (isInBounds(isoCoord)) {
             neighbors.push_back(getTile(isoCoord));
         } else {
-            auto dummy = std::make_shared<const Tile>(IntRotPoint(-1, -1));
+            auto dummy = std::make_shared<const Tile>(IntRotPoint(0, -1));
             neighbors.push_back(dummy);
         }
     }
@@ -113,7 +127,7 @@ std::vector<std::shared_ptr<const Tile>> MapModel::getAdjacentNeighbors(const Ti
         if (isInBounds(isoCoord)) {
             neighbors.push_back(getTile(isoCoord));
         } else {
-            auto dummy = std::make_shared<const Tile>(IntRotPoint(-1, -1));
+            auto dummy = std::make_shared<const Tile>(IntRotPoint(0, -1));
             neighbors.push_back(dummy);
         }
     }

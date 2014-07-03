@@ -3,6 +3,8 @@
 #ifndef COORDINATES_HPP_
 #define COORDINATES_HPP_
 
+#include <string>
+
 struct IntCartPoint;
 struct CartPoint;
 struct IntIsoPoint;
@@ -16,6 +18,8 @@ struct CartPoint {
 
     IsoPoint toIsometric() const;
     RotPoint toRotated() const;
+
+    std::string toString() const;
 
     double x;
     double y;
@@ -93,5 +97,10 @@ struct IntRotPoint {
 
 bool operator == (const IntRotPoint& lhs, const IntRotPoint& rhs);
 bool operator != (const IntRotPoint& lhs, const IntRotPoint& rhs);
+
+template <class T>
+std::string toString(const T& t) {
+    return "<" + std::to_string(t.x) + ", " + std::to_string(t.y) + ">";
+}
 
 #endif  // COORDINATES_HPP_

@@ -1,6 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <cmath>
+#include <string>
 #include "Coordinates.hpp"
 
 namespace {

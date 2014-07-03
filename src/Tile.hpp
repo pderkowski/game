@@ -3,21 +3,20 @@
 #ifndef TILE_HPP_
 #define TILE_HPP_
 
+#include "Attributes.hpp"
 #include "Coordinates.hpp"
 
 class Tile {
 public:
-    enum Type {
-        Empty = 0,  // don't assign other values
+    enum class Type {
+        Empty,
         Water,
         Grassland,
         Plains,
         Forest,
-        River,
         Desert,
         Hills,
-        Mountains,
-        NumberOfTileTypes  // this has to be the last one in this enum
+        Mountains
     };
 
     explicit Tile(const IntRotPoint& coordinates);
@@ -27,6 +26,7 @@ public:
 
     IntRotPoint coords;
     Type type;
+    Attributes attributes;
 
     bool isVisible;
 };

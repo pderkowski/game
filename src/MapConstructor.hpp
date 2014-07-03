@@ -10,6 +10,7 @@
 #include "Tile.hpp"
 #include "MapModel.hpp"
 #include "HeightMap.hpp"
+#include "Attributes.hpp"
 
 class MapConstructor {
 public:
@@ -22,7 +23,7 @@ public:
     MapConstructor& setSource(const HeightMap& heightMap);
     MapConstructor& setTypeMask(const std::vector<Tile::Type>& modifiableTypes);
 
-    MapConstructor& spawnRivers(std::map<Tile::Type, double> probabilities);
+    MapConstructor& spawnRivers(double probability);
     MapConstructor& createRiverFlow();
 
     MapModel construct() const;
@@ -32,7 +33,8 @@ public:
 private:
     bool isTypeModifiable(Tile::Type type) const;
     std::shared_ptr<Tile> findLowestNeighbor(std::shared_ptr<const Tile> tile) const;
-    void spawnLake(std::shared_ptr<Tile> source);
+    Attributes::RiverDirection getDirection(std::shared_ptr<const Tile> from,
+        std::shared_ptr<const Tile> to) const;
 
     HeightMap heightMap_;
     MapModel model_;

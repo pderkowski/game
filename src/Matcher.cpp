@@ -16,6 +16,15 @@ bool Matcher::match(std::shared_ptr<const Tile> tile,
 }
 
 
+TileMatcher::TileMatcher(std::function<bool(std::shared_ptr<const Tile>)> predicate)
+    : Matcher([predicate] (std::shared_ptr<const Tile> tile,
+        __attribute__((unused)) const std::vector<std::shared_ptr<const Tile>>& neighbors)
+    {
+        return predicate(tile);
+    })
+{ }
+
+
 TileTypeMatcher::TileTypeMatcher(Tile::Type type)
     : Matcher([&] (std::shared_ptr<const Tile> tile,
         __attribute__((unused)) const std::vector<std::shared_ptr<const Tile>>& neighbors)

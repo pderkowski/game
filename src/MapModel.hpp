@@ -25,7 +25,8 @@ public:
     std::shared_ptr<const Tile> getTile(const IntIsoPoint& p) const;
     std::shared_ptr<Tile> getTile(const IntIsoPoint& p);
 
-    std::vector<std::shared_ptr<const Tile>> getTiles(Tile::Type type) const;
+    std::vector<std::shared_ptr<const Tile>> getTilesByType(Tile::Type type) const;
+    std::vector<std::shared_ptr<const Tile>> getTiles(std::function<bool(const Tile&)> selector) const;
 
     std::vector<std::shared_ptr<const Tile>> getNeighbors(std::shared_ptr<const Tile> tile) const;
     std::vector<std::shared_ptr<const Tile>> getNeighbors(const Tile& tile) const;
