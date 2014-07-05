@@ -5,7 +5,7 @@ EXE_DIR=bin
 LIB_DIR=lib
 EXE_NAME=game
 
-INCLUDE_DIRS=$(shell find . -path '*/include' -type d)
+INCLUDE_DIRS=$(shell find . -path '*/include' -or -path '*/src' -type d)
 CPPFLAGS=$(foreach dir, $(INCLUDE_DIRS), -I$(dir) -isystem $(dir)) -std=c++11 -MD -MP
 WARNINGS=-Wall -Wextra -pedantic -Werror
 
