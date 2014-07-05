@@ -33,9 +33,7 @@ void Map::handleClick(const sf::Event& e) {
     std::shared_ptr<Tile> clickedObject
         = mapDrawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 
-    if (clickedObject) {
-        clickedObject->toggleVisibility();
-    }
+    // NOT IMPLEMENTED
 }
 
 void Map::handleMouseWheelMoved(const sf::Event& event) {
