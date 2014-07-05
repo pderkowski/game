@@ -67,8 +67,8 @@ std::vector<std::shared_ptr<const Tile>> Tile::getAdjacentNeighbors() const {
         neighbors.push_back(getNeighbor(Direction::Right));
     if (hasNeighbor(Direction::Bottom))
         neighbors.push_back(getNeighbor(Direction::Bottom));
-    if (hasNeighbor(Direction::TopLeft))
-        neighbors.push_back(getNeighbor(Direction::TopLeft));
+    if (hasNeighbor(Direction::Left))
+        neighbors.push_back(getNeighbor(Direction::Left));
 
     return neighbors;
 }
