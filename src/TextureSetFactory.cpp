@@ -244,147 +244,147 @@ TextureSet TextureSetFactory::getOverlayTextureSet() {
     TextureSet ts(Resources::loadTexture("textures/landmarks.png"));
 
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY })),
+            { DIFF, ANY, DIFF, ANY, DIFF, ANY, DIFF, ANY })),
         textures::landmarks::forest_t0r0b0l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { SAME, ANY, ANY, ANY, ANY, ANY, ANY, ANY })),
+            { SAME, ANY, DIFF, ANY, DIFF, ANY, DIFF, ANY })),
         textures::landmarks::forest_t1r0b0l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { ANY, ANY, ANY, ANY, ANY, ANY, SAME, ANY })),
+            { DIFF, ANY, DIFF, ANY, DIFF, ANY, SAME, ANY })),
         textures::landmarks::forest_t0r0b0l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { SAME, ANY, ANY, ANY, ANY, ANY, SAME, ANY })),
+            { SAME, ANY, DIFF, ANY, DIFF, ANY, SAME, ANY })),
         textures::landmarks::forest_t1r0b0l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { ANY, ANY, ANY, ANY, SAME, ANY, ANY, ANY })),
+            { DIFF, ANY, DIFF, ANY, SAME, ANY, DIFF, ANY })),
         textures::landmarks::forest_t0r0b1l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { SAME, ANY, ANY, ANY, SAME, ANY, ANY, ANY })),
+            { SAME, ANY, DIFF, ANY, SAME, ANY, DIFF, ANY })),
         textures::landmarks::forest_t1r0b1l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { ANY, ANY, ANY, ANY, SAME, ANY, SAME, ANY })),
+            { DIFF, ANY, DIFF, ANY, SAME, ANY, SAME, ANY })),
         textures::landmarks::forest_t0r0b1l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { SAME, ANY, ANY, ANY, SAME, ANY, SAME, ANY })),
+            { SAME, ANY, DIFF, ANY, SAME, ANY, SAME, ANY })),
         textures::landmarks::forest_t1r0b1l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { ANY, ANY, SAME, ANY, ANY, ANY, ANY, ANY })),
+            { DIFF, ANY, SAME, ANY, DIFF, ANY, DIFF, ANY })),
         textures::landmarks::forest_t0r1b0l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { SAME, ANY, SAME, ANY, ANY, ANY, ANY, ANY })),
+            { SAME, ANY, SAME, ANY, DIFF, ANY, DIFF, ANY })),
         textures::landmarks::forest_t1r1b0l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { ANY, ANY, SAME, ANY, ANY, ANY, SAME, ANY })),
+            { DIFF, ANY, SAME, ANY, DIFF, ANY, SAME, ANY })),
         textures::landmarks::forest_t0r1b0l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { SAME, ANY, SAME, ANY, ANY, ANY, SAME, ANY })),
+            { SAME, ANY, SAME, ANY, DIFF, ANY, SAME, ANY })),
         textures::landmarks::forest_t1r1b0l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { ANY, ANY, SAME, ANY, SAME, ANY, ANY, ANY })),
+            { DIFF, ANY, SAME, ANY, SAME, ANY, DIFF, ANY })),
         textures::landmarks::forest_t0r1b1l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { SAME, ANY, SAME, ANY, SAME, ANY, ANY, ANY })),
+            { SAME, ANY, SAME, ANY, SAME, ANY, DIFF, ANY })),
         textures::landmarks::forest_t1r1b1l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
-            { ANY, ANY, SAME, ANY, SAME, ANY, SAME, ANY })),
+            { DIFF, ANY, SAME, ANY, SAME, ANY, SAME, ANY })),
         textures::landmarks::forest_t0r1b1l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
             { SAME, ANY, SAME, ANY, SAME, ANY, SAME, ANY })),
         textures::landmarks::forest_t1r1b1l1);
 
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY })),
+            { DIFF, ANY, DIFF, ANY, DIFF, ANY, DIFF, ANY })),
         textures::landmarks::hills_t0r0b0l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { SAME, ANY, ANY, ANY, ANY, ANY, ANY, ANY })),
+            { SAME, ANY, DIFF, ANY, DIFF, ANY, DIFF, ANY })),
         textures::landmarks::hills_t1r0b0l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { ANY, ANY, ANY, ANY, ANY, ANY, SAME, ANY })),
+            { DIFF, ANY, DIFF, ANY, DIFF, ANY, SAME, ANY })),
         textures::landmarks::hills_t0r0b0l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { SAME, ANY, ANY, ANY, ANY, ANY, SAME, ANY })),
+            { SAME, ANY, DIFF, ANY, DIFF, ANY, SAME, ANY })),
         textures::landmarks::hills_t1r0b0l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { ANY, ANY, ANY, ANY, SAME, ANY, ANY, ANY })),
+            { DIFF, ANY, DIFF, ANY, SAME, ANY, DIFF, ANY })),
         textures::landmarks::hills_t0r0b1l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { SAME, ANY, ANY, ANY, SAME, ANY, ANY, ANY })),
+            { SAME, ANY, DIFF, ANY, SAME, ANY, DIFF, ANY })),
         textures::landmarks::hills_t1r0b1l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { ANY, ANY, ANY, ANY, SAME, ANY, SAME, ANY })),
+            { DIFF, ANY, DIFF, ANY, SAME, ANY, SAME, ANY })),
         textures::landmarks::hills_t0r0b1l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { SAME, ANY, ANY, ANY, SAME, ANY, SAME, ANY })),
+            { SAME, ANY, DIFF, ANY, SAME, ANY, SAME, ANY })),
         textures::landmarks::hills_t1r0b1l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { ANY, ANY, SAME, ANY, ANY, ANY, ANY, ANY })),
+            { DIFF, ANY, SAME, ANY, DIFF, ANY, DIFF, ANY })),
         textures::landmarks::hills_t0r1b0l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { SAME, ANY, SAME, ANY, ANY, ANY, ANY, ANY })),
+            { SAME, ANY, SAME, ANY, DIFF, ANY, DIFF, ANY })),
         textures::landmarks::hills_t1r1b0l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { ANY, ANY, SAME, ANY, ANY, ANY, SAME, ANY })),
+            { DIFF, ANY, SAME, ANY, DIFF, ANY, SAME, ANY })),
         textures::landmarks::hills_t0r1b0l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { SAME, ANY, SAME, ANY, ANY, ANY, SAME, ANY })),
+            { SAME, ANY, SAME, ANY, DIFF, ANY, SAME, ANY })),
         textures::landmarks::hills_t1r1b0l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { ANY, ANY, SAME, ANY, SAME, ANY, ANY, ANY })),
+            { DIFF, ANY, SAME, ANY, SAME, ANY, DIFF, ANY })),
         textures::landmarks::hills_t0r1b1l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { SAME, ANY, SAME, ANY, SAME, ANY, ANY, ANY })),
+            { SAME, ANY, SAME, ANY, SAME, ANY, DIFF, ANY })),
         textures::landmarks::hills_t1r1b1l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
-            { ANY, ANY, SAME, ANY, SAME, ANY, SAME, ANY })),
+            { DIFF, ANY, SAME, ANY, SAME, ANY, SAME, ANY })),
         textures::landmarks::hills_t0r1b1l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Hills,
             { SAME, ANY, SAME, ANY, SAME, ANY, SAME, ANY })),
         textures::landmarks::hills_t1r1b1l1);
 
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { ANY, ANY, ANY, ANY, ANY, ANY, ANY, ANY })),
+            { DIFF, ANY, DIFF, ANY, DIFF, ANY, DIFF, ANY })),
         textures::landmarks::mountains_t0r0b0l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { SAME, ANY, ANY, ANY, ANY, ANY, ANY, ANY })),
+            { SAME, ANY, DIFF, ANY, DIFF, ANY, DIFF, ANY })),
         textures::landmarks::mountains_t1r0b0l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { ANY, ANY, ANY, ANY, ANY, ANY, SAME, ANY })),
+            { DIFF, ANY, DIFF, ANY, DIFF, ANY, SAME, ANY })),
         textures::landmarks::mountains_t0r0b0l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { SAME, ANY, ANY, ANY, ANY, ANY, SAME, ANY })),
+            { SAME, ANY, DIFF, ANY, DIFF, ANY, SAME, ANY })),
         textures::landmarks::mountains_t1r0b0l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { ANY, ANY, ANY, ANY, SAME, ANY, ANY, ANY })),
+            { DIFF, ANY, DIFF, ANY, SAME, ANY, DIFF, ANY })),
         textures::landmarks::mountains_t0r0b1l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { SAME, ANY, ANY, ANY, SAME, ANY, ANY, ANY })),
+            { SAME, ANY, DIFF, ANY, SAME, ANY, DIFF, ANY })),
         textures::landmarks::mountains_t1r0b1l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { ANY, ANY, ANY, ANY, SAME, ANY, SAME, ANY })),
+            { DIFF, ANY, DIFF, ANY, SAME, ANY, SAME, ANY })),
         textures::landmarks::mountains_t0r0b1l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { SAME, ANY, ANY, ANY, SAME, ANY, SAME, ANY })),
+            { SAME, ANY, DIFF, ANY, SAME, ANY, SAME, ANY })),
         textures::landmarks::mountains_t1r0b1l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { ANY, ANY, SAME, ANY, ANY, ANY, ANY, ANY })),
+            { DIFF, ANY, SAME, ANY, DIFF, ANY, DIFF, ANY })),
         textures::landmarks::mountains_t0r1b0l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { SAME, ANY, SAME, ANY, ANY, ANY, ANY, ANY })),
+            { SAME, ANY, SAME, ANY, DIFF, ANY, DIFF, ANY })),
         textures::landmarks::mountains_t1r1b0l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { ANY, ANY, SAME, ANY, ANY, ANY, SAME, ANY })),
+            { DIFF, ANY, SAME, ANY, DIFF, ANY, SAME, ANY })),
         textures::landmarks::mountains_t0r1b0l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { SAME, ANY, SAME, ANY, ANY, ANY, SAME, ANY })),
+            { SAME, ANY, SAME, ANY, DIFF, ANY, SAME, ANY })),
         textures::landmarks::mountains_t1r1b0l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { ANY, ANY, SAME, ANY, SAME, ANY, ANY, ANY })),
+            { DIFF, ANY, SAME, ANY, SAME, ANY, DIFF, ANY })),
         textures::landmarks::mountains_t0r1b1l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { SAME, ANY, SAME, ANY, SAME, ANY, ANY, ANY })),
+            { SAME, ANY, SAME, ANY, SAME, ANY, DIFF, ANY })),
         textures::landmarks::mountains_t1r1b1l0);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
-            { ANY, ANY, SAME, ANY, SAME, ANY, SAME, ANY })),
+            { DIFF, ANY, SAME, ANY, SAME, ANY, SAME, ANY })),
         textures::landmarks::mountains_t0r1b1l1);
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Mountains,
             { SAME, ANY, SAME, ANY, SAME, ANY, SAME, ANY })),
