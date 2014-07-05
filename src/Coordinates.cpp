@@ -33,6 +33,10 @@ RotPoint cartesian_rotated(const CartPoint& cart) {
 }
 
 
+CartPoint::CartPoint()
+    : x(0.0), y(0.0)
+{ }
+
 CartPoint::CartPoint(double x, double y)
     : x(x), y(y)
 { }
@@ -57,6 +61,10 @@ bool operator != (const CartPoint& lhs, const CartPoint& rhs) {
     return lhs.x != rhs.x || lhs.y != rhs.y;
 }
 
+
+IntCartPoint::IntCartPoint()
+    : x(0), y(0)
+{ }
 
 IntCartPoint::IntCartPoint(int x, int y)
     : x(x), y(y)
@@ -83,6 +91,10 @@ bool operator != (const IntCartPoint& lhs, const IntCartPoint& rhs) {
 }
 
 
+IsoPoint::IsoPoint()
+    : x(0.0), y(0.0)
+{ }
+
 IsoPoint::IsoPoint(double x, double y)
     : x(x), y(y)
 { }
@@ -107,6 +119,10 @@ bool operator != (const IsoPoint& lhs, const IsoPoint& rhs) {
     return lhs.x != rhs.x || lhs.y != rhs.y;
 }
 
+
+IntIsoPoint::IntIsoPoint()
+    : x(0), y(0)
+{ }
 
 IntIsoPoint::IntIsoPoint(int x, int y)
     : x(x), y(y)
@@ -133,6 +149,10 @@ bool operator != (const IntIsoPoint& lhs, const IntIsoPoint& rhs) {
 }
 
 
+RotPoint::RotPoint()
+    : x(0.0), y(0.0)
+{ }
+
 RotPoint::RotPoint(double x, double y)
     : x(x), y(y)
 { }
@@ -157,6 +177,10 @@ bool operator != (const RotPoint& lhs, const RotPoint& rhs) {
     return lhs.x != rhs.x || lhs.y != rhs.y;
 }
 
+
+IntRotPoint::IntRotPoint()
+    : x(0), y(0)
+{ }
 
 IntRotPoint::IntRotPoint(int x, int y)
     : x(x), y(y)

@@ -13,6 +13,7 @@ struct IntRotPoint;
 struct RotPoint;
 
 struct CartPoint {
+    CartPoint();
     CartPoint(double x, double y);
     CartPoint(const IntCartPoint& p);
 
@@ -29,6 +30,7 @@ bool operator == (const CartPoint& lhs, const CartPoint& rhs);
 bool operator != (const CartPoint& lhs, const CartPoint& rhs);
 
 struct IntCartPoint {
+    IntCartPoint();
     IntCartPoint(int x, int y);
     explicit IntCartPoint(const CartPoint& p);
 
@@ -43,6 +45,7 @@ bool operator == (const IntCartPoint& lhs, const IntCartPoint& rhs);
 bool operator != (const IntCartPoint& lhs, const IntCartPoint& rhs);
 
 struct IsoPoint {
+    IsoPoint();
     IsoPoint(double x, double y);
     IsoPoint(const IntIsoPoint& p);
 
@@ -57,6 +60,7 @@ bool operator == (const IsoPoint& lhs, const IsoPoint& rhs);
 bool operator != (const IsoPoint& lhs, const IsoPoint& rhs);
 
 struct IntIsoPoint {
+    IntIsoPoint();
     IntIsoPoint(int x, int y);
     explicit IntIsoPoint(const IsoPoint& p);
 
@@ -71,6 +75,7 @@ bool operator == (const IntIsoPoint& lhs, const IntIsoPoint& rhs);
 bool operator != (const IntIsoPoint& lhs, const IntIsoPoint& rhs);
 
 struct RotPoint {
+    RotPoint();
     RotPoint(double x, double y);
     RotPoint(const IntRotPoint& p);
 
@@ -85,6 +90,7 @@ bool operator == (const RotPoint& lhs, const RotPoint& rhs);
 bool operator != (const RotPoint& lhs, const RotPoint& rhs);
 
 struct IntRotPoint {
+    IntRotPoint();
     IntRotPoint(int x, int y);
     explicit IntRotPoint(const RotPoint& p);
 
