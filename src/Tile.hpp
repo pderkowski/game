@@ -20,6 +20,7 @@ public:
 
     void setModel(const MapModel* model);
 
+    bool hasNeighbor(Direction direction) const;
     std::shared_ptr<const Tile> getNeighbor(Direction direction) const;
     std::vector<std::shared_ptr<const Tile>> getNeighbors() const;
     std::vector<std::shared_ptr<const Tile>> getAdjacentNeighbors() const;
@@ -35,6 +36,7 @@ private:
     friend bool operator == (const Tile& lhs, const Tile& rhs);
     friend bool operator != (const Tile& lhs, const Tile& rhs);
 
+    IntRotPoint getNeighborCoords(Direction direction) const;
     bool isValid() const;
 
     const MapModel* model_;

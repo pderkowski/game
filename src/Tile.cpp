@@ -18,38 +18,14 @@ void Tile::setModel(const MapModel* model) {
     model_ = model;
 }
 
+bool Tile::hasNeighbor(Direction direction) const {
+    auto neighborCoords = getNeighborCoords(direction);
+    return model_->isInBounds(model_->getTile(IntIsoPoint(neighborCoords.toIsometric())));
+}
+
 std::shared_ptr<const Tile> Tile::getNeighbor(Direction direction) const {
     if (isValid()) {
-        IntRotPoint neighborCoords;
-
-        switch (direction) {
-        case Direction::Top:
-            neighborCoords = IntRotPoint(coords.x, coords.y - 1);
-            break;
-        case Direction::TopRight:
-            neighborCoords = IntRotPoint(coords.x + 1, coords.y - 1);
-            break;
-        case Direction::Right:
-            neighborCoords = IntRotPoint(coords.x + 1, coords.y);
-            break;
-        case Direction::BottomRight:
-            neighborCoords = IntRotPoint(coords.x + 1, coords.y + 1);
-            break;
-        case Direction::Bottom:
-            neighborCoords = IntRotPoint(coords.x, coords.y + 1);
-            break;
-        case Direction::BottomLeft:
-            neighborCoords = IntRotPoint(coords.x - 1, coords.y + 1);
-            break;
-        case Direction::Left:
-            neighborCoords = IntRotPoint(coords.x - 1, coords.y);
-            break;
-        case Direction::TopLeft:
-            neighborCoords = IntRotPoint(coords.x - 1, coords.y - 1);
-            break;
-        };
-
-        return model_->getTile(IntIsoPoint(neighborCoords.toIsometric()));
+        return model_->getTile(IntIsoPoint(getNeighborCoords(direction).toIsometric()));
     } else {
         throw std::logic_error("Trying to find neighbors of invalid tile.");
     }
@@ -106,6 +82,30 @@ Direction Tile::getDirection(std::shared_ptr<const Tile> neighbor) const {
 bool Tile::isValid() const {
     return model_ != nullptr;
 }
+
+IntRotPoint Tile::getNeighborCoords(Direction direction) const {
+    switch (direction) {
+    case Direction::Top:
+        return IntRotPoint(coords.x, coords.y - 1);
+    case Direction::TopRight:
+        return IntRotPoint(coords.x + 1, coords.y - 1);
+    case Direction::Right:
+        return IntRotPoint(coords.x + 1, coords.y);
+    case Direction::BottomRight:
+        return IntRotPoint(coords.x + 1, coords.y + 1);
+    case Direction::Bottom:
+        return IntRotPoint(coords.x, coords.y + 1);
+    case Direction::BottomLeft:
+        return IntRotPoint(coords.x - 1, coords.y + 1);
+    case Direction::Left:
+        return IntRotPoint(coords.x - 1, coords.y);
+    case Direction::TopLeft:
+        return IntRotPoint(coords.x - 1, coords.y - 1);
+    default:
+        throw std::logic_error("Unrecognized direction.");
+    }
+}
+
 
 bool operator == (const Tile& lhs, const Tile& rhs) {
     return lhs.coords == rhs.coords && lhs.model_ == rhs.model_;
