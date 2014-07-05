@@ -10,6 +10,7 @@
 #include "HeightMap.hpp"
 #include "Coordinates.hpp"
 #include "Utils.hpp"
+#include "TileEnums.hpp"
 
 MapModel::MapModel(int rowsNo, int columnsNo)
     : rowsNo_(rowsNo), columnsNo_(columnsNo)
@@ -17,9 +18,40 @@ MapModel::MapModel(int rowsNo, int columnsNo)
     for (int r = 0; r < rowsNo; ++r) {
         tiles_.push_back(std::vector<std::shared_ptr<Tile>>(columnsNo));
         for (int c = 0; c < columnsNo; ++c) {
-            tiles_[r][c] = std::make_shared<Tile>(IntRotPoint(IntIsoPoint(c, r).toRotated()));
+            tiles_[r][c] = std::shared_ptr<Tile>(new Tile(IntRotPoint(IntIsoPoint(c, r).toRotated())));
         }
     }
+
+    setModelInTiles();
+}
+
+MapModel::MapModel(const MapModel& other)
+    : rowsNo_(other.rowsNo_), columnsNo_(other.columnsNo_)
+{
+    for (int r = 0; r < rowsNo_; ++r) {
+        tiles_.push_back(std::vector<std::shared_ptr<Tile>>(columnsNo_));
+        for (int c = 0; c < columnsNo_; ++c) {
+            tiles_[r][c] = std::shared_ptr<Tile>(new Tile(*(other.tiles_[r][c])));
+        }
+    }
+
+    setModelInTiles();
+}
+
+MapModel::~MapModel() {
+    for (int r = 0; r < rowsNo_; ++r) {
+        for (int c = 0; c < columnsNo_; ++c) {
+            tiles_[r][c]->setModel(nullptr);
+        }
+    }
+}
+
+
+void swap(MapModel& first, MapModel& other);
+
+MapModel& MapModel::operator = (MapModel model) {
+    swap(*this, model);
+    return *this;
 }
 
 int MapModel::getRowsNo() const {
@@ -42,16 +74,17 @@ bool MapModel::isInBounds(std::shared_ptr<const Tile> tile) const {
 
 std::shared_ptr<const Tile> MapModel::getTile(const IntIsoPoint& p) const {
     if (!isInBounds(p)) {
-        throw std::range_error("Requested tile is out of range.");
+        return std::shared_ptr<const Tile>(new Tile(IntRotPoint(p.toRotated())));
+    } else {
+        return tiles_[p.y][utils::positiveModulo(p.x, columnsNo_)];
     }
-    return tiles_[p.y][utils::positiveModulo(p.x, columnsNo_)];
 }
 
 std::shared_ptr<Tile> MapModel::getTile(const IntIsoPoint& p) {
     return std::const_pointer_cast<Tile>(static_cast<const MapModel&>(*this).getTile(p));
 }
 
-std::vector<std::shared_ptr<const Tile>> MapModel::getTilesByType(Tile::Type type) const {
+std::vector<std::shared_ptr<const Tile>> MapModel::getTilesByType(tileenums::Type type) const {
     std::vector<std::shared_ptr<const Tile>> res;
 
     for (const auto& row : tiles_) {
@@ -79,66 +112,26 @@ std::vector<std::shared_ptr<const Tile>> MapModel::getTiles(std::function<bool(c
     return res;
 }
 
-std::vector<std::shared_ptr<const Tile>> MapModel::getNeighbors(std::shared_ptr<const Tile> tile) const {
-    return getNeighbors(*tile);
-}
-
-std::vector<std::shared_ptr<const Tile>> MapModel::getNeighbors(const Tile& tile) const {
-    std::vector<IntRotPoint> neighborsCoords = {
-        IntRotPoint(tile.coords.x, tile.coords.y - 1),
-        IntRotPoint(tile.coords.x + 1, tile.coords.y - 1),
-        IntRotPoint(tile.coords.x + 1, tile.coords.y),
-        IntRotPoint(tile.coords.x + 1, tile.coords.y + 1),
-        IntRotPoint(tile.coords.x, tile.coords.y + 1),
-        IntRotPoint(tile.coords.x - 1, tile.coords.y + 1),
-        IntRotPoint(tile.coords.x - 1, tile.coords.y),
-        IntRotPoint(tile.coords.x - 1, tile.coords.y - 1) };
-
-    std::vector<std::shared_ptr<const Tile>> neighbors;
-    for (const auto& rotCoord : neighborsCoords) {
-        IntIsoPoint isoCoord(rotCoord.toIsometric());
-        if (isInBounds(isoCoord)) {
-            neighbors.push_back(getTile(isoCoord));
-        } else {
-            auto dummy = std::make_shared<const Tile>(IntRotPoint(0, -1));
-            neighbors.push_back(dummy);
-        }
-    }
-
-    return neighbors;
-}
-
-std::vector<std::shared_ptr<const Tile>> MapModel::getAdjacentNeighbors(
-    std::shared_ptr<const Tile> tile) const
-{
-    return getAdjacentNeighbors(*tile);
-}
-
-std::vector<std::shared_ptr<const Tile>> MapModel::getAdjacentNeighbors(const Tile& tile) const {
-    std::vector<IntRotPoint> neighborsCoords = {
-        IntRotPoint(tile.coords.x, tile.coords.y - 1),
-        IntRotPoint(tile.coords.x + 1, tile.coords.y),
-        IntRotPoint(tile.coords.x, tile.coords.y + 1),
-        IntRotPoint(tile.coords.x - 1, tile.coords.y) };
-
-    std::vector<std::shared_ptr<const Tile>> neighbors;
-    for (const auto& rotCoord : neighborsCoords) {
-        IntIsoPoint isoCoord(rotCoord.toIsometric());
-        if (isInBounds(isoCoord)) {
-            neighbors.push_back(getTile(isoCoord));
-        } else {
-            auto dummy = std::make_shared<const Tile>(IntRotPoint(0, -1));
-            neighbors.push_back(dummy);
-        }
-    }
-
-    return neighbors;
-}
-
 void MapModel::changeTiles(std::function<void(Tile&)> transformation) {
     for (const auto& row : tiles_) {
         for (const auto& tilePtr : row) {
             transformation(*tilePtr);
         }
     }
+}
+
+void MapModel::setModelInTiles() {
+    for (const auto& row : tiles_) {
+        for (const auto& tilePtr : row) {
+            tilePtr->setModel(this);
+        }
+    }
+}
+
+void swap(MapModel& first, MapModel& other) {
+    std::swap(first.rowsNo_, other.rowsNo_);
+    std::swap(first.columnsNo_, other.columnsNo_);
+    std::swap(first.tiles_, other.tiles_);
+    first.setModelInTiles();
+    other.setModelInTiles();
 }

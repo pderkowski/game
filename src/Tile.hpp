@@ -3,32 +3,41 @@
 #ifndef TILE_HPP_
 #define TILE_HPP_
 
+#include <memory>
+#include <queue>
 #include "Attributes.hpp"
 #include "Coordinates.hpp"
+#include "TileEnums.hpp"
+class MapModel;
+
+using namespace tileenums;
 
 class Tile {
 public:
-    enum class Type {
-        Empty,
-        Water,
-        Grassland,
-        Plains,
-        Forest,
-        Desert,
-        Hills,
-        Mountains
-    };
+    typedef std::queue<Unit> Units;
 
-    explicit Tile(const IntRotPoint& coordinates);
-    Tile(const IntRotPoint& coordinates, Type type);
+    Tile(const IntRotPoint& coords, Type type = Type::Empty);
 
-    void toggleVisibility();
+    void setModel(const MapModel* model);
+
+    std::shared_ptr<const Tile> getNeighbor(Direction direction) const;
+    std::vector<std::shared_ptr<const Tile>> getNeighbors() const;
+    std::vector<std::shared_ptr<const Tile>> getAdjacentNeighbors() const;
+
+    Direction getDirection(std::shared_ptr<const Tile> neighbor) const;
 
     IntRotPoint coords;
     Type type;
     Attributes attributes;
+    Units units;
 
-    bool isVisible;
+private:
+    friend bool operator == (const Tile& lhs, const Tile& rhs);
+    friend bool operator != (const Tile& lhs, const Tile& rhs);
+
+    bool isValid() const;
+
+    const MapModel* model_;
 };
 
 bool operator == (const Tile& lhs, const Tile& rhs);

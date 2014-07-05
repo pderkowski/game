@@ -50,7 +50,7 @@ private:
 
     sf::View mapView_;
 
-    std::vector<Layer> layers_;
+    std::vector<std::shared_ptr<Layer>> layers_;
 };
 
 #endif  // MAPDRAWER_HPP_

@@ -6,6 +6,7 @@
 #include <memory>
 #include "SFML/Graphics.hpp"
 #include "TextureSet.hpp"
+#include "Tile.hpp"
 
 class Layer : public sf::Drawable {
 public:
@@ -15,11 +16,9 @@ public:
     virtual void draw(sf::RenderTarget& target,
         sf::RenderStates states = sf::RenderStates::Default) const;
 
-    void add(std::shared_ptr<const Tile> tile,
-        const std::vector<std::shared_ptr<const Tile>>& neighbors,
-        const sf::Vector2f& tileCenter);
+    virtual void add(std::shared_ptr<const Tile> tile, const sf::Vector2f& tileCenter);
 
-private:
+protected:
     TextureSet textureSet_;
 
     sf::VertexArray vertices_;

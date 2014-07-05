@@ -17,12 +17,11 @@ void TextureSet::add(std::shared_ptr<const Matcher> textureMatcher, const sf::Ve
     textureMatchers_.push_back(std::make_pair(textureMatcher, vertices));
 }
 
-sf::VertexArray TextureSet::getVertices(std::shared_ptr<const Tile> tile,
-    const std::vector<std::shared_ptr<const Tile>>& neighbors) const
+sf::VertexArray TextureSet::getVertices(std::shared_ptr<const Tile> tile) const
 {
     sf::VertexArray matchedVertices;
     for (const auto& matcher_vertices : textureMatchers_) {
-        if (matcher_vertices.first->match(tile, neighbors)) {
+        if (matcher_vertices.first->match(tile)) {
             for (unsigned i = 0; i < matcher_vertices.second.getVertexCount(); ++i) {
                 matchedVertices.append(matcher_vertices.second[i]);
             }

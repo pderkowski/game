@@ -10,11 +10,9 @@ Layer::Layer(const TextureSet& textureSet)
     vertices_(sf::Quads)
 { }
 
-void Layer::add(std::shared_ptr<const Tile> tile,
-    const std::vector<std::shared_ptr<const Tile>>& neighbors,
-    const sf::Vector2f& position)
+void Layer::add(std::shared_ptr<const Tile> tile, const sf::Vector2f& position)
 {
-    auto vertices = textureSet_.getVertices(tile, neighbors);
+    auto vertices = textureSet_.getVertices(tile);
 
     for (unsigned i = 0; i < vertices.getVertexCount(); ++i) {
         vertices[i].position += (position - sf::Vector2f(48, 24));

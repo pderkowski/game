@@ -4,24 +4,17 @@
 #define ATTRIBUTES_HPP_
 
 #include "Attribute.hpp"
+#include "TileEnums.hpp"
 
 class Attributes {
-public:
-    enum RiverDirection {
-        Top = 1 << 0,
-        Right = 1 << 1,
-        Bottom = 1 << 2,
-        Left = 1 << 3
-    };
-
 private:
     class River {
     public:
         River();
 
-        void addDirection(RiverDirection direction);
+        void addDirection(tileenums::Direction direction);
         void resetDirections();
-        bool hasDirection(RiverDirection direction) const;
+        bool hasDirection(tileenums::Direction direction) const;
 
     private:
         int directions_;

@@ -10,6 +10,7 @@
 #include "NoiseGenerator.hpp"
 #include "MapConstructor.hpp"
 #include "Tile.hpp"
+#include "TileEnums.hpp"
 
 MapModel MapGenerator::generateMap(int rows, int columns) {
     static auto generator = std::make_shared<std::default_random_engine>(
@@ -30,30 +31,30 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
     const double mountainLevelOnHills = mountainMap.getNth(0.80 * mountainMap.getSize());
     const double forestLevel = forestMap.getNth(0.50 * forestMap.getSize());
 
-    const std::vector<Tile::Type> landTypes = { Tile::Type::Grassland, Tile::Type::Plains,
-        Tile::Type::Desert, Tile::Type::Hills, Tile::Type::Mountains };
+    const std::vector<tileenums::Type> landTypes = { tileenums::Type::Grassland, tileenums::Type::Plains,
+        tileenums::Type::Desert, tileenums::Type::Hills, tileenums::Type::Mountains };
 
     return MapConstructor(landMap, generator)
-        .setTypeMask({ Tile::Type::Empty })
-        .setType(Tile::Type::Water, waterLevel)
-        .setTypeMask({ Tile::Type::Water })
-        .setType(Tile::Type::Grassland, landLevel)
+        .setTypeMask({ tileenums::Type::Empty })
+        .setType(tileenums::Type::Water, waterLevel)
+        .setTypeMask({ tileenums::Type::Water })
+        .setType(tileenums::Type::Grassland, landLevel)
         .setTypeMask(landTypes)
         .setSource(humidityMap)
-        .setType(Tile::Type::Plains, plainsLevel)
-        .setType(Tile::Type::Desert, desertLevel)
+        .setType(tileenums::Type::Plains, plainsLevel)
+        .setType(tileenums::Type::Desert, desertLevel)
         .setSource(hillMap)
-        .setType(Tile::Type::Hills, hillLevel)
+        .setType(tileenums::Type::Hills, hillLevel)
         .setSource(mountainMap)
-        .setType(Tile::Type::Mountains, mountainLevelOnPlains)
-        .setTypeMask({ Tile::Type::Hills })
-        .setType(Tile::Type::Mountains, mountainLevelOnHills)
-        .setTypeMask({ Tile::Type::Mountains, Tile::Type::Hills, Tile::Type::Grassland })
+        .setType(tileenums::Type::Mountains, mountainLevelOnPlains)
+        .setTypeMask({ tileenums::Type::Hills })
+        .setType(tileenums::Type::Mountains, mountainLevelOnHills)
+        .setTypeMask({ tileenums::Type::Mountains, tileenums::Type::Hills, tileenums::Type::Grassland })
         .spawnRivers(0.02)
         .setSource(landMap)
         .createRiverFlow()
         .setSource(forestMap)
-        .setTypeMask({ Tile::Type::Plains, Tile::Type::Grassland })
-        .setType(Tile::Type::Forest, forestLevel)
+        .setTypeMask({ tileenums::Type::Plains, tileenums::Type::Grassland })
+        .setType(tileenums::Type::Forest, forestLevel)
         .construct();
 }

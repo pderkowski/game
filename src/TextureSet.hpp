@@ -15,8 +15,7 @@ public:
     TextureSet(std::shared_ptr<const sf::Texture> texture);
 
     void add(std::shared_ptr<const Matcher> textureMatcher, const sf::VertexArray& vertices);
-    sf::VertexArray getVertices(std::shared_ptr<const Tile> tile,
-        const std::vector<std::shared_ptr<const Tile>>& neighbors) const;
+    sf::VertexArray getVertices(std::shared_ptr<const Tile> tile) const;
 
     std::shared_ptr<const sf::Texture> getActualTexture() const;
 

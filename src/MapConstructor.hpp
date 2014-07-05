@@ -11,6 +11,7 @@
 #include "MapModel.hpp"
 #include "HeightMap.hpp"
 #include "Attributes.hpp"
+#include "TileEnums.hpp"
 
 class MapConstructor {
 public:
@@ -21,24 +22,22 @@ public:
     MapConstructor& operator =(const MapConstructor&) = delete;
 
     MapConstructor& setSource(const HeightMap& heightMap);
-    MapConstructor& setTypeMask(const std::vector<Tile::Type>& modifiableTypes);
+    MapConstructor& setTypeMask(const std::vector<tileenums::Type>& modifiableTypes);
 
     MapConstructor& spawnRivers(double probability);
     MapConstructor& createRiverFlow();
 
     MapModel construct() const;
 
-    MapConstructor& setType(Tile::Type type, double threshold);
+    MapConstructor& setType(tileenums::Type type, double threshold);
 
 private:
-    bool isTypeModifiable(Tile::Type type) const;
+    bool isTypeModifiable(tileenums::Type type) const;
     std::shared_ptr<Tile> findLowestNeighbor(std::shared_ptr<const Tile> tile) const;
-    Attributes::RiverDirection getDirection(std::shared_ptr<const Tile> from,
-        std::shared_ptr<const Tile> to) const;
 
     HeightMap heightMap_;
     MapModel model_;
-    std::vector<Tile::Type> typeMask_;
+    std::vector<tileenums::Type> typeMask_;
     std::shared_ptr<std::default_random_engine> generator_;
 };
 

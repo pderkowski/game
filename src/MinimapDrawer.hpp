@@ -9,6 +9,7 @@
 #include "Resources.hpp"
 #include "MapModel.hpp"
 #include "Tile.hpp"
+#include "TileEnums.hpp"
 
 class MinimapDrawer {
 public:
@@ -34,7 +35,7 @@ private:
     std::shared_ptr<const MapModel> model_;
     std::shared_ptr<sf::RenderTarget> target_;
 
-    std::map<Tile::Type, sf::Color> tileColors_;
+    std::map<tileenums::Type, sf::Color> tileColors_;
 
     int horizontalPixelsPerTile_;
     int verticalPixelsPerTile_;

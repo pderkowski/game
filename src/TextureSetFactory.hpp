@@ -12,6 +12,7 @@ public:
     static TextureSet getBlendTextureSet();
     static TextureSet getOverlayTextureSet();
     static TextureSet getAttributeTextureSet();
+    static TextureSet getUnitTextureSet();
 };
 
 #endif  // TEXTURESETFACTORY_HPP_
