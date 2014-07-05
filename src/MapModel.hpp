@@ -39,6 +39,7 @@ private:
 
     int rowsNo_;
     int columnsNo_;
+    std::vector<Unit> units_;
     std::vector<std::vector<std::shared_ptr<Tile>>> tiles_;
 };
 

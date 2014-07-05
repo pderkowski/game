@@ -8,11 +8,11 @@
 
 class TextureSetFactory {
 public:
-    static TextureSet getBaseTextureSet();
-    static TextureSet getBlendTextureSet();
-    static TextureSet getOverlayTextureSet();
-    static TextureSet getAttributeTextureSet();
-    static TextureSet getUnitTextureSet();
+    static TextureSet<Tile> getBaseTextureSet();
+    static TextureSet<Tile> getBlendTextureSet();
+    static TextureSet<Tile> getOverlayTextureSet();
+    static TextureSet<Tile> getAttributeTextureSet();
+    static TextureSet<Tile> getUnitTextureSet();
 };
 
 #endif  // TEXTURESETFACTORY_HPP_

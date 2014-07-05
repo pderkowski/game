@@ -9,27 +9,18 @@
 
 using namespace tileenums;
 
-Matcher::Matcher(Predicate predicate)
-    : predicate_(predicate)
-{ }
-
-bool Matcher::match(std::shared_ptr<const Tile> tile) const {
-    return predicate_(tile);
-}
-
-
 TileTypeMatcher::TileTypeMatcher(Type type)
-    : Matcher([type] (std::shared_ptr<const Tile> tile) {
-        return tile->type == type;
+    : Matcher<Tile>([type] (const Tile& tile) {
+        return tile.type == type;
     })
 { }
 
 NeighborTypesMatcher::NeighborTypesMatcher(Type type, const NeighborTypes& neighborTypes)
-    : Matcher([type, neighborTypes] (std::shared_ptr<const Tile> tile) {
-        if (tile->type != type)
+    : Matcher<Tile>([type, neighborTypes] (const Tile& tile) {
+        if (tile.type != type)
             return false;
 
-        std::vector<Direction> directions = { Direction::Top, Direction::TopRight, Direction::Right,\
+        std::vector<Direction> directions = { Direction::Top, Direction::TopRight, Direction::Right,
             Direction::BottomRight, Direction::Bottom, Direction::BottomLeft, Direction::Left,
             Direction::TopLeft };
 
@@ -41,15 +32,15 @@ NeighborTypesMatcher::NeighborTypesMatcher(Type type, const NeighborTypes& neigh
                 case Any:
                     break;
                 case Same:
-                    if ((tile->hasNeighbor(directions[i]) && tile->getNeighbor(directions[i])->type == type)
-                        || !tile->hasNeighbor(directions[i]))
+                    if ((tile.hasNeighbor(directions[i]) && tile.getNeighbor(directions[i])->type == type)
+                        || !tile.hasNeighbor(directions[i]))
                     {
                         break;
                     }
                     else
                         return false;
                 case Different:
-                    if (tile->hasNeighbor(directions[i]) && tile->getNeighbor(directions[i])->type != type)
+                    if (tile.hasNeighbor(directions[i]) && tile.getNeighbor(directions[i])->type != type)
                         break;
                     else
                         return false;

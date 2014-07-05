@@ -14,7 +14,6 @@
 #include "TextureSetFactory.hpp"
 #include "Resources.hpp"
 #include "Layer.hpp"
-#include "ModifiableLayer.hpp"
 
 MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::RenderTarget> target)
         : model_(model),
@@ -34,11 +33,11 @@ void MapDrawer::setModel(std::shared_ptr<MapModel> model) {
 
 void MapDrawer::makeLayers() {
     layers_.clear();
-    layers_.push_back(std::make_shared<Layer>(TextureSetFactory::getBaseTextureSet()));
-    layers_.push_back(std::make_shared<Layer>(TextureSetFactory::getBlendTextureSet()));
-    layers_.push_back(std::make_shared<Layer>(TextureSetFactory::getOverlayTextureSet()));
-    layers_.push_back(std::make_shared<Layer>(TextureSetFactory::getAttributeTextureSet()));
-    layers_.push_back(std::make_shared<ModifiableLayer>(TextureSetFactory::getUnitTextureSet()));
+    layers_.push_back(Layer<Tile>(TextureSetFactory::getBaseTextureSet()));
+    layers_.push_back(Layer<Tile>(TextureSetFactory::getBlendTextureSet()));
+    layers_.push_back(Layer<Tile>(TextureSetFactory::getOverlayTextureSet()));
+    layers_.push_back(Layer<Tile>(TextureSetFactory::getAttributeTextureSet()));
+    layers_.push_back(Layer<Tile>(TextureSetFactory::getUnitTextureSet()));
 
     for (int r = 0; r < model_->getRowsNo(); ++r) {
         for (int c = 0; c < model_->getColumnsNo(); ++c) {
@@ -58,16 +57,16 @@ void MapDrawer::addTileToLayers(std::shared_ptr<const Tile> tile) {
             utils::positiveModulo(tilePosition.x + getMapWidth(), 2 * getMapWidth()),
             tilePosition.y);
 
-        layer->add(tile, tilePosition);
-        layer->add(tile, dualTilePosition);
+        layer.add(*tile, tilePosition);
+        layer.add(*tile, dualTilePosition);
     }
 }
 
 void MapDrawer::draw() const {
     target_->setView(mapView_);
 
-    for (const auto& layerPtr : layers_) {
-        target_->draw(*layerPtr);
+    for (const auto& layer : layers_) {
+        target_->draw(layer);
     }
 }
 

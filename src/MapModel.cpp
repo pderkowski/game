@@ -26,7 +26,7 @@ MapModel::MapModel(int rowsNo, int columnsNo)
 }
 
 MapModel::MapModel(const MapModel& other)
-    : rowsNo_(other.rowsNo_), columnsNo_(other.columnsNo_)
+    : rowsNo_(other.rowsNo_), columnsNo_(other.columnsNo_), units_(other.units_)
 {
     for (int r = 0; r < rowsNo_; ++r) {
         tiles_.push_back(std::vector<std::shared_ptr<Tile>>(columnsNo_));
@@ -131,6 +131,7 @@ void MapModel::setModelInTiles() {
 void swap(MapModel& first, MapModel& other) {
     std::swap(first.rowsNo_, other.rowsNo_);
     std::swap(first.columnsNo_, other.columnsNo_);
+    std::swap(first.units_, other.units_);
     std::swap(first.tiles_, other.tiles_);
     first.setModelInTiles();
     other.setModelInTiles();
