@@ -90,16 +90,13 @@ std::shared_ptr<Tile> MapConstructor::findLowestNeighbor(std::shared_ptr<const T
 
     auto neighbors = tile->getAdjacentNeighbors();
     for (const auto& neighbor : neighbors) {
-        if (model_.isInBounds(neighbor) && *neighbor != *tile) {
-            if (!res) {
-                res = neighbor;
-            } else {
-                const IntIsoPoint resCoords(res->coords.toIsometric());
-                const IntIsoPoint neighCoords(neighbor->coords.toIsometric());
-                res = (heightMap_(resCoords.y, resCoords.x) < heightMap_(neighCoords.y, neighCoords.x))?
-                    res : neighbor;
-            }
-
+        if (!res) {
+            res = neighbor;
+        } else {
+            const IntIsoPoint resCoords(res->coords.toIsometric());
+            const IntIsoPoint neighCoords(neighbor->coords.toIsometric());
+            res = (heightMap_(resCoords.y, resCoords.x) < heightMap_(neighCoords.y, neighCoords.x))?
+                res : neighbor;
         }
     }
 

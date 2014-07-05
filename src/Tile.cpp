@@ -25,7 +25,11 @@ bool Tile::hasNeighbor(Direction direction) const {
 
 std::shared_ptr<const Tile> Tile::getNeighbor(Direction direction) const {
     if (isValid()) {
-        return model_->getTile(IntIsoPoint(getNeighborCoords(direction).toIsometric()));
+        if (hasNeighbor(direction)) {
+            return model_->getTile(IntIsoPoint(getNeighborCoords(direction).toIsometric()));
+        } else {
+            throw std::logic_error("Requested neighbor doesn't exist.");
+        }
     } else {
         throw std::logic_error("Trying to find neighbors of invalid tile.");
     }
@@ -34,14 +38,22 @@ std::shared_ptr<const Tile> Tile::getNeighbor(Direction direction) const {
 std::vector<std::shared_ptr<const Tile>> Tile::getNeighbors() const {
     std::vector<std::shared_ptr<const Tile>> neighbors;
 
-    neighbors.push_back(getNeighbor(Direction::Top));
-    neighbors.push_back(getNeighbor(Direction::TopRight));
-    neighbors.push_back(getNeighbor(Direction::Right));
-    neighbors.push_back(getNeighbor(Direction::BottomRight));
-    neighbors.push_back(getNeighbor(Direction::Bottom));
-    neighbors.push_back(getNeighbor(Direction::BottomLeft));
-    neighbors.push_back(getNeighbor(Direction::Left));
-    neighbors.push_back(getNeighbor(Direction::TopLeft));
+    if (hasNeighbor(Direction::Top))
+        neighbors.push_back(getNeighbor(Direction::Top));
+    if (hasNeighbor(Direction::TopRight))
+        neighbors.push_back(getNeighbor(Direction::TopRight));
+    if (hasNeighbor(Direction::Right))
+        neighbors.push_back(getNeighbor(Direction::Right));
+    if (hasNeighbor(Direction::BottomRight))
+        neighbors.push_back(getNeighbor(Direction::BottomRight));
+    if (hasNeighbor(Direction::Bottom))
+        neighbors.push_back(getNeighbor(Direction::Bottom));
+    if (hasNeighbor(Direction::BottomLeft))
+        neighbors.push_back(getNeighbor(Direction::BottomLeft));
+    if (hasNeighbor(Direction::Left))
+        neighbors.push_back(getNeighbor(Direction::Left));
+    if (hasNeighbor(Direction::TopLeft))
+        neighbors.push_back(getNeighbor(Direction::TopLeft));
 
     return neighbors;
 }
@@ -49,33 +61,38 @@ std::vector<std::shared_ptr<const Tile>> Tile::getNeighbors() const {
 std::vector<std::shared_ptr<const Tile>> Tile::getAdjacentNeighbors() const {
     std::vector<std::shared_ptr<const Tile>> neighbors;
 
-    neighbors.push_back(getNeighbor(Direction::Top));
-    neighbors.push_back(getNeighbor(Direction::Right));
-    neighbors.push_back(getNeighbor(Direction::Bottom));
-    neighbors.push_back(getNeighbor(Direction::Left));
+    if (hasNeighbor(Direction::Top))
+        neighbors.push_back(getNeighbor(Direction::Top));
+    if (hasNeighbor(Direction::Right))
+        neighbors.push_back(getNeighbor(Direction::Right));
+    if (hasNeighbor(Direction::Bottom))
+        neighbors.push_back(getNeighbor(Direction::Bottom));
+    if (hasNeighbor(Direction::TopLeft))
+        neighbors.push_back(getNeighbor(Direction::TopLeft));
 
     return neighbors;
 }
 
 Direction Tile::getDirection(std::shared_ptr<const Tile> neighbor) const {
-    if (*neighbor == *getNeighbor(Direction::Top)) {
+    if (hasNeighbor(Direction::Top) && *neighbor == *getNeighbor(Direction::Top)) {
         return Direction::Top;
-    } else if (*neighbor == *getNeighbor(Direction::TopRight)) {
+    } else if (hasNeighbor(Direction::TopRight) && *neighbor == *getNeighbor(Direction::TopRight)) {
         return Direction::TopRight;
-    } else if (*neighbor == *getNeighbor(Direction::Right)) {
+    } else if (hasNeighbor(Direction::Right) && *neighbor == *getNeighbor(Direction::Right)) {
         return Direction::Right;
-    } else if (*neighbor == *getNeighbor(Direction::BottomRight)) {
+    } else if (hasNeighbor(Direction::BottomRight) && *neighbor == *getNeighbor(Direction::BottomRight)) {
         return Direction::BottomRight;
-    } else if (*neighbor == *getNeighbor(Direction::Bottom)) {
+    } else if (hasNeighbor(Direction::Bottom) && *neighbor == *getNeighbor(Direction::Bottom)) {
         return Direction::Bottom;
-    } else if (*neighbor == *getNeighbor(Direction::BottomLeft)) {
+    } else if (hasNeighbor(Direction::BottomLeft) && *neighbor == *getNeighbor(Direction::BottomLeft)) {
         return Direction::BottomLeft;
-    } else if (*neighbor == *getNeighbor(Direction::Left)) {
+    } else if (hasNeighbor(Direction::Left) && *neighbor == *getNeighbor(Direction::Left)) {
         return Direction::Left;
-    } else if (*neighbor == *getNeighbor(Direction::TopLeft)) {
+    } else if (hasNeighbor(Direction::TopLeft) && *neighbor == *getNeighbor(Direction::TopLeft)) {
         return Direction::TopLeft;
     } else {
-        throw std::invalid_argument("Tile " + toString(neighbor->coords) + " is not adjacent to " + toString(coords) + ".");
+        throw std::invalid_argument("Tile " + toString(neighbor->coords) + " is not a neighbor of "
+            + toString(coords) + ".");
     }
 }
 
