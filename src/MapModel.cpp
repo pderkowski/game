@@ -120,6 +120,21 @@ void MapModel::changeTiles(std::function<void(Tile&)> transformation) {
     }
 }
 
+void MapModel::addUnit(std::shared_ptr<units::Unit> unit) {
+    units_.push_back(unit);
+}
+
+std::vector<std::shared_ptr<const units::Unit>> MapModel::getUnits() const {
+    std::vector<std::shared_ptr<const units::Unit>> res;
+
+    for (const auto& unit : units_) {
+        res.push_back(unit);
+    }
+
+    return res;
+}
+
+
 void MapModel::setModelInTiles() {
     for (const auto& row : tiles_) {
         for (const auto& tilePtr : row) {

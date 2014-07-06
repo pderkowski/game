@@ -14,13 +14,15 @@
 #include "TextureSetFactory.hpp"
 #include "Resources.hpp"
 #include "Layer.hpp"
+#include "units/Unit.hpp"
 
 MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::RenderTarget> target)
         : model_(model),
         target_(target),
         tileWidth_(96),
         tileHeight_(48),
-        mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y))
+        mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y)),
+        unitLayer_(TextureSetFactory::getUnitTextureSet())
 {
     makeLayers();
 }
@@ -37,13 +39,28 @@ void MapDrawer::makeLayers() {
     layers_.push_back(Layer<Tile>(TextureSetFactory::getBlendTextureSet()));
     layers_.push_back(Layer<Tile>(TextureSetFactory::getOverlayTextureSet()));
     layers_.push_back(Layer<Tile>(TextureSetFactory::getAttributeTextureSet()));
-    layers_.push_back(Layer<Tile>(TextureSetFactory::getUnitTextureSet()));
+    unitLayer_ = Layer<units::Unit>(TextureSetFactory::getUnitTextureSet());
 
     for (int r = 0; r < model_->getRowsNo(); ++r) {
         for (int c = 0; c < model_->getColumnsNo(); ++c) {
             auto tile = model_->getTile(IntIsoPoint(c, r));
             addTileToLayers(tile);
         }
+    }
+
+    for (const auto& unit : model_->getUnits()) {
+        auto tile = unit->getPosition();
+
+        auto tileCartCoords = tile->coords.toCartesian();
+        sf::Vector2f unitPosition(
+            utils::positiveModulo(tileCartCoords.x * tileWidth_ / 2, 2 * getMapWidth()),
+            tileCartCoords.y * tileHeight_ / 2);
+        sf::Vector2f dualUnitPosition(
+            utils::positiveModulo(unitPosition.x + getMapWidth(), 2 * getMapWidth()),
+            unitPosition.y);
+
+        unitLayer_.add(*unit, unitPosition);
+        unitLayer_.add(*unit, dualUnitPosition);
     }
 }
 
@@ -68,6 +85,8 @@ void MapDrawer::draw() const {
     for (const auto& layer : layers_) {
         target_->draw(layer);
     }
+
+    target_->draw(unitLayer_);
 }
 
 std::shared_ptr<const sf::RenderTarget> MapDrawer::getTarget() const {

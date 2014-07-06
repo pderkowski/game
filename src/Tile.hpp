@@ -4,7 +4,6 @@
 #define TILE_HPP_
 
 #include <memory>
-#include <queue>
 #include "Attributes.hpp"
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
@@ -14,8 +13,6 @@ using namespace tileenums;
 
 class Tile {
 public:
-    typedef std::queue<Unit> Units;
-
     Tile(const IntRotPoint& coords, Type type = Type::Empty);
 
     void setModel(const MapModel* model);
@@ -30,7 +27,6 @@ public:
     IntRotPoint coords;
     Type type;
     Attributes attributes;
-    Units units;
 
 private:
     friend bool operator == (const Tile& lhs, const Tile& rhs);

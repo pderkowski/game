@@ -14,6 +14,7 @@
 #include "textures/landmarks.hpp"
 #include "textures/units.hpp"
 #include "TileEnums.hpp"
+#include "units/Unit.hpp"
 
 using namespace tileenums;
 
@@ -516,11 +517,13 @@ TextureSet<Tile> TextureSetFactory::getAttributeTextureSet() {
     return ts;
 }
 
-TextureSet<Tile> TextureSetFactory::getUnitTextureSet() {
-    TextureSet<Tile> ts(Resources::loadTexture("textures/units.png"));
+TextureSet<units::Unit> TextureSetFactory::getUnitTextureSet() {
+    using namespace units;
 
-    ts.add(std::shared_ptr<const Matcher<Tile>>(new Matcher<Tile>([] (const Tile& tile) {
-        return !tile.units.empty() && tile.units.front() == Unit::Phalanx;
+    TextureSet<Unit> ts(Resources::loadTexture("textures/units.png"));
+
+    ts.add(std::shared_ptr<const Matcher<Unit>>(new Matcher<Unit>([] (const Unit& unit) {
+        return unit.getType() == units::Type::Phalanx;
     })), textures::units::phalanx);
 
     return ts;

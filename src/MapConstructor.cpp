@@ -12,6 +12,9 @@
 #include "MapModel.hpp"
 #include "MapConstructor.hpp"
 #include "Attributes.hpp"
+#include "units/Phalanx.hpp"
+
+using units::Phalanx;
 
 MapConstructor::MapConstructor(const HeightMap& heightMap,
     std::shared_ptr<std::default_random_engine> generator)
@@ -19,7 +22,7 @@ MapConstructor::MapConstructor(const HeightMap& heightMap,
         model_(heightMap.getRowsNo(), heightMap.getColumnsNo()),
         generator_(generator)
 {
-    model_.getTile(IntIsoPoint(0, 1))->units.push(tileenums::Unit::Phalanx);
+    model_.addUnit(std::shared_ptr<Phalanx>(new Phalanx(model_.getTile(IntIsoPoint(0, 1)))));
 }
 
 MapConstructor& MapConstructor::setSource(const HeightMap& heightMap) {

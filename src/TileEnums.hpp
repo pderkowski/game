@@ -5,10 +5,6 @@
 
 namespace tileenums {
 
-enum class Unit {
-    Phalanx
-};
-
 enum class Type {
     Empty,
     Water,

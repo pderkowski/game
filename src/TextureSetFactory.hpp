@@ -5,6 +5,7 @@
 
 #include "TextureSet.hpp"
 #include "Tile.hpp"
+#include "units/Unit.hpp"
 
 class TextureSetFactory {
 public:
@@ -12,7 +13,7 @@ public:
     static TextureSet<Tile> getBlendTextureSet();
     static TextureSet<Tile> getOverlayTextureSet();
     static TextureSet<Tile> getAttributeTextureSet();
-    static TextureSet<Tile> getUnitTextureSet();
+    static TextureSet<units::Unit> getUnitTextureSet();
 };
 
 #endif  // TEXTURESETFACTORY_HPP_

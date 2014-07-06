@@ -12,6 +12,7 @@
 #include "Coordinates.hpp"
 #include "Layer.hpp"
 #include "TextureSet.hpp"
+#include "units/Unit.hpp"
 
 class MapDrawer {
 public:
@@ -51,6 +52,7 @@ private:
     sf::View mapView_;
 
     std::vector<Layer<Tile>> layers_;
+    Layer<units::Unit> unitLayer_;
 };
 
 #endif  // MAPDRAWER_HPP_
