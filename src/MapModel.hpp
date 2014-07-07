@@ -33,17 +33,19 @@ public:
 
     void changeTiles(std::function<void(Tile&)> transformation);
 
-    void addUnit(std::shared_ptr<units::Unit> unit);
-    std::vector<std::shared_ptr<const units::Unit>> getUnits() const;
+    void addUnit(const units::Unit& unit);
+    const std::vector<units::Unit>& getUnits() const;
+    std::vector<units::Unit>& getUnits();
 
 private:
     friend void swap(MapModel& first, MapModel& other);
 
-    void setModelInTiles();
+    void setModelInTiles(const MapModel* model);
+    void setModelInUnits(const MapModel* model);
 
     int rowsNo_;
     int columnsNo_;
-    std::vector<std::shared_ptr<units::Unit>> units_;
+    std::vector<units::Unit> units_;
     std::vector<std::vector<std::shared_ptr<Tile>>> tiles_;
 };
 

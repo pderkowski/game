@@ -10,6 +10,7 @@
 #include "MapDrawer.hpp"
 #include "MinimapDrawer.hpp"
 #include "Tile.hpp"
+#include "TileEnums.hpp"
 
 class Map {
 public:
@@ -22,6 +23,8 @@ public:
     void handleClick(const sf::Event& e);
     void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);
+
+    void moveUnit(tileenums::Direction direction);
 
 private:
     int calculateHorizontalShift(float mouseXPosition) const;

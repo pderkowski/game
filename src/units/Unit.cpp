@@ -1,17 +1,45 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <memory>
+#include <stdexcept>
 #include "Unit.hpp"
 #include "Tile.hpp"
+#include "TileEnums.hpp"
+#include "MapModel.hpp"
 
 namespace units {
 
-Unit::Unit(std::shared_ptr<const Tile> position)
-    : position_(position)
+
+Unit::Unit(const IntRotPoint& coords, Type type, const MapModel* model)
+    : coords_(coords), type_(type), model_(model)
 { }
 
-std::shared_ptr<const Tile> Unit::getPosition() const {
-    return position_;
+void Unit::setModel(const MapModel* model) {
+    model_ = model;
 }
+
+Type Unit::getType() const {
+    return type_;
+}
+
+std::shared_ptr<const Tile> Unit::getPosition() const {
+    if (model_ != nullptr)
+        return model_->getTile(IntIsoPoint(coords_.toIsometric()));
+    else
+        throw std::runtime_error("No model set in unit.");
+}
+
+bool Unit::canMoveTo(tileenums::Direction direction) const {
+    return getPosition()->hasNeighbor(direction);
+}
+
+void Unit::moveTo(tileenums::Direction direction) {
+    if (canMoveTo(direction)) {
+        coords_ = getPosition()->getNeighbor(direction)->coords;
+    } else {
+        throw std::logic_error("Trying to move the unit in an impossible direction.");
+    }
+}
+
 
 }

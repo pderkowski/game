@@ -49,30 +49,19 @@ void MapDrawer::makeLayers() {
     }
 
     for (const auto& unit : model_->getUnits()) {
-        auto tile = unit->getPosition();
+        auto tile = unit.getPosition();
+        auto tilePosition = calculateTilePosition(tile);
+        auto dualTilePosition = calculateDualTilePosition(tile);
 
-        auto tileCartCoords = tile->coords.toCartesian();
-        sf::Vector2f unitPosition(
-            utils::positiveModulo(tileCartCoords.x * tileWidth_ / 2, 2 * getMapWidth()),
-            tileCartCoords.y * tileHeight_ / 2);
-        sf::Vector2f dualUnitPosition(
-            utils::positiveModulo(unitPosition.x + getMapWidth(), 2 * getMapWidth()),
-            unitPosition.y);
-
-        unitLayer_.add(*unit, unitPosition);
-        unitLayer_.add(*unit, dualUnitPosition);
+        unitLayer_.add(unit, tilePosition);
+        unitLayer_.add(unit, dualTilePosition);
     }
 }
 
 void MapDrawer::addTileToLayers(std::shared_ptr<const Tile> tile) {
     for (auto& layer : layers_) {
-        auto tileCartCoords = tile->coords.toCartesian();
-        sf::Vector2f tilePosition(
-            utils::positiveModulo(tileCartCoords.x * tileWidth_ / 2, 2 * getMapWidth()),
-            tileCartCoords.y * tileHeight_ / 2);
-        sf::Vector2f dualTilePosition(
-            utils::positiveModulo(tilePosition.x + getMapWidth(), 2 * getMapWidth()),
-            tilePosition.y);
+        auto tilePosition = calculateTilePosition(tile);
+        auto dualTilePosition = calculateDualTilePosition(tile);
 
         layer.add(*tile, tilePosition);
         layer.add(*tile, dualTilePosition);
@@ -175,4 +164,34 @@ sf::FloatRect MapDrawer::getDisplayedRectangle() const {
         leftTopCoords.y / getMapHeight(),
         (rightBottomCoords.x - leftTopCoords.x) / getMapWidth(),
         (rightBottomCoords.y - leftTopCoords.y) / getMapHeight());
+}
+
+sf::Vector2f MapDrawer::calculateTilePosition(std::shared_ptr<const Tile> tile) const {
+    auto tileCartCoords = tile->coords.toCartesian();
+    return sf::Vector2f(utils::positiveModulo(tileCartCoords.x * tileWidth_ / 2, 2 * getMapWidth()),
+        tileCartCoords.y * tileHeight_ / 2);
+}
+
+sf::Vector2f MapDrawer::calculateDualTilePosition(std::shared_ptr<const Tile> tile) const {
+    auto primaryTilePosition = calculateTilePosition(tile);
+    return sf::Vector2f(utils::positiveModulo(primaryTilePosition.x + getMapWidth(), 2 * getMapWidth()),
+        primaryTilePosition.y);
+}
+
+void MapDrawer::updateUnitLayer(const units::Unit& unit, std::shared_ptr<const Tile> oldTile,
+        std::shared_ptr<const Tile> newTile)
+{
+    if (oldTile) {
+        auto oldPosition = calculateTilePosition(oldTile);
+        auto oldDualPosition = calculateDualTilePosition(oldTile);
+        unitLayer_.remove(unit, oldPosition);
+        unitLayer_.remove(unit, oldDualPosition);
+    }
+
+    if (newTile) {
+        auto newPosition = calculateTilePosition(newTile);
+        auto newDualPosition = calculateDualTilePosition(newTile);
+        unitLayer_.add(unit, newPosition);
+        unitLayer_.add(unit, newDualPosition);
+    }
 }

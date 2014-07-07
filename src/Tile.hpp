@@ -13,7 +13,7 @@ using namespace tileenums;
 
 class Tile {
 public:
-    Tile(const IntRotPoint& coords, Type type = Type::Empty);
+    Tile(const IntRotPoint& coords, Type type = Type::Empty, const MapModel* model = nullptr);
 
     void setModel(const MapModel* model);
 

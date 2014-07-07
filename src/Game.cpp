@@ -5,6 +5,7 @@
 #include "Map.hpp"
 #include "Menu.hpp"
 #include "Game.hpp"
+#include "TileEnums.hpp"
 
 Game::Game(int rows, int columns)
         : window_(std::make_shared<sf::RenderWindow>(
@@ -62,6 +63,18 @@ void Game::handleEvents() {
                 break;
             case sf::Keyboard::Key::M:
                 toggleMenu();
+                break;
+            case sf::Keyboard::Key::Left:
+                map_.moveUnit(tileenums::Direction::Left);
+                break;
+            case sf::Keyboard::Key::Right:
+                map_.moveUnit(tileenums::Direction::Right);
+                break;
+            case sf::Keyboard::Key::Up:
+                map_.moveUnit(tileenums::Direction::Top);
+                break;
+            case sf::Keyboard::Key::Down:
+                map_.moveUnit(tileenums::Direction::Bottom);
                 break;
             default:
                 break;

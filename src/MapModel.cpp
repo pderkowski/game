@@ -18,11 +18,10 @@ MapModel::MapModel(int rowsNo, int columnsNo)
     for (int r = 0; r < rowsNo; ++r) {
         tiles_.push_back(std::vector<std::shared_ptr<Tile>>(columnsNo));
         for (int c = 0; c < columnsNo; ++c) {
-            tiles_[r][c] = std::shared_ptr<Tile>(new Tile(IntRotPoint(IntIsoPoint(c, r).toRotated())));
+            tiles_[r][c] = std::shared_ptr<Tile>(new Tile(IntRotPoint(IntIsoPoint(c, r).toRotated()),
+                tileenums::Type::Empty, this));
         }
     }
-
-    setModelInTiles();
 }
 
 MapModel::MapModel(const MapModel& other)
@@ -32,18 +31,16 @@ MapModel::MapModel(const MapModel& other)
         tiles_.push_back(std::vector<std::shared_ptr<Tile>>(columnsNo_));
         for (int c = 0; c < columnsNo_; ++c) {
             tiles_[r][c] = std::shared_ptr<Tile>(new Tile(*(other.tiles_[r][c])));
+            tiles_[r][c]->setModel(this);
         }
     }
 
-    setModelInTiles();
+    setModelInUnits(this);
 }
 
 MapModel::~MapModel() {
-    for (int r = 0; r < rowsNo_; ++r) {
-        for (int c = 0; c < columnsNo_; ++c) {
-            tiles_[r][c]->setModel(nullptr);
-        }
-    }
+    setModelInTiles(nullptr);
+    setModelInUnits(nullptr);
 }
 
 
@@ -120,26 +117,30 @@ void MapModel::changeTiles(std::function<void(Tile&)> transformation) {
     }
 }
 
-void MapModel::addUnit(std::shared_ptr<units::Unit> unit) {
+void MapModel::addUnit(const units::Unit& unit) {
     units_.push_back(unit);
 }
 
-std::vector<std::shared_ptr<const units::Unit>> MapModel::getUnits() const {
-    std::vector<std::shared_ptr<const units::Unit>> res;
+const std::vector<units::Unit>& MapModel::getUnits() const {
+    return units_;
+}
 
-    for (const auto& unit : units_) {
-        res.push_back(unit);
-    }
-
-    return res;
+std::vector<units::Unit>& MapModel::getUnits() {
+    return const_cast<std::vector<units::Unit>&>(static_cast<const MapModel&>(*this).getUnits());
 }
 
 
-void MapModel::setModelInTiles() {
+void MapModel::setModelInTiles(const MapModel* model) {
     for (const auto& row : tiles_) {
         for (const auto& tilePtr : row) {
-            tilePtr->setModel(this);
+            tilePtr->setModel(model);
         }
+    }
+}
+
+void MapModel::setModelInUnits(const MapModel* model) {
+    for (auto& unit : units_) {
+        unit.setModel(model);
     }
 }
 
@@ -148,6 +149,8 @@ void swap(MapModel& first, MapModel& other) {
     std::swap(first.columnsNo_, other.columnsNo_);
     std::swap(first.units_, other.units_);
     std::swap(first.tiles_, other.tiles_);
-    first.setModelInTiles();
-    other.setModelInTiles();
+    first.setModelInTiles(&first);
+    first.setModelInUnits(&first);
+    other.setModelInTiles(&other);
+    other.setModelInUnits(&other);
 }

@@ -5,6 +5,8 @@
 
 #include <memory>
 #include "Tile.hpp"
+#include "TileEnums.hpp"
+class MapModel;
 
 namespace units {
 
@@ -14,14 +16,19 @@ enum class Type {
 
 class Unit {
 public:
-    explicit Unit(std::shared_ptr<const Tile> position);
-    virtual ~Unit() { }
+    Unit(const IntRotPoint& coords, Type type, const MapModel* model = nullptr);
 
-    virtual Type getType() const = 0;
+    void setModel(const MapModel* model);
+
+    Type getType() const;
     std::shared_ptr<const Tile> getPosition() const;
+    bool canMoveTo(tileenums::Direction direction) const;
+    void moveTo(tileenums::Direction direction);
 
-protected:
-    std::shared_ptr<const Tile> position_;
+private:
+    IntRotPoint coords_;
+    Type type_;
+    const MapModel* model_;
 };
 
 }  // namespace units

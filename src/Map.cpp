@@ -71,3 +71,14 @@ int Map::calculateVerticalShift(float mouseYPosition) const {
         return 0;
     }
 }
+
+void Map::moveUnit(tileenums::Direction direction) {
+    auto& unit = model_->getUnits().front();
+    auto oldPosition = unit.getPosition();
+
+    if (unit.canMoveTo(direction))
+        unit.moveTo(direction);
+
+    auto newPosition = unit.getPosition();
+    mapDrawer_.updateUnitLayer(unit, oldPosition, newPosition);
+}

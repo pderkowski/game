@@ -31,6 +31,9 @@ public:
 
     sf::FloatRect getDisplayedRectangle() const;
 
+    void updateUnitLayer(const units::Unit& unit, std::shared_ptr<const Tile> oldPosition,
+        std::shared_ptr<const Tile> newPosition);
+
 private:
     void makeLayers();
     void addTileToLayers(std::shared_ptr<const Tile> tile);
@@ -42,6 +45,9 @@ private:
 
     bool canZoom(float delta) const;
     sf::Vector2f boundShift(int x, int y) const;
+
+    sf::Vector2f calculateTilePosition(std::shared_ptr<const Tile> tile) const;
+    sf::Vector2f calculateDualTilePosition(std::shared_ptr<const Tile> tile) const;
 
     std::shared_ptr<MapModel> model_;
     std::shared_ptr<sf::RenderTarget> target_;

@@ -23,7 +23,6 @@ public:
 
     void add(const T&, const sf::Vector2f& center);
     void remove(const T&, const sf::Vector2f& center);
-    void update(const T&, const sf::Vector2f& center);
 
 private:
     struct VertexPosition {
@@ -79,7 +78,7 @@ void Layer<T>::add(const T& t, const sf::Vector2f& center)
 
 template <class T>
 void Layer<T>::remove(const T& t, const sf::Vector2f& center) {
-    const auto key = Key(&t, center);
+    const auto key = Key(t, center);
     if (positions_.find(key) != positions_.end()) {
         auto position = positions_.at(key);
         removeVertices(position);
@@ -89,17 +88,12 @@ void Layer<T>::remove(const T& t, const sf::Vector2f& center) {
 }
 
 template <class T>
-void Layer<T>::update(const T& t, const sf::Vector2f& center) {
-    remove(t, center);
-    add(t, center);
-}
-
-template <class T>
 void Layer<T>::removeVertices(const VertexPosition& position) {
     for (size_t pos = position.start + position.size; pos != vertices_.getVertexCount(); ++pos) {
         vertices_[pos - position.size] = vertices_[pos];
-        vertices_.resize(vertices_.getVertexCount() - position.size);
     }
+
+    vertices_.resize(vertices_.getVertexCount() - position.size);
 }
 
 template <class T>

@@ -10,8 +10,8 @@
 
 using namespace tileenums;
 
-Tile::Tile(const IntRotPoint& coords, Type type)
-    : coords(coords), type(type), model_(nullptr)
+Tile::Tile(const IntRotPoint& coords, Type type, const MapModel* model)
+    : coords(coords), type(type), model_(model)
 { }
 
 void Tile::setModel(const MapModel* model) {
