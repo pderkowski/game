@@ -21,11 +21,10 @@ public:
     void draw() const;
 
     void setModel(std::shared_ptr<MapModel> model);
-
     std::shared_ptr<const sf::RenderTarget> getTarget() const;
 
     std::shared_ptr<Tile> getObjectByPosition(const sf::Vector2i& position);
-    std::shared_ptr<const Tile> getObjectByPosition(const sf::Vector2i& position) const;
+
     void scrollView(int x, int y);
     void zoomViem(int delta, const sf::Vector2i& mousePosition);
 
@@ -33,6 +32,8 @@ public:
 
     void updateUnitLayer(const units::Unit& unit, std::shared_ptr<const Tile> oldPosition,
         std::shared_ptr<const Tile> newPosition);
+
+    void printSelection(const sf::Vector2i& position);
 
 private:
     void makeLayers();
@@ -59,6 +60,9 @@ private:
 
     std::vector<Layer<Tile>> layers_;
     Layer<units::Unit> unitLayer_;
+
+    sf::Font font_;
+    sf::Text selection_;
 };
 
 #endif  // MAPDRAWER_HPP_

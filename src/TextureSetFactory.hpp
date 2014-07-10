@@ -14,6 +14,8 @@ public:
     static TextureSet<Tile> getOverlayTextureSet();
     static TextureSet<Tile> getAttributeTextureSet();
     static TextureSet<units::Unit> getUnitTextureSet();
+
+    static TextureSet<Tile> getGridTextureSet();
 };
 
 #endif  // TEXTURESETFACTORY_HPP_

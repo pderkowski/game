@@ -3,4 +3,4 @@
 #include "units.hpp"
 #include "TextureUtils.hpp"
 
-const sf::VertexArray textures::units::phalanx = makeQuad(96, 72, sf::Vector2f(96, 72));
+const sf::VertexArray textures::units::phalanx = makeQuad(96, 54, sf::Vector2f(96, 90));

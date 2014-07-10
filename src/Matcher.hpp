@@ -23,7 +23,6 @@ protected:
     Predicate predicate_;
 };
 
-
 class TileTypeMatcher : public Matcher<Tile> {
 public:
     TileTypeMatcher(tileenums::Type type);

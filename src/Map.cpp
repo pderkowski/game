@@ -45,6 +45,7 @@ void Map::handleMouseWheelMoved(const sf::Event& event) {
 void Map::handleMouseMoved(const sf::Event& event)  {
     mapDrawer_.scrollView(calculateHorizontalShift(event.mouseMove.x),
         calculateVerticalShift(event.mouseMove.y));
+    mapDrawer_.printSelection(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
     minimapDrawer_.updateMinimap(mapDrawer_.getDisplayedRectangle());
 }
 
@@ -61,6 +62,7 @@ int Map::calculateHorizontalShift(float mouseXPosition) const {
 }
 
 int Map::calculateVerticalShift(float mouseYPosition) const {
+
     const int scrollMarginSize = 20;
 
     if (mouseYPosition < scrollMarginSize) {

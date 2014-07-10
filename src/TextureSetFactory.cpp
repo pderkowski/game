@@ -528,3 +528,13 @@ TextureSet<units::Unit> TextureSetFactory::getUnitTextureSet() {
 
     return ts;
 }
+
+TextureSet<Tile> TextureSetFactory::getGridTextureSet() {
+    TextureSet<Tile> ts(Resources::loadTexture("textures/terrains.png"));
+
+    ts.add(std::shared_ptr<const Matcher<Tile>>(new Matcher<Tile>([] (__attribute__((unused)) const Tile& tile) {
+        return true;
+    })), textures::terrains::grid);
+
+    return ts;
+}

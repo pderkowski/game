@@ -17,6 +17,8 @@ extern const sf::VertexArray plains;
 extern const sf::VertexArray forest;
 extern const sf::VertexArray desert;
 
+extern const sf::VertexArray grid;
+
 }  // terrains
 
 }  // textures

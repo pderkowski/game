@@ -22,7 +22,9 @@ MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::Render
         tileWidth_(96),
         tileHeight_(48),
         mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y)),
-        unitLayer_(TextureSetFactory::getUnitTextureSet())
+        unitLayer_(TextureSetFactory::getUnitTextureSet()),
+        font_(Resources::loadFont("fonts/UbuntuMono.ttf")),
+        selection_("Empty", font_)
 {
     makeLayers();
 }
@@ -37,6 +39,7 @@ void MapDrawer::makeLayers() {
     layers_.clear();
     layers_.push_back(Layer<Tile>(TextureSetFactory::getBaseTextureSet()));
     layers_.push_back(Layer<Tile>(TextureSetFactory::getBlendTextureSet()));
+    layers_.push_back(Layer<Tile>(TextureSetFactory::getGridTextureSet()));
     layers_.push_back(Layer<Tile>(TextureSetFactory::getOverlayTextureSet()));
     layers_.push_back(Layer<Tile>(TextureSetFactory::getAttributeTextureSet()));
     unitLayer_ = Layer<units::Unit>(TextureSetFactory::getUnitTextureSet());
@@ -76,6 +79,7 @@ void MapDrawer::draw() const {
     }
 
     target_->draw(unitLayer_);
+    target_->draw(selection_);
 }
 
 std::shared_ptr<const sf::RenderTarget> MapDrawer::getTarget() const {
@@ -84,18 +88,52 @@ std::shared_ptr<const sf::RenderTarget> MapDrawer::getTarget() const {
 
 std::shared_ptr<Tile> MapDrawer::getObjectByPosition(const sf::Vector2i& position) {
     auto mapCoords = mapPixelToMapCoords(position);
+    // std::cerr << toString(mapCoords) << "\n";
 
     if (model_->isInBounds(mapCoords))
         return model_->getTile(mapCoords);
     else
-        return std::shared_ptr<Tile>();
+        throw std::runtime_error("Clicked area does not point to any object.");
 }
 
 IntIsoPoint MapDrawer::mapPixelToMapCoords(const sf::Vector2i& position) {
-    return IntIsoPoint(CartPoint(
-        target_->mapPixelToCoords(position).x * 2 / tileWidth_,
-        target_->mapPixelToCoords(position).y * 2 / tileHeight_
-    ).toIsometric());
+    const int halfWidth = tileWidth_ / 2;
+    const int halfHeight = tileHeight_ / 2;
+
+    // std::cerr << "\n\n";
+    // std::cerr << "Pixel: " << position.x << ", " << position.y << ".\n";
+    const sf::Vector2f coords = target_->mapPixelToCoords(position);
+    // std::cerr << "Coords: " << coords.x << ", " << coords.y << ".\n";
+    const sf::Vector2i intCoords(lround(coords.x), lround(coords.y));
+    // std::cerr << "IntCoords: " << intCoords.x << ", " << intCoords.y << ".\n";
+    const sf::Vector2i corner(intCoords.x - intCoords.x % halfWidth,
+        intCoords.y - intCoords.y % halfHeight);
+    // std::cerr << "Corner: " << corner.x << ", " << corner.y << ".\n";
+    const sf::Vector2i scaledCorner(corner.x / halfWidth, corner.y / halfHeight);
+    // std::cerr << "ScaledCorner: " << scaledCorner.x << ", " << scaledCorner.y << ".\n";
+
+    sf::Vector2i firstCenter, otherCenter;
+    if ((scaledCorner.x + scaledCorner.y) % 2 == 0) {
+        firstCenter = corner;
+        otherCenter = sf::Vector2i(corner.x + halfWidth, corner.y + halfHeight);
+    } else {
+        firstCenter = sf::Vector2i(corner.x + halfWidth, corner.y);
+        otherCenter = sf::Vector2i(corner.x, corner.y + halfHeight);
+    }
+    // std::cerr << "First center: " << firstCenter.x << ", " << firstCenter.y << ".\n";
+    // std::cerr << "Other center: " << otherCenter.x << ", " << otherCenter.y << ".\n";
+
+    const double distanceToFirst = sqrt(pow(coords.x - firstCenter.x, 2) + pow(coords.y - firstCenter.y, 2));
+    const double distanceToOther = sqrt(pow(otherCenter.x - coords.x, 2) + pow(otherCenter.y - coords.y, 2));
+
+    // std::cerr << "Distance to first: " << distanceToFirst << ".\n";
+    // std::cerr << "Distance to other: " << distanceToOther << ".\n";
+
+    const sf::Vector2i closest = (distanceToFirst < distanceToOther)? firstCenter : otherCenter;
+    const IntCartPoint scaledClosest = IntCartPoint(closest.x / halfWidth, closest.y / halfHeight);
+    const IntIsoPoint isometric(scaledClosest.toIsometric());
+
+    return isometric;
 }
 
 void MapDrawer::scrollView(int x, int y) {
@@ -179,7 +217,7 @@ sf::Vector2f MapDrawer::calculateDualTilePosition(std::shared_ptr<const Tile> ti
 }
 
 void MapDrawer::updateUnitLayer(const units::Unit& unit, std::shared_ptr<const Tile> oldTile,
-        std::shared_ptr<const Tile> newTile)
+    std::shared_ptr<const Tile> newTile)
 {
     if (oldTile) {
         auto oldPosition = calculateTilePosition(oldTile);
@@ -194,4 +232,11 @@ void MapDrawer::updateUnitLayer(const units::Unit& unit, std::shared_ptr<const T
         unitLayer_.add(unit, newPosition);
         unitLayer_.add(unit, newDualPosition);
     }
+}
+
+void MapDrawer::printSelection(const sf::Vector2i& position) {
+    std::shared_ptr<Tile> selectedTile = getObjectByPosition(position);
+
+    selection_.setPosition(target_->mapPixelToCoords(sf::Vector2i(0, 0)));
+    selection_.setString(toString(IntIsoPoint(selectedTile->coords.toIsometric())));
 }
