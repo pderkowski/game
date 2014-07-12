@@ -2,8 +2,10 @@
 
 #include <memory>
 #include <stdexcept>
+#include <vector>
 #include "Unit.hpp"
 #include "Tile.hpp"
+#include "Coordinates.hpp"
 #include "TileEnums.hpp"
 #include "MapModel.hpp"
 
@@ -34,11 +36,7 @@ bool Unit::canMoveTo(tileenums::Direction direction) const {
 }
 
 void Unit::moveTo(tileenums::Direction direction) {
-    if (canMoveTo(direction)) {
-        coords_ = getPosition()->getNeighbor(direction)->coords;
-    } else {
-        throw std::logic_error("Trying to move the unit in an impossible direction.");
-    }
+    coords_ = getPosition()->getNeighbor(direction)->coords;
 }
 
 

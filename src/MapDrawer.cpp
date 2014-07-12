@@ -51,13 +51,13 @@ void MapDrawer::makeLayers() {
         }
     }
 
-    for (const auto& unit : model_->getUnits()) {
-        auto tile = unit.getPosition();
+    for (auto& unit : model_->getUnits()) {
+        auto tile = unit->getPosition();
         auto tilePosition = calculateTilePosition(tile);
         auto dualTilePosition = calculateDualTilePosition(tile);
 
-        unitLayer_.add(unit, tilePosition);
-        unitLayer_.add(unit, dualTilePosition);
+        unitLayer_.add(*unit, tilePosition);
+        unitLayer_.add(*unit, dualTilePosition);
     }
 }
 
@@ -87,6 +87,8 @@ std::shared_ptr<const sf::RenderTarget> MapDrawer::getTarget() const {
 }
 
 std::shared_ptr<Tile> MapDrawer::getObjectByPosition(const sf::Vector2i& position) {
+    target_->setView(mapView_);
+
     auto mapCoords = mapPixelToMapCoords(position);
     // std::cerr << toString(mapCoords) << "\n";
 

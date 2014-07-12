@@ -5,12 +5,14 @@
 
 #include <vector>
 #include <memory>
+#include "boost/optional.hpp"
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
 #include "MapDrawer.hpp"
 #include "MinimapDrawer.hpp"
 #include "Tile.hpp"
 #include "TileEnums.hpp"
+#include "units/Unit.hpp"
 
 class Map {
 public:
@@ -20,19 +22,21 @@ public:
 
     void generateMap();
 
-    void handleClick(const sf::Event& e);
+    void handleLeftClick(const sf::Event& e);
+    void handleRightClick(const sf::Event& e);
     void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);
 
+private:
     void moveUnit(tileenums::Direction direction);
 
-private:
     int calculateHorizontalShift(float mouseXPosition) const;
     int calculateVerticalShift(float mouseYPosition) const;
 
     std::shared_ptr<MapModel> model_;
     MapDrawer mapDrawer_;
     MinimapDrawer minimapDrawer_;
+    boost::optional<units::Unit*> selectedUnit_;
 };
 
 #endif  // MAP_HPP_

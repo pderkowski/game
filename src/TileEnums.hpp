@@ -3,6 +3,9 @@
 #ifndef TILEENUMS_HPP_
 #define TILEENUMS_HPP_
 
+#include <string>
+#include <stdexcept>
+
 namespace tileenums {
 
 enum class Type {
@@ -27,6 +30,29 @@ enum class Direction {
     TopLeft = 1 << 7
 };
 
+}
+
+inline std::string toString(tileenums::Direction direction) {
+    switch (direction) {
+    case tileenums::Direction::Top:
+        return "Top";
+    case tileenums::Direction::TopRight:
+        return "TopRight";
+    case tileenums::Direction::Right:
+        return "Right";
+    case tileenums::Direction::BottomRight:
+        return "BottomRight";
+    case tileenums::Direction::Bottom:
+        return "Bottom";
+    case tileenums::Direction::BottomLeft:
+        return "BottomLeft";
+    case tileenums::Direction::Left:
+        return "Left";
+    case tileenums::Direction::TopLeft:
+        return "TopLeft";
+    default:
+        throw std::logic_error("Unrecognized direction.");
+    }
 }
 
 #endif  // TILEENUMS_HPP_

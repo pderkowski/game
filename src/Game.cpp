@@ -50,9 +50,12 @@ void Game::handleEvents() {
     while (window_->pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
             window_->close();
-        } else if (event.type == sf::Event::MouseButtonPressed
-                && event.mouseButton.button == sf::Mouse::Button::Left) {
-            handleClick(event);
+        } else if (event.type == sf::Event::MouseButtonPressed) {
+            if (event.mouseButton.button == sf::Mouse::Button::Left) {
+                handleLeftClick(event);
+            } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
+                handleRightClick(event);
+            }
         } else if (event.type == sf::Event::KeyPressed) {
             switch (event.key.code) {
             case sf::Keyboard::Key::Space:
@@ -63,18 +66,6 @@ void Game::handleEvents() {
                 break;
             case sf::Keyboard::Key::M:
                 toggleMenu();
-                break;
-            case sf::Keyboard::Key::Left:
-                map_.moveUnit(tileenums::Direction::Left);
-                break;
-            case sf::Keyboard::Key::Right:
-                map_.moveUnit(tileenums::Direction::Right);
-                break;
-            case sf::Keyboard::Key::Up:
-                map_.moveUnit(tileenums::Direction::Top);
-                break;
-            case sf::Keyboard::Key::Down:
-                map_.moveUnit(tileenums::Direction::Bottom);
                 break;
             default:
                 break;
@@ -87,11 +78,17 @@ void Game::handleEvents() {
     }
 }
 
-void Game::handleClick(const sf::Event& event) {
+void Game::handleLeftClick(const sf::Event& event) {
     if (menu_.isVisible()) {
-        menu_.handleClick(event);
+        menu_.handleLeftClick(event);
     } else {
-        map_.handleClick(event);
+        map_.handleLeftClick(event);
+    }
+}
+
+void Game::handleRightClick(const sf::Event& event) {
+    if (!menu_.isVisible()) {
+        map_.handleRightClick(event);
     }
 }
 

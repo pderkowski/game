@@ -24,7 +24,7 @@ void Menu::draw() const {
     drawer_.draw();
 }
 
-void Menu::handleClick(const sf::Event& e) {
+void Menu::handleLeftClick(const sf::Event& e) {
     std::shared_ptr<MenuItem> clickedObject
         = drawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 

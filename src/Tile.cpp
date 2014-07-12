@@ -1,5 +1,6 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <iostream>
 #include <stdexcept>
 #include <memory>
 #include <queue>

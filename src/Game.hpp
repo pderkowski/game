@@ -19,7 +19,8 @@ private:
     void quit();
     void toggleMenu();
     void handleEvents();
-    void handleClick(const sf::Event& event);
+    void handleLeftClick(const sf::Event& event);
+    void handleRightClick(const sf::Event& event);
     void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);
 

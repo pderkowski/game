@@ -1,7 +1,9 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <iostream>
 #include <vector>
 #include <memory>
+#include "boost/optional.hpp"
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
 #include "MapDrawer.hpp"
@@ -29,11 +31,35 @@ void Map::generateMap() {
     minimapDrawer_.updateMinimap(mapDrawer_.getDisplayedRectangle());
 }
 
-void Map::handleClick(const sf::Event& e) {
-    std::shared_ptr<Tile> clickedObject
+void Map::handleLeftClick(const sf::Event& e) {
+    std::shared_ptr<Tile> clickedTile
         = mapDrawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 
-    // NOT IMPLEMENTED
+    auto units = model_->getUnitsByTile(*clickedTile);
+    if (!units.empty()) {
+        selectedUnit_ = units.front();
+        std::cerr << "Selected unit!\n";
+    } else {
+        selectedUnit_ = boost::optional<units::Unit*>();
+        std::cerr << "No units selected!\n";
+    }
+}
+
+void Map::handleRightClick(const sf::Event& e) {
+    if (selectedUnit_) {
+        std::shared_ptr<Tile> destination
+            = mapDrawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
+
+        Tile source = *((*selectedUnit_)->getPosition());
+
+        if (model_->doesPathExist(source, *destination)) {
+            std::vector<tileenums::Direction> steps = model_->findPath(source, *destination);
+
+            for (auto step : steps) {
+                moveUnit(step);
+            }
+        }
+    }
 }
 
 void Map::handleMouseWheelMoved(const sf::Event& event) {
@@ -75,12 +101,14 @@ int Map::calculateVerticalShift(float mouseYPosition) const {
 }
 
 void Map::moveUnit(tileenums::Direction direction) {
-    auto& unit = model_->getUnits().front();
-    auto oldPosition = unit.getPosition();
+    if (selectedUnit_) {
+        units::Unit* unit = *selectedUnit_;
+        auto oldPosition = unit->getPosition();
 
-    if (unit.canMoveTo(direction))
-        unit.moveTo(direction);
+        if (unit->canMoveTo(direction))
+            unit->moveTo(direction);
 
-    auto newPosition = unit.getPosition();
-    mapDrawer_.updateUnitLayer(unit, oldPosition, newPosition);
+        auto newPosition = unit->getPosition();
+        mapDrawer_.updateUnitLayer(*unit, oldPosition, newPosition);
+    }
 }

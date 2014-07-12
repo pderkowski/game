@@ -4,9 +4,10 @@
 #define UNITS_UNIT_HPP_
 
 #include <memory>
-#include "Tile.hpp"
 #include "TileEnums.hpp"
+#include "Coordinates.hpp"
 class MapModel;
+class Tile;
 
 namespace units {
 

@@ -121,12 +121,35 @@ void MapModel::addUnit(const units::Unit& unit) {
     units_.push_back(unit);
 }
 
-const std::vector<units::Unit>& MapModel::getUnits() const {
-    return units_;
+std::vector<units::Unit*> MapModel::getUnits() {
+    std::vector<units::Unit*> res;
+
+    for (auto& unit : units_) {
+        res.push_back(&unit);
+    }
+
+    return res;
 }
 
-std::vector<units::Unit>& MapModel::getUnits() {
-    return const_cast<std::vector<units::Unit>&>(static_cast<const MapModel&>(*this).getUnits());
+std::vector<units::Unit*> MapModel::getUnitsByTile(const Tile& tile) {
+    std::vector<units::Unit*> res;
+
+    for (auto& unit : units_) {
+        std::cerr << "Unit: " << toString(unit.getPosition()->coords) << " tile: " << toString(tile.coords) << "\n";
+        if (*(unit.getPosition()) == tile)
+            res.push_back(&unit);
+    }
+
+    return res;
+}
+
+
+bool MapModel::doesPathExist(const Tile& source, const Tile& goal) const {
+    return pathfinder_.doesPathExist(source, goal);
+}
+
+std::vector<tileenums::Direction> MapModel::findPath(const Tile& source, const Tile& goal) const {
+    return pathfinder_.findPath(source, goal);
 }
 
 
@@ -149,6 +172,7 @@ void swap(MapModel& first, MapModel& other) {
     std::swap(first.columnsNo_, other.columnsNo_);
     std::swap(first.units_, other.units_);
     std::swap(first.tiles_, other.tiles_);
+    std::swap(first.pathfinder_, other.pathfinder_);
     first.setModelInTiles(&first);
     first.setModelInUnits(&first);
     other.setModelInTiles(&other);
