@@ -13,6 +13,7 @@
 #include "TileEnums.hpp"
 #include "units/Unit.hpp"
 #include "Selection.hpp"
+#include "Pathfinder.hpp"
 
 class Map {
 public:
@@ -37,6 +38,7 @@ private:
     MapDrawer mapDrawer_;
     MinimapDrawer minimapDrawer_;
     Selection selection_;
+    Pathfinder pathfinder_;
 };
 
 #endif  // MAP_HPP_

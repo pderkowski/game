@@ -131,14 +131,6 @@ std::vector<units::Unit*> MapModel::getUnits() {
     return res;
 }
 
-bool MapModel::doesPathExist(const Tile& source, const Tile& goal) const {
-    return pathfinder_.doesPathExist(source, goal);
-}
-
-std::vector<tileenums::Direction> MapModel::findPath(const Tile& source, const Tile& goal) const {
-    return pathfinder_.findPath(source, goal);
-}
-
 
 void MapModel::setModelInTiles(MapModel* model) {
     for (const auto& row : tiles_) {
@@ -159,7 +151,6 @@ void swap(MapModel& first, MapModel& other) {
     std::swap(first.columnsNo_, other.columnsNo_);
     std::swap(first.units_, other.units_);
     std::swap(first.tiles_, other.tiles_);
-    std::swap(first.pathfinder_, other.pathfinder_);
     first.setModelInTiles(&first);
     first.setModelInUnits(&first);
     other.setModelInTiles(&other);

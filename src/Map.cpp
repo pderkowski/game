@@ -43,8 +43,8 @@ void Map::handleRightClick(const sf::Event& e) {
         if (selection_.isDestinationSelected() && *(selection_.getDestination()) == *destination) {
             auto source = selection_.getSource();
 
-            if (model_->doesPathExist(*source, *destination)) {
-                std::vector<tileenums::Direction> steps = model_->findPath(*source, *destination);
+            if (pathfinder_.doesPathExist(*source, *destination)) {
+                std::vector<tileenums::Direction> steps = pathfinder_.findPath(*source, *destination);
 
                 for (auto step : steps) {
                     moveUnit(step);
@@ -105,6 +105,7 @@ void Map::moveUnit(tileenums::Direction direction) {
             unit->moveTo(direction);
 
         auto newPosition = unit->getPosition();
+        selection_.setSource(std::const_pointer_cast<Tile>(newPosition));
         mapDrawer_.updateUnitLayer(*unit, oldPosition, newPosition);
     }
 }

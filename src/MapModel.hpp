@@ -10,7 +10,6 @@
 #include "HeightMap.hpp"
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
-#include "Pathfinder.hpp"
 #include "units/Unit.hpp"
 
 class MapModel {
@@ -38,9 +37,6 @@ public:
 
     std::vector<units::Unit*> getUnits();
 
-    bool doesPathExist(const Tile& from, const Tile& to) const;
-    std::vector<tileenums::Direction> findPath(const Tile& from, const Tile& to) const;
-
 private:
     friend void swap(MapModel& first, MapModel& other);
 
@@ -52,7 +48,7 @@ private:
     std::vector<units::Unit> units_;
     std::vector<std::vector<std::shared_ptr<Tile>>> tiles_;
 
-    Pathfinder pathfinder_;
+
 };
 
 #endif  // MAPMODEL_HPP_
