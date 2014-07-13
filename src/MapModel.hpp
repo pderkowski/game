@@ -37,7 +37,6 @@ public:
     void addUnit(const units::Unit& unit);
 
     std::vector<units::Unit*> getUnits();
-    std::vector<units::Unit*> getUnitsByTile(const Tile& tile);
 
     bool doesPathExist(const Tile& from, const Tile& to) const;
     std::vector<tileenums::Direction> findPath(const Tile& from, const Tile& to) const;
@@ -45,8 +44,8 @@ public:
 private:
     friend void swap(MapModel& first, MapModel& other);
 
-    void setModelInTiles(const MapModel* model);
-    void setModelInUnits(const MapModel* model);
+    void setModelInTiles(MapModel* model);
+    void setModelInUnits(MapModel* model);
 
     int rowsNo_;
     int columnsNo_;

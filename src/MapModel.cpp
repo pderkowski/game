@@ -131,19 +131,6 @@ std::vector<units::Unit*> MapModel::getUnits() {
     return res;
 }
 
-std::vector<units::Unit*> MapModel::getUnitsByTile(const Tile& tile) {
-    std::vector<units::Unit*> res;
-
-    for (auto& unit : units_) {
-        std::cerr << "Unit: " << toString(unit.getPosition()->coords) << " tile: " << toString(tile.coords) << "\n";
-        if (*(unit.getPosition()) == tile)
-            res.push_back(&unit);
-    }
-
-    return res;
-}
-
-
 bool MapModel::doesPathExist(const Tile& source, const Tile& goal) const {
     return pathfinder_.doesPathExist(source, goal);
 }
@@ -153,7 +140,7 @@ std::vector<tileenums::Direction> MapModel::findPath(const Tile& source, const T
 }
 
 
-void MapModel::setModelInTiles(const MapModel* model) {
+void MapModel::setModelInTiles(MapModel* model) {
     for (const auto& row : tiles_) {
         for (const auto& tilePtr : row) {
             tilePtr->setModel(model);
@@ -161,7 +148,7 @@ void MapModel::setModelInTiles(const MapModel* model) {
     }
 }
 
-void MapModel::setModelInUnits(const MapModel* model) {
+void MapModel::setModelInUnits(MapModel* model) {
     for (auto& unit : units_) {
         unit.setModel(model);
     }

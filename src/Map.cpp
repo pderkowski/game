@@ -32,32 +32,29 @@ void Map::generateMap() {
 }
 
 void Map::handleLeftClick(const sf::Event& e) {
-    std::shared_ptr<Tile> clickedTile
-        = mapDrawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
-
-    auto units = model_->getUnitsByTile(*clickedTile);
-    if (!units.empty()) {
-        selectedUnit_ = units.front();
-        std::cerr << "Selected unit!\n";
-    } else {
-        selectedUnit_ = boost::optional<units::Unit*>();
-        std::cerr << "No units selected!\n";
-    }
+    selection_.setSource(mapDrawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)));
 }
 
 void Map::handleRightClick(const sf::Event& e) {
-    if (selectedUnit_) {
+    if (selection_.isUnitSelected()) {
         std::shared_ptr<Tile> destination
             = mapDrawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 
-        Tile source = *((*selectedUnit_)->getPosition());
+        if (selection_.isDestinationSelected() && *(selection_.getDestination()) == *destination) {
+            auto source = selection_.getSource();
 
-        if (model_->doesPathExist(source, *destination)) {
-            std::vector<tileenums::Direction> steps = model_->findPath(source, *destination);
+            if (model_->doesPathExist(*source, *destination)) {
+                std::vector<tileenums::Direction> steps = model_->findPath(*source, *destination);
 
-            for (auto step : steps) {
-                moveUnit(step);
+                for (auto step : steps) {
+                    moveUnit(step);
+                }
             }
+
+            selection_.clear();
+            selection_.setSource(destination);
+        } else {
+            selection_.setDestination(destination);
         }
     }
 }
@@ -101,8 +98,8 @@ int Map::calculateVerticalShift(float mouseYPosition) const {
 }
 
 void Map::moveUnit(tileenums::Direction direction) {
-    if (selectedUnit_) {
-        units::Unit* unit = *selectedUnit_;
+    if (selection_.isUnitSelected()) {
+        units::Unit* unit = selection_.getSelectedUnit();
         auto oldPosition = unit->getPosition();
 
         if (unit->canMoveTo(direction))

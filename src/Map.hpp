@@ -5,7 +5,6 @@
 
 #include <vector>
 #include <memory>
-#include "boost/optional.hpp"
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
 #include "MapDrawer.hpp"
@@ -13,6 +12,7 @@
 #include "Tile.hpp"
 #include "TileEnums.hpp"
 #include "units/Unit.hpp"
+#include "Selection.hpp"
 
 class Map {
 public:
@@ -36,7 +36,7 @@ private:
     std::shared_ptr<MapModel> model_;
     MapDrawer mapDrawer_;
     MinimapDrawer minimapDrawer_;
-    boost::optional<units::Unit*> selectedUnit_;
+    Selection selection_;
 };
 
 #endif  // MAP_HPP_

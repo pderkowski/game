@@ -7,15 +7,16 @@
 #include "Attributes.hpp"
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
+#include "units/Unit.hpp"
 class MapModel;
 
 using namespace tileenums;
 
 class Tile {
 public:
-    Tile(const IntRotPoint& coords, Type type = Type::Empty, const MapModel* model = nullptr);
+    Tile(const IntRotPoint& coords, Type type = Type::Empty, MapModel* model = nullptr);
 
-    void setModel(const MapModel* model);
+    void setModel(MapModel* model);
 
     bool hasNeighbor(Direction direction) const;
     std::shared_ptr<const Tile> getNeighbor(Direction direction) const;
@@ -23,6 +24,8 @@ public:
     std::vector<std::shared_ptr<const Tile>> getAdjacentNeighbors() const;
 
     Direction getDirection(std::shared_ptr<const Tile> neighbor) const;
+
+    std::vector<units::Unit*> getUnits();
 
     IntRotPoint coords;
     Type type;
@@ -35,7 +38,7 @@ private:
     IntRotPoint getNeighborCoords(Direction direction) const;
     bool isValid() const;
 
-    const MapModel* model_;
+    MapModel* model_;
 };
 
 bool operator == (const Tile& lhs, const Tile& rhs);

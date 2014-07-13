@@ -1,6 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <iostream>
+#include <algorithm>
 #include <stdexcept>
 #include <memory>
 #include <queue>
@@ -11,11 +12,11 @@
 
 using namespace tileenums;
 
-Tile::Tile(const IntRotPoint& coords, Type type, const MapModel* model)
+Tile::Tile(const IntRotPoint& coords, Type type, MapModel* model)
     : coords(coords), type(type), model_(model)
 { }
 
-void Tile::setModel(const MapModel* model) {
+void Tile::setModel(MapModel* model) {
     model_ = model;
 }
 
@@ -123,6 +124,17 @@ IntRotPoint Tile::getNeighborCoords(Direction direction) const {
         throw std::logic_error("Unrecognized direction.");
     }
 }
+
+std::vector<units::Unit*> Tile::getUnits() {
+    std::vector<units::Unit*> res = model_->getUnits();
+
+    std::remove_if(res.begin(), res.end(), [this] (units::Unit* unit) {
+        return *(unit->getPosition()) == *this;
+    });
+
+    return res;
+}
+
 
 
 bool operator == (const Tile& lhs, const Tile& rhs) {
