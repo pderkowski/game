@@ -22,9 +22,7 @@ MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::Render
         tileWidth_(96),
         tileHeight_(48),
         mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y)),
-        unitLayer_(TextureSetFactory::getUnitTextureSet()),
-        font_(Resources::loadFont("fonts/UbuntuMono.ttf")),
-        selection_("Empty", font_)
+        unitLayer_(TextureSetFactory::getUnitTextureSet())
 {
     makeLayers();
 }
@@ -79,7 +77,6 @@ void MapDrawer::draw() const {
     }
 
     target_->draw(unitLayer_);
-    target_->draw(selection_);
 }
 
 std::shared_ptr<const sf::RenderTarget> MapDrawer::getTarget() const {
@@ -234,11 +231,4 @@ void MapDrawer::updateUnitLayer(const units::Unit& unit, std::shared_ptr<const T
         unitLayer_.add(unit, newPosition);
         unitLayer_.add(unit, newDualPosition);
     }
-}
-
-void MapDrawer::printSelection(const sf::Vector2i& position) {
-    std::shared_ptr<Tile> selectedTile = getObjectByPosition(position);
-
-    selection_.setPosition(target_->mapPixelToCoords(sf::Vector2i(0, 0)));
-    selection_.setString(toString(IntIsoPoint(selectedTile->coords.toIsometric())));
 }

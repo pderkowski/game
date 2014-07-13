@@ -33,8 +33,6 @@ public:
     void updateUnitLayer(const units::Unit& unit, std::shared_ptr<const Tile> oldPosition,
         std::shared_ptr<const Tile> newPosition);
 
-    void printSelection(const sf::Vector2i& position);
-
 private:
     void makeLayers();
     void addTileToLayers(std::shared_ptr<const Tile> tile);
@@ -60,9 +58,6 @@ private:
 
     std::vector<Layer<Tile>> layers_;
     Layer<units::Unit> unitLayer_;
-
-    sf::Font font_;
-    sf::Text selection_;
 };
 
 #endif  // MAPDRAWER_HPP_
