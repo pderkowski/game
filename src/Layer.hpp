@@ -23,6 +23,7 @@ public:
 
     void add(const T&, const sf::Vector2f& center);
     void remove(const T&, const sf::Vector2f& center);
+    void clear();
 
 private:
     struct VertexPosition {
@@ -85,6 +86,12 @@ void Layer<T>::remove(const T& t, const sf::Vector2f& center) {
         positions_.erase(key);
         updatePositions(position);
     }
+}
+
+template <class T>
+void Layer<T>::clear() {
+    vertices_.clear();
+    positions_.clear();
 }
 
 template <class T>

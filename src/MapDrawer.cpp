@@ -15,6 +15,7 @@
 #include "Resources.hpp"
 #include "Layer.hpp"
 #include "units/Unit.hpp"
+#include "MiscellaneousEnums.hpp"
 
 MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::RenderTarget> target)
         : model_(model),
@@ -22,6 +23,7 @@ MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::Render
         tileWidth_(96),
         tileHeight_(48),
         mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y)),
+        selectionLayer_(TextureSetFactory::getMiscellaneousTextureSet()),
         unitLayer_(TextureSetFactory::getUnitTextureSet())
 {
     makeLayers();
@@ -76,6 +78,7 @@ void MapDrawer::draw() const {
         target_->draw(layer);
     }
 
+    target_->draw(selectionLayer_);
     target_->draw(unitLayer_);
 }
 
@@ -230,5 +233,23 @@ void MapDrawer::updateUnitLayer(const units::Unit& unit, std::shared_ptr<const T
         auto newDualPosition = calculateDualTilePosition(newTile);
         unitLayer_.add(unit, newPosition);
         unitLayer_.add(unit, newDualPosition);
+    }
+}
+
+void MapDrawer::updateSelectionLayer(const Selection& selection) {
+    selectionLayer_.clear();
+
+    if (selection.isSourceSelected()) {
+        auto sourcePosition = calculateTilePosition(selection.getSource());
+        auto sourceDualPosition = calculateDualTilePosition(selection.getSource());
+        selectionLayer_.add(miscellaneous::Type::Source, sourcePosition);
+        selectionLayer_.add(miscellaneous::Type::Source, sourceDualPosition);
+    }
+
+    if (selection.isDestinationSelected()) {
+        auto destinationPosition = calculateTilePosition(selection.getDestination());
+        auto destinationDualPosition = calculateDualTilePosition(selection.getDestination());
+        selectionLayer_.add(miscellaneous::Type::Destination, destinationPosition);
+        selectionLayer_.add(miscellaneous::Type::Destination, destinationDualPosition);
     }
 }

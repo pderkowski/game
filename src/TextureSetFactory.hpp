@@ -6,6 +6,7 @@
 #include "TextureSet.hpp"
 #include "Tile.hpp"
 #include "units/Unit.hpp"
+#include "MiscellaneousEnums.hpp"
 
 class TextureSetFactory {
 public:
@@ -16,6 +17,8 @@ public:
     static TextureSet<units::Unit> getUnitTextureSet();
 
     static TextureSet<Tile> getGridTextureSet();
+
+    static TextureSet<miscellaneous::Type> getMiscellaneousTextureSet();
 };
 
 #endif  // TEXTURESETFACTORY_HPP_

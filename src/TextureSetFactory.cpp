@@ -13,8 +13,10 @@
 #include "textures/terrains.hpp"
 #include "textures/landmarks.hpp"
 #include "textures/units.hpp"
+#include "textures/miscellaneous.hpp"
 #include "TileEnums.hpp"
 #include "units/Unit.hpp"
+#include "MiscellaneousEnums.hpp"
 
 using namespace tileenums;
 
@@ -535,6 +537,24 @@ TextureSet<Tile> TextureSetFactory::getGridTextureSet() {
     ts.add(std::shared_ptr<const Matcher<Tile>>(new Matcher<Tile>([] (__attribute__((unused)) const Tile& tile) {
         return true;
     })), textures::terrains::grid);
+
+    return ts;
+}
+
+TextureSet<miscellaneous::Type> TextureSetFactory::getMiscellaneousTextureSet() {
+    TextureSet<miscellaneous::Type> ts(Resources::loadTexture("textures/miscellaneous.png"));
+
+    ts.add(std::shared_ptr<const Matcher<miscellaneous::Type>>(
+        new Matcher<miscellaneous::Type>([] (const miscellaneous::Type& type)
+    {
+        return type == miscellaneous::Type::Source;
+    })), textures::miscellaneous::source);
+
+    ts.add(std::shared_ptr<const Matcher<miscellaneous::Type>>(
+        new Matcher<miscellaneous::Type>([] (const miscellaneous::Type& type)
+    {
+        return type == miscellaneous::Type::Destination;
+    })), textures::miscellaneous::destination);
 
     return ts;
 }

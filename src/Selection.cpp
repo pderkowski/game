@@ -5,10 +5,11 @@
 
 
 Selection::Selection()
+    : source_(nullptr), destination_(nullptr)
 { }
 
 Selection::Selection(std::shared_ptr<Tile> source)
-    : source_(source)
+    : source_(source), destination_(nullptr)
 { }
 
 void Selection::setSource(std::shared_ptr<Tile> source) {

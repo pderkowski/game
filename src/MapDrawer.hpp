@@ -13,6 +13,8 @@
 #include "Layer.hpp"
 #include "TextureSet.hpp"
 #include "units/Unit.hpp"
+#include "Selection.hpp"
+#include "MiscellaneousEnums.hpp"
 
 class MapDrawer {
 public:
@@ -32,6 +34,7 @@ public:
 
     void updateUnitLayer(const units::Unit& unit, std::shared_ptr<const Tile> oldPosition,
         std::shared_ptr<const Tile> newPosition);
+    void updateSelectionLayer(const Selection& selection);
 
 private:
     void makeLayers();
@@ -57,6 +60,7 @@ private:
     sf::View mapView_;
 
     std::vector<Layer<Tile>> layers_;
+    Layer<miscellaneous::Type> selectionLayer_;
     Layer<units::Unit> unitLayer_;
 };
 

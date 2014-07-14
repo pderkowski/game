@@ -33,6 +33,7 @@ void Map::generateMap() {
 
 void Map::handleLeftClick(const sf::Event& e) {
     selection_.setSource(mapDrawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)));
+    mapDrawer_.updateSelectionLayer(selection_);
 }
 
 void Map::handleRightClick(const sf::Event& e) {
@@ -57,6 +58,8 @@ void Map::handleRightClick(const sf::Event& e) {
             selection_.setDestination(destination);
         }
     }
+
+    mapDrawer_.updateSelectionLayer(selection_);
 }
 
 void Map::handleMouseWheelMoved(const sf::Event& event) {
