@@ -16,11 +16,15 @@ private:
         void resetDirections();
         bool hasDirection(tileenums::Direction direction) const;
 
+        bool operator == (const Attributes::River& rhs) const;
+
     private:
         int directions_;
     };
 
 public:
+    bool operator == (const Attributes& rhs) const;
+
     Attribute<River> river;
 };
 

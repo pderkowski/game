@@ -18,7 +18,8 @@ public:
 
     static TextureSet<Tile> getGridTextureSet();
 
-    static TextureSet<miscellaneous::Type> getMiscellaneousTextureSet();
+    static TextureSet<miscellaneous::Type> getSelectionTextureSet();
+    static TextureSet<tileenums::Direction> getPathTextureSet();
 };
 
 #endif  // TEXTURESETFACTORY_HPP_

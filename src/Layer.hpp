@@ -4,13 +4,14 @@
 #define LAYER_HPP_
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <utility>
 #include <stdexcept>
 #include "SFML/Graphics.hpp"
 #include "TextureSet.hpp"
 #include "Utils.hpp"
+#include "boost/functional/hash.hpp"
 
 template <class T>
 class Layer : public sf::Drawable {
@@ -33,9 +34,14 @@ private:
 
     struct Key {
         Key(const T& t, const sf::Vector2f& center);
-        bool operator < (const Key& rhs) const;
+        bool operator == (const Key& rhs) const;
 
-        std::pair<const T*, sf::Vector2f> key;
+        T value;
+        sf::Vector2f pos;
+    };
+
+    struct KeyHasher {
+        std::size_t operator()(const Layer<T>::Key& key) const;
     };
 
 private:
@@ -44,7 +50,7 @@ private:
 
     TextureSet<T> textureSet_;
     sf::VertexArray vertices_;
-    std::map<Key, VertexPosition> positions_;
+    std::unordered_map<Key, VertexPosition, KeyHasher> positions_;
 };
 
 template <class T>
@@ -121,15 +127,29 @@ void Layer<T>::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
 template <class T>
 Layer<T>::Key::Key(const T& t, const sf::Vector2f& center)
-    : key(std::make_pair(&t, center))
+    : value(t), pos(center)
 { }
 
-template <class T>
-bool Layer<T>::Key::operator < (const Key& rhs) const {
-    using utils::operator <;
 
-    return (key.first < rhs.key.first) || (key.first == rhs.key.first && key.second < rhs.key.second);
+template <class T>
+bool Layer<T>::Key::operator == (const Key& rhs) const {
+    return value == rhs.value && pos == rhs.pos;
 }
+
+
+template <class T>
+std::size_t Layer<T>::KeyHasher::operator()(const Layer<T>::Key& key) const {
+    std::size_t seed = 0;
+
+    static std::hash<T> valueHasher;
+    static std::hash<sf::Vector2f> posHasher;
+
+    boost::hash_combine(seed, valueHasher(key.value));
+    boost::hash_combine(seed, posHasher(key.pos));
+    return seed;
+}
+
+
 
 
 #endif  // LAYER_HPP_

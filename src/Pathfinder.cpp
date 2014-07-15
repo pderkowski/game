@@ -13,44 +13,41 @@ bool Pathfinder::doesPathExist(__attribute__((unused)) const Tile& source,
     return true;
 }
 
-std::vector<tileenums::Direction> Pathfinder::findPath(const Tile& source, const Tile& goal) const {
-    std::cerr << "Source: " << toString(source.coords) << "\n";
-    std::cerr << "Goal: " << toString(goal.coords) << "\n";
-
-    std::vector<tileenums::Direction> res;
+std::vector<Tile> Pathfinder::findPath(const Tile& source, const Tile& goal) const {
+    std::vector<Tile> res;
 
     Tile current = source;
     while (current != goal) {
-        tileenums::Direction nextStep = findNextStep(current, goal);
-        res.push_back(nextStep);
-        current = *(current.getNeighbor(nextStep));
+        res.push_back(current);
+        current = findNextStep(current, goal);
     }
+    res.push_back(goal);
 
     return res;
 }
 
-tileenums::Direction Pathfinder::findNextStep(const Tile& source, const Tile& goal) const {
+Tile Pathfinder::findNextStep(const Tile& source, const Tile& goal) const {
     if (source.coords.y < goal.coords.y) {
         if (source.coords.x < goal.coords.x) {
-            return tileenums::Direction::BottomRight;
+            return *(source.getNeighbor(tileenums::Direction::BottomRight));
         } else if (source.coords.x > goal.coords.x) {
-            return tileenums::Direction::BottomLeft;
+            return *(source.getNeighbor(tileenums::Direction::BottomLeft));
         } else {
-            return tileenums::Direction::Bottom;
+            return *(source.getNeighbor(tileenums::Direction::Bottom));
         }
     } else if (source.coords.y > goal.coords.y) {
         if (source.coords.x < goal.coords.x) {
-            return tileenums::Direction::TopRight;
+            return *(source.getNeighbor(tileenums::Direction::TopRight));
         } else if (source.coords.x > goal.coords.x) {
-            return tileenums::Direction::TopLeft;
+            return *(source.getNeighbor(tileenums::Direction::TopLeft));
         } else {
-            return tileenums::Direction::Top;
+            return *(source.getNeighbor(tileenums::Direction::Top));
         }
     } else {
         if (source.coords.x < goal.coords.x) {
-            return tileenums::Direction::Right;
+            return *(source.getNeighbor(tileenums::Direction::Right));
         } else if (source.coords.x > goal.coords.x) {
-            return tileenums::Direction::Left;
+            return *(source.getNeighbor(tileenums::Direction::Left));
         } else {
             throw std::logic_error("Can't find next step: source and goal are equal.");
         }

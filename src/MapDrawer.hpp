@@ -35,6 +35,7 @@ public:
     void updateUnitLayer(const units::Unit& unit, std::shared_ptr<const Tile> oldPosition,
         std::shared_ptr<const Tile> newPosition);
     void updateSelectionLayer(const Selection& selection);
+    void updatePathLayer(const std::vector<Tile>& path);
 
 private:
     void makeLayers();
@@ -48,8 +49,8 @@ private:
     bool canZoom(float delta) const;
     sf::Vector2f boundShift(int x, int y) const;
 
-    sf::Vector2f calculateTilePosition(std::shared_ptr<const Tile> tile) const;
-    sf::Vector2f calculateDualTilePosition(std::shared_ptr<const Tile> tile) const;
+    sf::Vector2f calculateTilePosition(const Tile& tile) const;
+    sf::Vector2f calculateDualTilePosition(const Tile& tile) const;
 
     std::shared_ptr<MapModel> model_;
     std::shared_ptr<sf::RenderTarget> target_;
@@ -60,6 +61,7 @@ private:
     sf::View mapView_;
 
     std::vector<Layer<Tile>> layers_;
+    Layer<tileenums::Direction> pathLayer_;
     Layer<miscellaneous::Type> selectionLayer_;
     Layer<units::Unit> unitLayer_;
 };

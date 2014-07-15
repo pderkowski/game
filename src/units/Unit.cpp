@@ -39,5 +39,10 @@ void Unit::moveTo(tileenums::Direction direction) {
     coords_ = getPosition()->getNeighbor(direction)->coords;
 }
 
-
+bool operator == (const Unit& lhs, const Unit& rhs) {
+    return (lhs.coords_ == rhs.coords_) && (lhs.type_ == rhs.type_) && (lhs.model_ == rhs.model_);
 }
+
+
+}  // namespace units
+

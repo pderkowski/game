@@ -541,7 +541,7 @@ TextureSet<Tile> TextureSetFactory::getGridTextureSet() {
     return ts;
 }
 
-TextureSet<miscellaneous::Type> TextureSetFactory::getMiscellaneousTextureSet() {
+TextureSet<miscellaneous::Type> TextureSetFactory::getSelectionTextureSet() {
     TextureSet<miscellaneous::Type> ts(Resources::loadTexture("textures/miscellaneous.png"));
 
     ts.add(std::shared_ptr<const Matcher<miscellaneous::Type>>(
@@ -555,6 +555,61 @@ TextureSet<miscellaneous::Type> TextureSetFactory::getMiscellaneousTextureSet() 
     {
         return type == miscellaneous::Type::Destination;
     })), textures::miscellaneous::destination);
+
+    return ts;
+}
+
+
+TextureSet<tileenums::Direction> TextureSetFactory::getPathTextureSet() {
+    TextureSet<tileenums::Direction> ts(Resources::loadTexture("textures/miscellaneous.png"));
+
+    ts.add(std::shared_ptr<const Matcher<tileenums::Direction>>(
+        new Matcher<tileenums::Direction>([] (const tileenums::Direction& direction)
+    {
+        return direction == tileenums::Direction::Top;
+    })), textures::miscellaneous::top);
+
+    ts.add(std::shared_ptr<const Matcher<tileenums::Direction>>(
+        new Matcher<tileenums::Direction>([] (const tileenums::Direction& direction)
+    {
+        return direction == tileenums::Direction::TopRight;
+    })), textures::miscellaneous::topRight);
+
+    ts.add(std::shared_ptr<const Matcher<tileenums::Direction>>(
+        new Matcher<tileenums::Direction>([] (const tileenums::Direction& direction)
+    {
+        return direction == tileenums::Direction::Right;
+    })), textures::miscellaneous::right);
+
+    ts.add(std::shared_ptr<const Matcher<tileenums::Direction>>(
+        new Matcher<tileenums::Direction>([] (const tileenums::Direction& direction)
+    {
+        return direction == tileenums::Direction::BottomRight;
+    })), textures::miscellaneous::bottomRight);
+
+    ts.add(std::shared_ptr<const Matcher<tileenums::Direction>>(
+        new Matcher<tileenums::Direction>([] (const tileenums::Direction& direction)
+    {
+        return direction == tileenums::Direction::Bottom;
+    })), textures::miscellaneous::bottom);
+
+    ts.add(std::shared_ptr<const Matcher<tileenums::Direction>>(
+        new Matcher<tileenums::Direction>([] (const tileenums::Direction& direction)
+    {
+        return direction == tileenums::Direction::BottomLeft;
+    })), textures::miscellaneous::bottomLeft);
+
+    ts.add(std::shared_ptr<const Matcher<tileenums::Direction>>(
+        new Matcher<tileenums::Direction>([] (const tileenums::Direction& direction)
+    {
+        return direction == tileenums::Direction::Left;
+    })), textures::miscellaneous::left);
+
+    ts.add(std::shared_ptr<const Matcher<tileenums::Direction>>(
+        new Matcher<tileenums::Direction>([] (const tileenums::Direction& direction)
+    {
+        return direction == tileenums::Direction::TopLeft;
+    })), textures::miscellaneous::topLeft);
 
     return ts;
 }

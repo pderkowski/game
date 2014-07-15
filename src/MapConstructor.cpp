@@ -66,9 +66,9 @@ MapConstructor& MapConstructor::createRiverFlow() {
             const IntIsoPoint lowestNeighborCoords(lowestNeighbor->coords.toIsometric());
 
             if (model_.isInBounds(lowestNeighbor)) {
-                current->attributes.river->addDirection(current->getDirection(lowestNeighbor));
+                current->attributes.river->addDirection(current->getDirection(*lowestNeighbor));
                 lowestNeighbor->attributes.river.enable();
-                lowestNeighbor->attributes.river->addDirection(lowestNeighbor->getDirection(current));
+                lowestNeighbor->attributes.river->addDirection(lowestNeighbor->getDirection(*current));
             } else {
                 current->type = tileenums::Type::Water;
                 break;

@@ -20,3 +20,11 @@ void Attributes::River::resetDirections() {
 bool Attributes::River::hasDirection(Direction direction) const {
     return directions_ & static_cast<int>(direction);
 }
+
+bool Attributes::operator == (const Attributes& rhs) const {
+    return river == rhs.river;
+}
+
+bool Attributes::River::operator == (const Attributes::River& rhs) const {
+    return directions_ == rhs.directions_;
+}

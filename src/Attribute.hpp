@@ -3,6 +3,15 @@
 #include "boost/optional.hpp"
 
 template<class T>
+class Attribute;
+
+template<class T>
+bool operator == (const Attribute<T>& lhs, const Attribute<T>& rhs) {
+    return (lhs && rhs && (*lhs == *rhs)) || (!lhs && !rhs);
+}
+
+
+template<class T>
 class Attribute {
 public:
     void enable();
@@ -16,6 +25,8 @@ public:
     T* operator ->();
 
 private:
+    friend bool operator == <>(const Attribute<T>& lhs, const Attribute<T>& rhs);
+
     boost::optional<T> data_;
 };
 
@@ -55,3 +66,4 @@ template<class T>
 T* Attribute<T>::operator ->() {
     return data_.get_ptr();
 }
+

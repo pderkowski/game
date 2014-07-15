@@ -23,7 +23,8 @@ MapDrawer::MapDrawer(std::shared_ptr<MapModel> model, std::shared_ptr<sf::Render
         tileWidth_(96),
         tileHeight_(48),
         mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y)),
-        selectionLayer_(TextureSetFactory::getMiscellaneousTextureSet()),
+        pathLayer_(TextureSetFactory::getPathTextureSet()),
+        selectionLayer_(TextureSetFactory::getSelectionTextureSet()),
         unitLayer_(TextureSetFactory::getUnitTextureSet())
 {
     makeLayers();
@@ -53,8 +54,8 @@ void MapDrawer::makeLayers() {
 
     for (auto& unit : model_->getUnits()) {
         auto tile = unit->getPosition();
-        auto tilePosition = calculateTilePosition(tile);
-        auto dualTilePosition = calculateDualTilePosition(tile);
+        auto tilePosition = calculateTilePosition(*tile);
+        auto dualTilePosition = calculateDualTilePosition(*tile);
 
         unitLayer_.add(*unit, tilePosition);
         unitLayer_.add(*unit, dualTilePosition);
@@ -63,8 +64,8 @@ void MapDrawer::makeLayers() {
 
 void MapDrawer::addTileToLayers(std::shared_ptr<const Tile> tile) {
     for (auto& layer : layers_) {
-        auto tilePosition = calculateTilePosition(tile);
-        auto dualTilePosition = calculateDualTilePosition(tile);
+        auto tilePosition = calculateTilePosition(*tile);
+        auto dualTilePosition = calculateDualTilePosition(*tile);
 
         layer.add(*tile, tilePosition);
         layer.add(*tile, dualTilePosition);
@@ -78,6 +79,7 @@ void MapDrawer::draw() const {
         target_->draw(layer);
     }
 
+    target_->draw(pathLayer_);
     target_->draw(selectionLayer_);
     target_->draw(unitLayer_);
 }
@@ -90,7 +92,6 @@ std::shared_ptr<Tile> MapDrawer::getObjectByPosition(const sf::Vector2i& positio
     target_->setView(mapView_);
 
     auto mapCoords = mapPixelToMapCoords(position);
-    // std::cerr << toString(mapCoords) << "\n";
 
     if (model_->isInBounds(mapCoords))
         return model_->getTile(mapCoords);
@@ -102,17 +103,11 @@ IntIsoPoint MapDrawer::mapPixelToMapCoords(const sf::Vector2i& position) {
     const int halfWidth = tileWidth_ / 2;
     const int halfHeight = tileHeight_ / 2;
 
-    // std::cerr << "\n\n";
-    // std::cerr << "Pixel: " << position.x << ", " << position.y << ".\n";
     const sf::Vector2f coords = target_->mapPixelToCoords(position);
-    // std::cerr << "Coords: " << coords.x << ", " << coords.y << ".\n";
     const sf::Vector2i intCoords(lround(coords.x), lround(coords.y));
-    // std::cerr << "IntCoords: " << intCoords.x << ", " << intCoords.y << ".\n";
     const sf::Vector2i corner(intCoords.x - intCoords.x % halfWidth,
         intCoords.y - intCoords.y % halfHeight);
-    // std::cerr << "Corner: " << corner.x << ", " << corner.y << ".\n";
     const sf::Vector2i scaledCorner(corner.x / halfWidth, corner.y / halfHeight);
-    // std::cerr << "ScaledCorner: " << scaledCorner.x << ", " << scaledCorner.y << ".\n";
 
     sf::Vector2i firstCenter, otherCenter;
     if ((scaledCorner.x + scaledCorner.y) % 2 == 0) {
@@ -122,14 +117,9 @@ IntIsoPoint MapDrawer::mapPixelToMapCoords(const sf::Vector2i& position) {
         firstCenter = sf::Vector2i(corner.x + halfWidth, corner.y);
         otherCenter = sf::Vector2i(corner.x, corner.y + halfHeight);
     }
-    // std::cerr << "First center: " << firstCenter.x << ", " << firstCenter.y << ".\n";
-    // std::cerr << "Other center: " << otherCenter.x << ", " << otherCenter.y << ".\n";
 
     const double distanceToFirst = sqrt(pow(coords.x - firstCenter.x, 2) + pow(coords.y - firstCenter.y, 2));
     const double distanceToOther = sqrt(pow(otherCenter.x - coords.x, 2) + pow(otherCenter.y - coords.y, 2));
-
-    // std::cerr << "Distance to first: " << distanceToFirst << ".\n";
-    // std::cerr << "Distance to other: " << distanceToOther << ".\n";
 
     const sf::Vector2i closest = (distanceToFirst < distanceToOther)? firstCenter : otherCenter;
     const IntCartPoint scaledClosest = IntCartPoint(closest.x / halfWidth, closest.y / halfHeight);
@@ -206,13 +196,13 @@ sf::FloatRect MapDrawer::getDisplayedRectangle() const {
         (rightBottomCoords.y - leftTopCoords.y) / getMapHeight());
 }
 
-sf::Vector2f MapDrawer::calculateTilePosition(std::shared_ptr<const Tile> tile) const {
-    auto tileCartCoords = tile->coords.toCartesian();
+sf::Vector2f MapDrawer::calculateTilePosition(const Tile& tile) const {
+    auto tileCartCoords = tile.coords.toCartesian();
     return sf::Vector2f(utils::positiveModulo(tileCartCoords.x * tileWidth_ / 2, 2 * getMapWidth()),
         tileCartCoords.y * tileHeight_ / 2);
 }
 
-sf::Vector2f MapDrawer::calculateDualTilePosition(std::shared_ptr<const Tile> tile) const {
+sf::Vector2f MapDrawer::calculateDualTilePosition(const Tile& tile) const {
     auto primaryTilePosition = calculateTilePosition(tile);
     return sf::Vector2f(utils::positiveModulo(primaryTilePosition.x + getMapWidth(), 2 * getMapWidth()),
         primaryTilePosition.y);
@@ -222,15 +212,15 @@ void MapDrawer::updateUnitLayer(const units::Unit& unit, std::shared_ptr<const T
     std::shared_ptr<const Tile> newTile)
 {
     if (oldTile) {
-        auto oldPosition = calculateTilePosition(oldTile);
-        auto oldDualPosition = calculateDualTilePosition(oldTile);
+        auto oldPosition = calculateTilePosition(*oldTile);
+        auto oldDualPosition = calculateDualTilePosition(*oldTile);
         unitLayer_.remove(unit, oldPosition);
         unitLayer_.remove(unit, oldDualPosition);
     }
 
     if (newTile) {
-        auto newPosition = calculateTilePosition(newTile);
-        auto newDualPosition = calculateDualTilePosition(newTile);
+        auto newPosition = calculateTilePosition(*newTile);
+        auto newDualPosition = calculateDualTilePosition(*newTile);
         unitLayer_.add(unit, newPosition);
         unitLayer_.add(unit, newDualPosition);
     }
@@ -240,16 +230,29 @@ void MapDrawer::updateSelectionLayer(const Selection& selection) {
     selectionLayer_.clear();
 
     if (selection.isSourceSelected()) {
-        auto sourcePosition = calculateTilePosition(selection.getSource());
-        auto sourceDualPosition = calculateDualTilePosition(selection.getSource());
+        auto sourcePosition = calculateTilePosition(*selection.getSource());
+        auto sourceDualPosition = calculateDualTilePosition(*selection.getSource());
         selectionLayer_.add(miscellaneous::Type::Source, sourcePosition);
         selectionLayer_.add(miscellaneous::Type::Source, sourceDualPosition);
     }
 
     if (selection.isDestinationSelected()) {
-        auto destinationPosition = calculateTilePosition(selection.getDestination());
-        auto destinationDualPosition = calculateDualTilePosition(selection.getDestination());
+        auto destinationPosition = calculateTilePosition(*selection.getDestination());
+        auto destinationDualPosition = calculateDualTilePosition(*selection.getDestination());
         selectionLayer_.add(miscellaneous::Type::Destination, destinationPosition);
         selectionLayer_.add(miscellaneous::Type::Destination, destinationDualPosition);
+    }
+}
+
+void MapDrawer::updatePathLayer(const std::vector<Tile>& path) {
+    pathLayer_.clear();
+
+    for (size_t i = 0; i + 1 < path.size(); ++i) {
+        const Tile& currentTile = path[i];
+        const Tile& nextTile = path[i + 1];
+        auto tilePosition = calculateTilePosition(currentTile);
+        auto tileDualPosition = calculateDualTilePosition(currentTile);
+        pathLayer_.add(currentTile.getDirection(nextTile), tilePosition);
+        pathLayer_.add(currentTile.getDirection(nextTile), tileDualPosition);
     }
 }

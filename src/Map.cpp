@@ -32,26 +32,31 @@ void Map::generateMap() {
 }
 
 void Map::handleLeftClick(const sf::Event& e) {
+    selection_.clear();
     selection_.setSource(mapDrawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)));
+    mapDrawer_.updatePathLayer(std::vector<Tile>());
     mapDrawer_.updateSelectionLayer(selection_);
 }
 
 void Map::handleRightClick(const sf::Event& e) {
+    std::vector<Tile> path;
+
     if (selection_.isUnitSelected()) {
         std::shared_ptr<Tile> destination
             = mapDrawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 
+        auto source = selection_.getSource();
+        if (pathfinder_.doesPathExist(*source, *destination)) {
+            path = pathfinder_.findPath(*source, *destination);
+        }
+
         if (selection_.isDestinationSelected() && *(selection_.getDestination()) == *destination) {
-            auto source = selection_.getSource();
-
-            if (pathfinder_.doesPathExist(*source, *destination)) {
-                std::vector<tileenums::Direction> steps = pathfinder_.findPath(*source, *destination);
-
-                for (auto step : steps) {
-                    moveUnit(step);
-                }
+            for (size_t i = 0; i + 1 < path.size(); ++i) {
+                auto direction = path[i].getDirection(path[i + 1]);
+                moveUnit(direction);
             }
 
+            path.clear();
             selection_.clear();
             selection_.setSource(destination);
         } else {
@@ -59,6 +64,7 @@ void Map::handleRightClick(const sf::Event& e) {
         }
     }
 
+    mapDrawer_.updatePathLayer(path);
     mapDrawer_.updateSelectionLayer(selection_);
 }
 
@@ -104,11 +110,13 @@ void Map::moveUnit(tileenums::Direction direction) {
         units::Unit* unit = selection_.getSelectedUnit();
         auto oldPosition = unit->getPosition();
 
+        mapDrawer_.updateUnitLayer(*unit, oldPosition, nullptr); // remove old drawing
+
         if (unit->canMoveTo(direction))
             unit->moveTo(direction);
 
         auto newPosition = unit->getPosition();
         selection_.setSource(std::const_pointer_cast<Tile>(newPosition));
-        mapDrawer_.updateUnitLayer(*unit, oldPosition, newPosition);
+        mapDrawer_.updateUnitLayer(*unit, nullptr, newPosition);
     }
 }

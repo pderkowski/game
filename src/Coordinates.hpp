@@ -3,7 +3,9 @@
 #ifndef COORDINATES_HPP_
 #define COORDINATES_HPP_
 
+#include <functional>
 #include <string>
+#include "boost/functional/hash.hpp"
 
 struct IntCartPoint;
 struct CartPoint;
@@ -108,5 +110,22 @@ template <class T>
 std::string toString(const T& t) {
     return "<" + std::to_string(t.x) + ", " + std::to_string(t.y) + ">";
 }
+
+
+namespace std {
+
+template <>
+struct hash<IntRotPoint> {
+    std::size_t operator()(const IntRotPoint& p) const {
+        std::size_t seed = 0;
+
+        boost::hash_combine(seed, boost::hash_value(p.x));
+        boost::hash_combine(seed, boost::hash_value(p.y));
+
+        return seed;
+    }
+};
+
+}  // namespace std
 
 #endif  // COORDINATES_HPP_

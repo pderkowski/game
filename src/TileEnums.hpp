@@ -5,6 +5,7 @@
 
 #include <string>
 #include <stdexcept>
+#include "boost/functional/hash.hpp"
 
 namespace tileenums {
 
@@ -30,7 +31,26 @@ enum class Direction {
     TopLeft = 1 << 7
 };
 
-}
+}  // namespace tileenums
+
+
+namespace std {
+
+template <>
+struct hash<tileenums::Direction>
+{
+    std::size_t operator()(const tileenums::Direction& direction) const
+    {
+        std::size_t seed = 0;
+
+        static std::hash<int> typeHasher;
+        boost::hash_combine(seed, typeHasher(static_cast<int>(direction)));
+
+        return seed;
+    }
+};
+
+}  // namespace std
 
 inline std::string toString(tileenums::Direction direction) {
     switch (direction) {
