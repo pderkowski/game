@@ -105,6 +105,7 @@ struct IntRotPoint {
 
 bool operator == (const IntRotPoint& lhs, const IntRotPoint& rhs);
 bool operator != (const IntRotPoint& lhs, const IntRotPoint& rhs);
+bool operator < (const IntRotPoint& lhs, const IntRotPoint& rhs);
 
 template <class T>
 std::string toString(const T& t) {

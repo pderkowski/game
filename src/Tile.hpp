@@ -14,7 +14,8 @@ using namespace tileenums;
 
 class Tile {
 public:
-    Tile(const IntRotPoint& coords, Type type = Type::Empty, MapModel* model = nullptr);
+    explicit Tile(const IntRotPoint& coords = IntRotPoint(-1, -1), Type type = Type::Empty,
+        MapModel* model = nullptr);
 
     void setModel(MapModel* model);
 

@@ -23,6 +23,7 @@ private:
     void handleRightClick(const sf::Event& event);
     void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);
+    void handleAPressed();
 
     std::shared_ptr<sf::RenderWindow> window_;
     Map map_;

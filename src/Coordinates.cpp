@@ -206,3 +206,7 @@ bool operator != (const IntRotPoint& lhs, const IntRotPoint& rhs) {
     return lhs.x != rhs.x || lhs.y != rhs.y;
 }
 
+bool operator < (const IntRotPoint& lhs, const IntRotPoint& rhs) {
+    return (lhs.x < rhs.x) || (lhs.x == rhs.x && lhs.y < rhs.y);
+}
+

@@ -10,6 +10,7 @@
 #include "Tile.hpp"
 #include "MapGenerator.hpp"
 #include "Map.hpp"
+#include "Pathfinder.hpp"
 
 Map::Map(int rows, int columns, std::shared_ptr<sf::RenderWindow> target)
         : model_(std::make_shared<MapModel>(MapGenerator::generateMap(rows, columns))),
@@ -46,8 +47,11 @@ void Map::handleRightClick(const sf::Event& e) {
             = mapDrawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 
         auto source = selection_.getSource();
-        if (pathfinder_.doesPathExist(*source, *destination)) {
-            path = pathfinder_.findPath(*source, *destination);
+
+        units::Unit* selectedUnit = selection_.getSelectedUnit();
+        Pathfinder pathfinder(selectedUnit->getMovingCosts());
+        if (pathfinder.doesPathExist(*source, *destination)) {
+            path = pathfinder.findPath(*source, *destination);
         }
 
         if (selection_.isDestinationSelected() && *(selection_.getDestination()) == *destination) {
@@ -118,5 +122,13 @@ void Map::moveUnit(tileenums::Direction direction) {
         auto newPosition = unit->getPosition();
         selection_.setSource(std::const_pointer_cast<Tile>(newPosition));
         mapDrawer_.updateUnitLayer(*unit, nullptr, newPosition);
+    }
+}
+
+void Map::handleAPressed() {
+    if (selection_.isSourceSelected()) {
+        model_->addUnit(units::Unit(selection_.getSource()->coords, units::Type::Phalanx, model_.get()));
+        units::Unit* unit = selection_.getSelectedUnit();
+        mapDrawer_.updateUnitLayer(*unit, nullptr, unit->getPosition());
     }
 }

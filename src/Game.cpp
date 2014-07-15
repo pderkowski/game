@@ -67,6 +67,9 @@ void Game::handleEvents() {
             case sf::Keyboard::Key::M:
                 toggleMenu();
                 break;
+            case sf::Keyboard::Key::A:
+                handleAPressed();
+                break;
             default:
                 break;
             }
@@ -105,3 +108,10 @@ void Game::handleMouseMoved(const sf::Event& event) {
         map_.handleMouseMoved(event);
     }
 }
+
+void Game::handleAPressed() {
+    if (!menu_.isVisible()) {
+        map_.handleAPressed();
+    }
+}
+

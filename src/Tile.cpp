@@ -147,8 +147,5 @@ bool operator != (const Tile& lhs, const Tile& rhs) {
 }
 
 bool operator < (const Tile& lhs, const Tile& rhs) {
-    if (lhs.model_ != rhs.model_) {
-        throw std::logic_error("Compared tiles have different models.");
-    }
     return lhs.coords < rhs.coords;
 }

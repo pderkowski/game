@@ -19,9 +19,7 @@ MapConstructor::MapConstructor(const HeightMap& heightMap,
         : heightMap_(heightMap),
         model_(heightMap.getRowsNo(), heightMap.getColumnsNo()),
         generator_(generator)
-{
-    model_.addUnit(units::Unit(IntRotPoint(0, 1), units::Type::Phalanx, &model_));
-}
+{ }
 
 MapConstructor& MapConstructor::setSource(const HeightMap& heightMap) {
     if (heightMap.getRowsNo() == heightMap_.getRowsNo()
