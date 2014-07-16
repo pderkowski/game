@@ -8,7 +8,7 @@
 int main(__attribute__((unused)) int argc, char* argv[]) {
     Resources::initialize(Paths{argv[0]});
 
-    Game game(160, 80);
+    Game game(160, 80, 2);
     game.start();
 
     return 0;

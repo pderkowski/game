@@ -13,6 +13,7 @@
 #include "TileEnums.hpp"
 #include "units/Unit.hpp"
 #include "Selection.hpp"
+#include "Player.hpp"
 
 class Map {
 public:
@@ -28,6 +29,8 @@ public:
     void handleMouseMoved(const sf::Event& event);
     void handleAPressed();
 
+    void setPlayer(const Player& player);
+
 private:
     void moveUnit(tileenums::Direction direction);
 
@@ -38,6 +41,7 @@ private:
     MapDrawer mapDrawer_;
     MinimapDrawer minimapDrawer_;
     Selection selection_;
+    Player currentPlayer_;
 };
 
 #endif  // MAP_HPP_

@@ -132,3 +132,7 @@ void Map::handleAPressed() {
         mapDrawer_.updateUnitLayer(*unit, nullptr, unit->getPosition());
     }
 }
+
+void Map::setPlayer(const Player& player) {
+    currentPlayer_ = player;
+}

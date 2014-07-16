@@ -2,12 +2,14 @@
 
 #include <cstdlib>
 #include <memory>
+#include <string>
 #include "Map.hpp"
 #include "Menu.hpp"
 #include "Game.hpp"
 #include "TileEnums.hpp"
+#include "Player.hpp"
 
-Game::Game(int rows, int columns)
+Game::Game(int rows, int columns, int players)
         : window_(std::make_shared<sf::RenderWindow>(
             sf::VideoMode::getFullscreenModes()[0],
             "",
@@ -18,6 +20,12 @@ Game::Game(int rows, int columns)
     menu_.addItem("Return", [this] () { toggleMenu(); });
     menu_.addItem("New game", [this] () { restart(); });
     menu_.addItem("Quit game", [this] () { quit(); });
+
+    for (int i = 1; i <= players; ++i) {
+        players_.push(Player("Player " + std::to_string(i)));
+    }
+
+    switchToNextPlayer();
 }
 
 void Game::start() {
@@ -70,6 +78,9 @@ void Game::handleEvents() {
             case sf::Keyboard::Key::A:
                 handleAPressed();
                 break;
+            case sf::Keyboard::Key::Return:
+                handleEnterPressed();
+                break;
             default:
                 break;
             }
@@ -115,3 +126,16 @@ void Game::handleAPressed() {
     }
 }
 
+void Game::handleEnterPressed() {
+    if (!menu_.isVisible()) {
+        switchToNextPlayer();
+    }
+}
+
+void Game::switchToNextPlayer() {
+    Player nextPlayer = players_.front();
+    map_.setPlayer(nextPlayer);
+    std::cout << nextPlayer.getName() << "\n";
+    players_.pop();
+    players_.push(nextPlayer); // move player to the end of queue
+}
