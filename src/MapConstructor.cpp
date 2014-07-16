@@ -7,6 +7,7 @@
 #include <memory>
 #include <random>
 #include <algorithm>
+#include <iterator>
 #include "Tile.hpp"
 #include "HeightMap.hpp"
 #include "MapModel.hpp"
@@ -40,7 +41,10 @@ MapConstructor& MapConstructor::setTypeMask(const std::vector<tileenums::Type>& 
 MapConstructor& MapConstructor::spawnRivers(double probability) {
     model_.changeTiles([&] (Tile& tile) {
         if (isTypeModifiable(tile.type)) {
-            if (((*generator_)() % 1000) / 1000.0 < probability) {
+            if ((((*generator_)() % 1000) / 1000.0 < probability)
+                && isHigherThanNeighbors(tile)
+                && doesNotBorderWater(tile))
+            {
                 tile.attributes.river.enable();
             }
         }
@@ -55,28 +59,22 @@ MapConstructor& MapConstructor::createRiverFlow() {
     });
 
     for (const auto& source : sources) {
-        for (auto lowestNeighbor = findLowestNeighbor(source), current = std::const_pointer_cast<Tile>(source);
+        for (auto lowerNeighbor = findRandomLowerNeighbor(source), current = std::const_pointer_cast<Tile>(source);
             current->type != tileenums::Type::Water;
-            current = lowestNeighbor,
-            lowestNeighbor = findLowestNeighbor(lowestNeighbor))
+            current = lowerNeighbor,
+            lowerNeighbor = findRandomLowerNeighbor(lowerNeighbor))
         {
-            const IntIsoPoint currentCoords(current->coords.toIsometric());
-            const IntIsoPoint lowestNeighborCoords(lowestNeighbor->coords.toIsometric());
-
-            if (model_.isInBounds(lowestNeighbor)) {
-                current->attributes.river->addDirection(current->getDirection(*lowestNeighbor));
-                lowestNeighbor->attributes.river.enable();
-                lowestNeighbor->attributes.river->addDirection(lowestNeighbor->getDirection(*current));
+            if (!lowerNeighbor) {
+                current->type = tileenums::Type::Water;
+                break;
+            } else if (lowerNeighbor->attributes.river) {
+                current->attributes.river->addDirection(current->getDirection(*lowerNeighbor));
+                lowerNeighbor->attributes.river->addDirection(lowerNeighbor->getDirection(*current));
+                break;
             } else {
-                current->type = tileenums::Type::Water;
-                break;
-            }
-
-            if (heightMap_(lowestNeighborCoords.y, lowestNeighborCoords.x)
-                > heightMap_(currentCoords.y, currentCoords.x))
-            {
-                current->type = tileenums::Type::Water;
-                break;
+                lowerNeighbor->attributes.river.enable();
+                current->attributes.river->addDirection(current->getDirection(*lowerNeighbor));
+                lowerNeighbor->attributes.river->addDirection(lowerNeighbor->getDirection(*current));
             }
         }
     }
@@ -84,22 +82,40 @@ MapConstructor& MapConstructor::createRiverFlow() {
     return *this;
 }
 
-std::shared_ptr<Tile> MapConstructor::findLowestNeighbor(std::shared_ptr<const Tile> tile) const {
-    std::shared_ptr<const Tile> res;
-
+std::shared_ptr<Tile> MapConstructor::findRandomLowerNeighbor(std::shared_ptr<const Tile> tile) const {
     auto neighbors = tile->getAdjacentNeighbors();
-    for (const auto& neighbor : neighbors) {
-        if (!res) {
-            res = neighbor;
-        } else {
-            const IntIsoPoint resCoords(res->coords.toIsometric());
+    std::vector<std::shared_ptr<const Tile>> lowerNeighbors;
+
+    std::copy_if(neighbors.begin(), neighbors.end(), std::back_inserter(lowerNeighbors),
+        [tile, this] (std::shared_ptr<const Tile> neighbor) {
+            const IntIsoPoint tileCoords(tile->coords.toIsometric());
             const IntIsoPoint neighCoords(neighbor->coords.toIsometric());
-            res = (heightMap_(resCoords.y, resCoords.x) < heightMap_(neighCoords.y, neighCoords.x))?
-                res : neighbor;
+            return heightMap_(neighCoords.y, neighCoords.x) < (heightMap_(tileCoords.y, tileCoords.x));
+        });
+
+    if (lowerNeighbors.size() > 0) {
+        lowerNeighbors.push_back(findLowest(lowerNeighbors)); // lowest has 2 times bigger chance
+        return std::const_pointer_cast<Tile>(lowerNeighbors[(*generator_)() % lowerNeighbors.size()]);
+    } else {
+        return nullptr;
+    }
+}
+
+std::shared_ptr<const Tile> MapConstructor::findLowest(
+    std::vector<std::shared_ptr<const Tile>> tiles) const
+{
+    auto lowest = tiles.front();
+
+    for (auto tile : tiles) {
+        const IntIsoPoint tileCoords(tile->coords.toIsometric());
+        const IntIsoPoint lowestCoords(lowest->coords.toIsometric());
+
+        if ((heightMap_(tileCoords.y, tileCoords.x) < heightMap_(lowestCoords.y, lowestCoords.x))) {
+            lowest = tile;
         }
     }
 
-    return std::const_pointer_cast<Tile>(res);
+    return lowest;
 }
 
 
@@ -121,4 +137,31 @@ MapConstructor& MapConstructor::setType(tileenums::Type type, double threshold) 
 
 bool MapConstructor::isTypeModifiable(tileenums::Type type) const {
     return std::find(typeMask_.begin(), typeMask_.end(), type) != typeMask_.end();
+}
+
+bool MapConstructor::isHigherThanNeighbors(const Tile& tile) const {
+    const IntIsoPoint tileCoords(tile.coords.toIsometric());
+
+    auto neighbors = tile.getAdjacentNeighbors();
+    for (const auto& neighbor : neighbors) {
+        const IntIsoPoint neighCoords(neighbor->coords.toIsometric());
+        if (heightMap_(tileCoords.y, tileCoords.x) <= heightMap_(neighCoords.y, neighCoords.x)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool MapConstructor::doesNotBorderWater(const Tile& tile) const {
+    const IntIsoPoint tileCoords(tile.coords.toIsometric());
+
+    auto neighbors = tile.getNeighbors();
+    for (const auto& neighbor : neighbors) {
+        if (neighbor->type == tileenums::Type::Water) {
+            return false;
+        }
+    }
+
+    return true;
 }

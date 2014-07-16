@@ -33,7 +33,10 @@ public:
 
 private:
     bool isTypeModifiable(tileenums::Type type) const;
-    std::shared_ptr<Tile> findLowestNeighbor(std::shared_ptr<const Tile> tile) const;
+    std::shared_ptr<Tile> findRandomLowerNeighbor(std::shared_ptr<const Tile> tile) const;
+    std::shared_ptr<const Tile> findLowest(std::vector<std::shared_ptr<const Tile>> tiles) const;
+    bool isHigherThanNeighbors(const Tile& tile) const;
+    bool doesNotBorderWater(const Tile& tile) const;
 
     HeightMap heightMap_;
     MapModel model_;
