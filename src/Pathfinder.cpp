@@ -18,10 +18,31 @@ Pathfinder::Pathfinder(const std::map<tileenums::Type, unsigned>& cost)
     : cost_(cost)
 { }
 
-bool Pathfinder::doesPathExist(__attribute__((unused)) const Tile& source,
-    __attribute__((unused)) const Tile& goal) const
-{
-    return true;
+bool Pathfinder::doesPathExist(const Tile& source, const Tile& goal) const {
+    std::queue<Tile> queue;
+    std::set<Tile> reached;
+
+    queue.push(source);
+    reached.insert(source);
+
+    while (!queue.empty()) {
+        Tile current = queue.front();
+        queue.pop();
+
+        if (current == goal) {
+            return true;
+        }
+
+        std::vector<std::shared_ptr<const Tile>> neighbors = current.getNeighbors();
+        for (auto neighbor : neighbors) {
+            if (!reached.count(*neighbor) && isPassable(neighbor->type)) {
+                reached.insert(*neighbor);
+                queue.push(*neighbor);
+            }
+        }
+    }
+
+    return false;
 }
 
 std::vector<Tile> Pathfinder::findPath(const Tile& source, const Tile& goal) const {

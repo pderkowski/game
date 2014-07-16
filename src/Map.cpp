@@ -46,25 +46,25 @@ void Map::handleRightClick(const sf::Event& e) {
         std::shared_ptr<Tile> destination
             = mapDrawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 
-        auto source = selection_.getSource();
-
         units::Unit* selectedUnit = selection_.getSelectedUnit();
         Pathfinder pathfinder(selectedUnit->getMovingCosts());
+
+        auto source = selection_.getSource();
         if (pathfinder.doesPathExist(*source, *destination)) {
             path = pathfinder.findPath(*source, *destination);
-        }
 
-        if (selection_.isDestinationSelected() && *(selection_.getDestination()) == *destination) {
-            for (size_t i = 0; i + 1 < path.size(); ++i) {
-                auto direction = path[i].getDirection(path[i + 1]);
-                moveUnit(direction);
+            if (selection_.isDestinationSelected() && *(selection_.getDestination()) == *destination) {
+                for (size_t i = 0; i + 1 < path.size(); ++i) {
+                    auto direction = path[i].getDirection(path[i + 1]);
+                    moveUnit(direction);
+                }
+
+                path.clear();
+                selection_.clear();
+                selection_.setSource(destination);
+            } else {
+                selection_.setDestination(destination);
             }
-
-            path.clear();
-            selection_.clear();
-            selection_.setSource(destination);
-        } else {
-            selection_.setDestination(destination);
         }
     }
 
