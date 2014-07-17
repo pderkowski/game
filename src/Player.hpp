@@ -4,6 +4,8 @@
 #define PLAYER_HPP_
 
 #include <string>
+#include <vector>
+#include "units/Unit.hpp"
 
 class Player {
 public:
@@ -13,6 +15,8 @@ public:
 
 private:
     std::string name_;
+
+    std::vector<units::Unit> units_;
 };
 
 #endif  // PLAYER_HPP_

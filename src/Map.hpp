@@ -29,7 +29,7 @@ public:
     void handleMouseMoved(const sf::Event& event);
     void handleAPressed();
 
-    void setPlayer(const Player& player);
+    void setPlayer(Player* player);
 
 private:
     void moveUnit(tileenums::Direction direction);
@@ -41,7 +41,7 @@ private:
     MapDrawer mapDrawer_;
     MinimapDrawer minimapDrawer_;
     Selection selection_;
-    Player currentPlayer_;
+    Player* currentPlayer_;
 };
 
 #endif  // MAP_HPP_

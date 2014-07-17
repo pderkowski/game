@@ -15,17 +15,14 @@ Game::Game(int rows, int columns, int players)
             "",
             sf::Style::Fullscreen)),
         map_(rows, columns, window_),
-        menu_(window_)
+        menu_(window_),
+        players_(players)
 {
     menu_.addItem("Return", [this] () { toggleMenu(); });
     menu_.addItem("New game", [this] () { restart(); });
     menu_.addItem("Quit game", [this] () { quit(); });
 
-    for (int i = 1; i <= players; ++i) {
-        players_.push(Player("Player " + std::to_string(i)));
-    }
-
-    switchToNextPlayer();
+    map_.setPlayer(players_.getCurrentPlayer());
 }
 
 void Game::start() {
@@ -128,14 +125,8 @@ void Game::handleAPressed() {
 
 void Game::handleEnterPressed() {
     if (!menu_.isVisible()) {
-        switchToNextPlayer();
+        players_.switchToNextPlayer();
+        map_.setPlayer(players_.getCurrentPlayer());
     }
 }
 
-void Game::switchToNextPlayer() {
-    Player nextPlayer = players_.front();
-    map_.setPlayer(nextPlayer);
-    std::cout << nextPlayer.getName() << "\n";
-    players_.pop();
-    players_.push(nextPlayer); // move player to the end of queue
-}

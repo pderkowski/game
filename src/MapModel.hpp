@@ -48,7 +48,6 @@ private:
     std::vector<units::Unit> units_;
     std::vector<std::vector<std::shared_ptr<Tile>>> tiles_;
 
-
 };
 
 #endif  // MAPMODEL_HPP_

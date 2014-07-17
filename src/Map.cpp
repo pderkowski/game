@@ -133,6 +133,6 @@ void Map::handleAPressed() {
     }
 }
 
-void Map::setPlayer(const Player& player) {
+void Map::setPlayer(Player* player) {
     currentPlayer_ = player;
 }

@@ -4,11 +4,11 @@
 #define GAME_HPP_
 
 #include <memory>
-#include <queue>
+#include <vector>
 #include "SFML/Graphics.hpp"
 #include "Map.hpp"
 #include "Menu.hpp"
-#include "Player.hpp"
+#include "Players.hpp"
 
 class Game {
 public:
@@ -20,7 +20,6 @@ private:
     void restart();
     void quit();
     void toggleMenu();
-    void switchToNextPlayer();
     void handleEvents();
     void handleLeftClick(const sf::Event& event);
     void handleRightClick(const sf::Event& event);
@@ -32,7 +31,7 @@ private:
     std::shared_ptr<sf::RenderWindow> window_;
     Map map_;
     Menu menu_;
-    std::queue<Player> players_;
+    Players players_;
 };
 
 #endif  // GAME_HPP_
