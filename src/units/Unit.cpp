@@ -32,6 +32,10 @@ std::shared_ptr<const Tile> Unit::getPosition() const {
         throw std::runtime_error("No model set in unit.");
 }
 
+IntRotPoint Unit::getCoords() const {
+    return coords_;
+}
+
 bool Unit::canMoveTo(tileenums::Direction direction) const {
     return getPosition()->hasNeighbor(direction);
 }

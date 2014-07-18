@@ -125,17 +125,6 @@ IntRotPoint Tile::getNeighborCoords(Direction direction) const {
     }
 }
 
-std::vector<units::Unit*> Tile::getUnits() {
-    std::vector<units::Unit*> res = model_->getUnits();
-
-    auto newEnd = std::remove_if(res.begin(), res.end(), [this] (units::Unit* unit) {
-        return *(unit->getPosition()) != *this;
-    });
-    res.erase(newEnd, res.end());
-
-    return res;
-}
-
 
 
 bool operator == (const Tile& lhs, const Tile& rhs) {

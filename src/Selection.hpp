@@ -7,6 +7,7 @@
 #include "Tile.hpp"
 #include "units/Unit.hpp"
 class MapModel;
+class Player;
 
 class Selection {
 public:
@@ -17,13 +18,12 @@ public:
     void setDestination(std::shared_ptr<Tile> destination);
     void clear();
 
-    bool isUnitSelected() const;
+    bool isUnitSelected(const Player* player) const;
     bool isSourceSelected() const;
     bool isDestinationSelected() const;
 
     std::shared_ptr<const Tile> getSource() const;
     std::shared_ptr<const Tile> getDestination() const;
-    units::Unit* getSelectedUnit() const;
 
 private:
     std::shared_ptr<Tile> source_;

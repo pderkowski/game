@@ -7,7 +7,6 @@
 #include "Attributes.hpp"
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
-#include "units/Unit.hpp"
 class MapModel;
 
 using namespace tileenums;
@@ -25,8 +24,6 @@ public:
     std::vector<std::shared_ptr<const Tile>> getAdjacentNeighbors() const;
 
     Direction getDirection(const Tile& neighbor) const;
-
-    std::vector<units::Unit*> getUnits();
 
     IntRotPoint coords;
     Type type;

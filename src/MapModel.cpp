@@ -25,7 +25,7 @@ MapModel::MapModel(int rowsNo, int columnsNo)
 }
 
 MapModel::MapModel(const MapModel& other)
-    : rowsNo_(other.rowsNo_), columnsNo_(other.columnsNo_), units_(other.units_)
+    : rowsNo_(other.rowsNo_), columnsNo_(other.columnsNo_)
 {
     for (int r = 0; r < rowsNo_; ++r) {
         tiles_.push_back(std::vector<std::shared_ptr<Tile>>(columnsNo_));
@@ -34,13 +34,10 @@ MapModel::MapModel(const MapModel& other)
             tiles_[r][c]->setModel(this);
         }
     }
-
-    setModelInUnits(this);
 }
 
 MapModel::~MapModel() {
     setModelInTiles(nullptr);
-    setModelInUnits(nullptr);
 }
 
 
@@ -117,19 +114,6 @@ void MapModel::changeTiles(std::function<void(Tile&)> transformation) {
     }
 }
 
-void MapModel::addUnit(const units::Unit& unit) {
-    units_.push_back(unit);
-}
-
-std::vector<units::Unit*> MapModel::getUnits() {
-    std::vector<units::Unit*> res;
-
-    for (auto& unit : units_) {
-        res.push_back(&unit);
-    }
-
-    return res;
-}
 
 
 void MapModel::setModelInTiles(MapModel* model) {
@@ -140,19 +124,10 @@ void MapModel::setModelInTiles(MapModel* model) {
     }
 }
 
-void MapModel::setModelInUnits(MapModel* model) {
-    for (auto& unit : units_) {
-        unit.setModel(model);
-    }
-}
-
 void swap(MapModel& first, MapModel& other) {
     std::swap(first.rowsNo_, other.rowsNo_);
     std::swap(first.columnsNo_, other.columnsNo_);
-    std::swap(first.units_, other.units_);
     std::swap(first.tiles_, other.tiles_);
     first.setModelInTiles(&first);
-    first.setModelInUnits(&first);
     other.setModelInTiles(&other);
-    other.setModelInUnits(&other);
 }

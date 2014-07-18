@@ -10,7 +10,6 @@
 #include "HeightMap.hpp"
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
-#include "units/Unit.hpp"
 
 class MapModel {
 public:
@@ -33,19 +32,13 @@ public:
 
     void changeTiles(std::function<void(Tile&)> transformation);
 
-    void addUnit(const units::Unit& unit);
-
-    std::vector<units::Unit*> getUnits();
-
 private:
     friend void swap(MapModel& first, MapModel& other);
 
     void setModelInTiles(MapModel* model);
-    void setModelInUnits(MapModel* model);
 
     int rowsNo_;
     int columnsNo_;
-    std::vector<units::Unit> units_;
     std::vector<std::vector<std::shared_ptr<Tile>>> tiles_;
 
 };

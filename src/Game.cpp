@@ -7,22 +7,21 @@
 #include "Menu.hpp"
 #include "Game.hpp"
 #include "TileEnums.hpp"
-#include "Player.hpp"
+#include "Players.hpp"
+#include "MapRenderer.hpp"
 
-Game::Game(int rows, int columns, int players)
+Game::Game(int rows, int columns, int numberOfPlayers)
         : window_(std::make_shared<sf::RenderWindow>(
             sf::VideoMode::getFullscreenModes()[0],
             "",
             sf::Style::Fullscreen)),
         map_(rows, columns, window_),
-        menu_(window_),
-        players_(players)
+        players_(numberOfPlayers, map_.getRenderer()),
+        menu_(window_)
 {
     menu_.addItem("Return", [this] () { toggleMenu(); });
     menu_.addItem("New game", [this] () { restart(); });
     menu_.addItem("Quit game", [this] () { quit(); });
-
-    map_.setPlayer(players_.getCurrentPlayer());
 }
 
 void Game::start() {
@@ -31,6 +30,7 @@ void Game::start() {
 
         window_->clear();
         map_.draw();
+        players_.draw();
         if (menu_.isVisible()) {
             menu_.draw();
         }
@@ -58,9 +58,11 @@ void Game::handleEvents() {
         } else if (event.type == sf::Event::MouseButtonPressed) {
             if (event.mouseButton.button == sf::Mouse::Button::Left) {
                 handleLeftClick(event);
-            } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
-                handleRightClick(event);
             }
+
+            // else if (event.mouseButton.button == sf::Mouse::Button::Right) {
+            //     handleRightClick(event);
+            // }
         } else if (event.type == sf::Event::KeyPressed) {
             switch (event.key.code) {
             case sf::Keyboard::Key::Space:
@@ -72,9 +74,9 @@ void Game::handleEvents() {
             case sf::Keyboard::Key::M:
                 toggleMenu();
                 break;
-            case sf::Keyboard::Key::A:
-                handleAPressed();
-                break;
+            // case sf::Keyboard::Key::A:
+            //     handleAPressed();
+            //     break;
             case sf::Keyboard::Key::Return:
                 handleEnterPressed();
                 break;
@@ -92,16 +94,18 @@ void Game::handleEvents() {
 void Game::handleLeftClick(const sf::Event& event) {
     if (menu_.isVisible()) {
         menu_.handleLeftClick(event);
-    } else {
-        map_.handleLeftClick(event);
     }
+
+    // else {
+    //     map_.handleLeftClick(event);
+    // }
 }
 
-void Game::handleRightClick(const sf::Event& event) {
-    if (!menu_.isVisible()) {
-        map_.handleRightClick(event);
-    }
-}
+// void Game::handleRightClick(const sf::Event& event) {
+//     if (!menu_.isVisible()) {
+//         map_.handleRightClick(event);
+//     }
+// }
 
 void Game::handleMouseWheelMoved(const sf::Event& event) {
     if (!menu_.isVisible()) {
@@ -117,16 +121,15 @@ void Game::handleMouseMoved(const sf::Event& event) {
     }
 }
 
-void Game::handleAPressed() {
-    if (!menu_.isVisible()) {
-        map_.handleAPressed();
-    }
-}
+// void Game::handleAPressed() {
+//     if (!menu_.isVisible()) {
+//         map_.handleAPressed();
+//     }
+// }
 
 void Game::handleEnterPressed() {
     if (!menu_.isVisible()) {
         players_.switchToNextPlayer();
-        map_.setPlayer(players_.getCurrentPlayer());
     }
 }
 

@@ -10,11 +10,12 @@
 #include "Tile.hpp"
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
+#include "MapRenderer.hpp"
 
 MinimapDrawer::MinimapDrawer(std::shared_ptr<const MapModel> model,
-    std::shared_ptr<sf::RenderTarget> target)
+    const MapRenderer* renderer)
         : model_(model),
-        target_(target),
+        renderer_(renderer),
         tileColors_{
             { tileenums::Type::Empty, sf::Color(160, 160, 160) },
             { tileenums::Type::Water, sf::Color(127, 201, 255) },
@@ -108,11 +109,16 @@ sf::Color MinimapDrawer::getColorFromModel(int row, int column) const {
 }
 
 void MinimapDrawer::draw() const {
-    target_->setView(target_->getDefaultView());
     sf::Sprite minimapSprite;
     minimapSprite.setTexture(minimap_.getTexture());
-    minimapSprite.setPosition(getBasePosition());
-    target_->draw(minimapSprite);
+
+    auto target = renderer_->getFixedView();
+
+    sf::Vector2f basePosition = target->mapPixelToCoords(
+        sf::Vector2i(renderer_->getSize().x - width_, renderer_->getSize().y - height_));
+    minimapSprite.setPosition(basePosition);
+
+    target->draw(minimapSprite);
 }
 
 void MinimapDrawer::updateMinimap(const sf::FloatRect& bounds) {
@@ -125,9 +131,4 @@ void MinimapDrawer::updateMinimap(const sf::FloatRect& bounds) {
     minimap_.draw(displayedRectangle_);
     minimap_.draw(minimapBorders_);
     minimap_.display();
-}
-
-sf::Vector2f MinimapDrawer::getBasePosition() const {
-    return target_->mapPixelToCoords(
-        sf::Vector2i(target_->getSize().x - width_, target_->getSize().y - height_));
 }

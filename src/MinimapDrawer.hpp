@@ -10,10 +10,11 @@
 #include "MapModel.hpp"
 #include "Tile.hpp"
 #include "TileEnums.hpp"
+#include "MapRenderer.hpp"
 
 class MinimapDrawer {
 public:
-    MinimapDrawer(std::shared_ptr<const MapModel>, std::shared_ptr<sf::RenderTarget> target);
+    MinimapDrawer(std::shared_ptr<const MapModel>, const MapRenderer* renderer);
 
     void updateMinimap(const sf::FloatRect& boundsOfDisplayedRectangle);
 
@@ -30,10 +31,11 @@ private:
     sf::Uint8* createMinimapPixels();
 
     sf::Color getColorFromModel(int row, int column) const;
-    sf::Vector2f getBasePosition() const;
 
+private:
     std::shared_ptr<const MapModel> model_;
-    std::shared_ptr<sf::RenderTarget> target_;
+
+    const MapRenderer* renderer_;
 
     std::map<tileenums::Type, sf::Color> tileColors_;
 

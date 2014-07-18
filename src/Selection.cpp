@@ -2,7 +2,7 @@
 #include "Tile.hpp"
 #include "units/Unit.hpp"
 #include "Selection.hpp"
-
+#include "Player.hpp"
 
 Selection::Selection()
     : source_(nullptr), destination_(nullptr)
@@ -25,8 +25,8 @@ void Selection::clear() {
     destination_ = nullptr;
 }
 
-bool Selection::isUnitSelected() const {
-    return isSourceSelected() && !source_->getUnits().empty();
+bool Selection::isUnitSelected(const Player* player) const {
+    return isSourceSelected() && player->hasUnitAtCoords(source_->coords);
 }
 
 bool Selection::isSourceSelected() const {
@@ -43,8 +43,4 @@ std::shared_ptr<const Tile> Selection::getSource() const {
 
 std::shared_ptr<const Tile> Selection::getDestination() const {
     return destination_;
-}
-
-units::Unit* Selection::getSelectedUnit() const {
-    return source_->getUnits().front();
 }
