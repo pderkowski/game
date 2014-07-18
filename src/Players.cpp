@@ -7,6 +7,7 @@
 #include "Players.hpp"
 #include "Coordinates.hpp"
 #include "MapModel.hpp"
+#include "units/Unit.hpp"
 
 Players::Players(int numberOfPlayers, const MapModel* model, const MapRenderer* renderer)
     : currentPlayer_(0), model_(model), renderer_(renderer), drawer_(this, renderer)
@@ -53,4 +54,13 @@ void Players::handleLeftClick(const sf::Event& e) {
     selection_.setSource(clickedTile);
     // mapDrawer_.updatePathLayer(std::vector<Tile>());
     drawer_.updateSelectionLayer(selection_);
+}
+
+void Players::handleAPressed() {
+    if (selection_.isSourceSelected()) {
+        getCurrentPlayer()->addUnit(
+            units::Unit(selection_.getSource()->coords, units::Type::Phalanx, model_));
+
+        drawer_.updateUnitLayer();
+    }
 }

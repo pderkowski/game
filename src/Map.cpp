@@ -124,11 +124,4 @@ int Map::calculateVerticalShift(float mouseYPosition) const {
 //     }
 // }
 
-// void Map::handleAPressed() {
-//     if (selection_.isSourceSelected()) {
-//         model_->addUnit(units::Unit(selection_.getSource()->coords, units::Type::Phalanx, model_.get()));
-//         units::Unit* unit = selection_.getSelectedUnit();
-//         mapDrawer_.updateUnitLayer(*unit, nullptr, unit->getPosition());
-//     }
-// }
 

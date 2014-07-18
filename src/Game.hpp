@@ -25,7 +25,7 @@ private:
     // void handleRightClick(const sf::Event& event);
     void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);
-    // void handleAPressed();
+    void handleAPressed();
     void handleEnterPressed();
 
     std::shared_ptr<sf::RenderWindow> window_;

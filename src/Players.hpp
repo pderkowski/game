@@ -23,6 +23,7 @@ public:
     std::vector<const units::Unit*> getAllUnits() const;
 
     void handleLeftClick(const sf::Event& e);
+    void handleAPressed();
 
 private:
     unsigned currentPlayer_;

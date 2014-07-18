@@ -25,7 +25,6 @@ public:
     // void handleRightClick(const sf::Event& e);
     void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);
-    // void handleAPressed();
 
 private:
     int calculateHorizontalShift(float mouseXPosition) const;
