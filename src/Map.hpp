@@ -17,11 +17,11 @@ public:
 
     void draw() const;
 
+    std::shared_ptr<const MapModel> getModel() const;
     const MapRenderer* getRenderer() const;
 
     void generateMap();
 
-    // void handleLeftClick(const sf::Event& e);
     // void handleRightClick(const sf::Event& e);
     void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);

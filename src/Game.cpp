@@ -16,7 +16,7 @@ Game::Game(int rows, int columns, int numberOfPlayers)
             "",
             sf::Style::Fullscreen)),
         map_(rows, columns, window_),
-        players_(numberOfPlayers, map_.getRenderer()),
+        players_(numberOfPlayers, map_.getModel().get(), map_.getRenderer()),
         menu_(window_)
 {
     menu_.addItem("Return", [this] () { toggleMenu(); });
@@ -94,11 +94,9 @@ void Game::handleEvents() {
 void Game::handleLeftClick(const sf::Event& event) {
     if (menu_.isVisible()) {
         menu_.handleLeftClick(event);
+    } else {
+        players_.handleLeftClick(event);
     }
-
-    // else {
-    //     map_.handleLeftClick(event);
-    // }
 }
 
 // void Game::handleRightClick(const sf::Event& event) {

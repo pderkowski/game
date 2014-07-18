@@ -23,6 +23,10 @@ void Map::draw() const {
     minimapDrawer_.draw();
 }
 
+std::shared_ptr<const MapModel> Map::getModel() const {
+    return model_;
+}
+
 const MapRenderer* Map::getRenderer() const {
     return &renderer_;
 }
@@ -33,13 +37,6 @@ void Map::generateMap() {
     minimapDrawer_.setModel(model_);
     minimapDrawer_.updateMinimap(renderer_.getDisplayedRectangle());
 }
-
-// void Map::handleLeftClick(const sf::Event& e) {
-//     selection_.clear();
-//     selection_.setSource(mapDrawer_.getObjectByPosition(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)));
-//     mapDrawer_.updatePathLayer(std::vector<Tile>());
-//     mapDrawer_.updateSelectionLayer(selection_);
-// }
 
 // void Map::handleRightClick(const sf::Event& e) {
 //     std::vector<Tile> path;

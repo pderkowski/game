@@ -12,10 +12,10 @@ class Player;
 class Selection {
 public:
     Selection();
-    explicit Selection(std::shared_ptr<Tile> source);
+    explicit Selection(std::shared_ptr<const Tile> source);
 
-    void setSource(std::shared_ptr<Tile> source);
-    void setDestination(std::shared_ptr<Tile> destination);
+    void setSource(std::shared_ptr<const Tile> source);
+    void setDestination(std::shared_ptr<const Tile> destination);
     void clear();
 
     bool isUnitSelected(const Player* player) const;
@@ -26,8 +26,8 @@ public:
     std::shared_ptr<const Tile> getDestination() const;
 
 private:
-    std::shared_ptr<Tile> source_;
-    std::shared_ptr<Tile> destination_;
+    std::shared_ptr<const Tile> source_;
+    std::shared_ptr<const Tile> destination_;
 };
 
 #endif  // SELECTION_HPP_
