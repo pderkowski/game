@@ -58,11 +58,9 @@ void Game::handleEvents() {
         } else if (event.type == sf::Event::MouseButtonPressed) {
             if (event.mouseButton.button == sf::Mouse::Button::Left) {
                 handleLeftClick(event);
+            } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
+                handleRightClick(event);
             }
-
-            // else if (event.mouseButton.button == sf::Mouse::Button::Right) {
-            //     handleRightClick(event);
-            // }
         } else if (event.type == sf::Event::KeyPressed) {
             switch (event.key.code) {
             case sf::Keyboard::Key::Space:
@@ -99,11 +97,11 @@ void Game::handleLeftClick(const sf::Event& event) {
     }
 }
 
-// void Game::handleRightClick(const sf::Event& event) {
-//     if (!menu_.isVisible()) {
-//         map_.handleRightClick(event);
-//     }
-// }
+void Game::handleRightClick(const sf::Event& event) {
+    if (!menu_.isVisible()) {
+        players_.handleRightClick(event);
+    }
+}
 
 void Game::handleMouseWheelMoved(const sf::Event& event) {
     if (!menu_.isVisible()) {

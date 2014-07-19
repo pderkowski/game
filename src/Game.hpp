@@ -22,7 +22,7 @@ private:
     void toggleMenu();
     void handleEvents();
     void handleLeftClick(const sf::Event& event);
-    // void handleRightClick(const sf::Event& event);
+    void handleRightClick(const sf::Event& event);
     void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);
     void handleAPressed();

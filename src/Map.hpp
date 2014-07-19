@@ -22,7 +22,6 @@ public:
 
     void generateMap();
 
-    // void handleRightClick(const sf::Event& e);
     void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);
 

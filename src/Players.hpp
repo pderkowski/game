@@ -9,6 +9,8 @@
 #include "PlayersDrawer.hpp"
 #include "MapRenderer.hpp"
 #include "Selection.hpp"
+#include "Tile.hpp"
+#include "units/Unit.hpp"
 class MapModel;
 
 class Players {
@@ -23,7 +25,15 @@ public:
     std::vector<const units::Unit*> getAllUnits() const;
 
     void handleLeftClick(const sf::Event& e);
+    void handleRightClick(const sf::Event& e);
     void handleAPressed();
+
+private:
+    void moveUnit(units::Unit* unit, const std::vector<Tile>& path);
+
+    std::shared_ptr<const Tile> getClickedTile(const sf::Vector2i& clickedPoint);
+
+    bool isDestinationConfirmed(const Tile& destination) const;
 
 private:
     unsigned currentPlayer_;

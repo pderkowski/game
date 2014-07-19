@@ -8,6 +8,7 @@
 #include "Coordinates.hpp"
 #include "MapModel.hpp"
 #include "units/Unit.hpp"
+#include "Pathfinder.hpp"
 
 Players::Players(int numberOfPlayers, const MapModel* model, const MapRenderer* renderer)
     : currentPlayer_(0), model_(model), renderer_(renderer), drawer_(this, renderer)
@@ -47,12 +48,9 @@ std::vector<const units::Unit*> Players::getAllUnits() const {
 
 void Players::handleLeftClick(const sf::Event& e) {
     selection_.clear();
+    selection_.setSource(getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)));
 
-    IntIsoPoint clicked = renderer_->getMapCoords(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
-    auto clickedTile = model_->getTile(clicked);
-
-    selection_.setSource(clickedTile);
-    // mapDrawer_.updatePathLayer(std::vector<Tile>());
+    drawer_.updatePathLayer(std::vector<Tile>());
     drawer_.updateSelectionLayer(selection_);
 }
 
@@ -63,4 +61,51 @@ void Players::handleAPressed() {
 
         drawer_.updateUnitLayer();
     }
+}
+
+void Players::handleRightClick(const sf::Event& e) {
+    if (selection_.isUnitSelected(getCurrentPlayer())) {
+        auto source = selection_.getSource();
+        auto destination = getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
+
+        units::Unit* selectedUnit = getCurrentPlayer()->getUnitAtCoords(source->coords);
+
+        Pathfinder pathfinder(selectedUnit->getMovingCosts());
+        if (pathfinder.doesPathExist(*source, *destination)) {
+            std::vector<Tile> path = pathfinder.findPath(*source, *destination);
+
+            if (isDestinationConfirmed(*destination)) {
+                moveUnit(selectedUnit, path);
+
+                selection_.clear();
+                selection_.setSource(destination);
+
+                path.clear();
+            } else {
+                selection_.setDestination(destination);
+            }
+
+            drawer_.updatePathLayer(path);
+        }
+    }
+
+    drawer_.updateSelectionLayer(selection_);
+}
+
+void Players::moveUnit(units::Unit* unit, const std::vector<Tile>& path) {
+    for (size_t i = 0; i + 1 < path.size(); ++i) {
+        auto direction = path[i].getDirection(path[i + 1]);
+        unit->moveTo(direction);
+    }
+
+    drawer_.updateUnitLayer();
+}
+
+std::shared_ptr<const Tile> Players::getClickedTile(const sf::Vector2i& clickedPoint) {
+    IntIsoPoint clickedCoords = renderer_->getMapCoords(clickedPoint);
+    return model_->getTile(clickedCoords);
+}
+
+bool Players::isDestinationConfirmed(const Tile& destination) const {
+    return selection_.isDestinationSelected() && *(selection_.getDestination()) == destination;
 }
