@@ -49,18 +49,3 @@ void MapDrawer::draw() const {
         target->draw(layer);
     }
 }
-
-// std::shared_ptr<Tile> MapDrawer::getObjectByPosition(const sf::Vector2i& position) {
-//     target_->setView(mapView_);
-
-//     auto mapCoords = mapPixelToMapCoords(position);
-
-//     if (model_->isInBounds(mapCoords))
-//         return model_->getTile(mapCoords);
-//     else
-//         throw std::runtime_error("Clicked area does not point to any object.");
-// }
-
-
-
-
