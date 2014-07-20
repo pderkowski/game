@@ -31,6 +31,7 @@ public:
     void handleLeftClick(const sf::Event& e);
     void handleRightClick(const sf::Event& e);
     void handleAPressed();
+    void handleFPressed();
 
 private:
     std::shared_ptr<const Tile> getClickedTile(const sf::Vector2i& clickedPoint);

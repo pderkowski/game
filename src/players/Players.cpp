@@ -68,6 +68,10 @@ void Players::handleAPressed() {
     }
 }
 
+void Players::handleFPressed() {
+    drawer_.toggleFog();
+}
+
 void Players::handleRightClick(const sf::Event& e) {
     if (selection_.isUnitSelected(getCurrentPlayer())) {
         auto source = selection_.getSource();

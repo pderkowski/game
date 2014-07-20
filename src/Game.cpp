@@ -75,6 +75,9 @@ void Game::handleEvents() {
             case sf::Keyboard::Key::A:
                 handleAPressed();
                 break;
+            case sf::Keyboard::Key::F:
+                handleFPressed();
+                break;
             case sf::Keyboard::Key::Return:
                 handleEnterPressed();
                 break;
@@ -120,6 +123,12 @@ void Game::handleMouseMoved(const sf::Event& event) {
 void Game::handleAPressed() {
     if (!menu_.isVisible()) {
         players_.handleAPressed();
+    }
+}
+
+void Game::handleFPressed() {
+    if (!menu_.isVisible()) {
+        players_.handleFPressed();
     }
 }
 

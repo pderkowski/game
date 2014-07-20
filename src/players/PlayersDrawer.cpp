@@ -23,7 +23,8 @@ PlayersDrawer::PlayersDrawer(const Players* players, const MapRenderer* renderer
     selectionLayer_(TextureSetFactory::getSelectionTextureSet()),
     unitLayer_(TextureSetFactory::getUnitTextureSet()),
     fogLayer_(TextureSetFactory::getFogTextureSet()),
-    renderer_(renderer)
+    renderer_(renderer),
+    isFogToggledOn_(true)
 { }
 
 void PlayersDrawer::draw() const {
@@ -31,7 +32,13 @@ void PlayersDrawer::draw() const {
     target->draw(pathLayer_);
     target->draw(selectionLayer_);
     target->draw(unitLayer_);
-    target->draw(fogLayer_);
+    if (isFogToggledOn_) {
+        target->draw(fogLayer_);
+    }
+}
+
+void PlayersDrawer::toggleFog() {
+    isFogToggledOn_ = !isFogToggledOn_;
 }
 
 void PlayersDrawer::updateUnitLayer() {

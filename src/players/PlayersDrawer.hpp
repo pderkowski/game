@@ -26,6 +26,8 @@ public:
 
     void draw() const;
 
+    void toggleFog();
+
     void updateUnitLayer();
     void updateSelectionLayer(const Selection& selection);
     void updatePathLayer(const std::vector<Tile>& path);
@@ -42,6 +44,8 @@ private:
     Layer<TileVisibility> fogLayer_;
 
     const MapRenderer* renderer_;
+
+    bool isFogToggledOn_;
 };
 
 
