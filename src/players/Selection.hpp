@@ -1,12 +1,16 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef SELECTION_HPP_
-#define SELECTION_HPP_
+#ifndef PLAYERS_SELECTION_HPP_
+#define PLAYERS_SELECTION_HPP_
 
 #include <memory>
 #include "Tile.hpp"
 #include "units/Unit.hpp"
 class MapModel;
+
+
+namespace players {
+
 class Player;
 
 class Selection {
@@ -30,4 +34,8 @@ private:
     std::shared_ptr<const Tile> destination_;
 };
 
-#endif  // SELECTION_HPP_
+
+}  // namespace players
+
+
+#endif  // PLAYERS_SELECTION_HPP_

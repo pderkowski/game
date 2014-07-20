@@ -531,16 +531,6 @@ TextureSet<units::Unit> TextureSetFactory::getUnitTextureSet() {
     return ts;
 }
 
-TextureSet<Tile> TextureSetFactory::getGridTextureSet() {
-    TextureSet<Tile> ts(Resources::loadTexture("textures/terrains.png"));
-
-    ts.add(std::shared_ptr<const Matcher<Tile>>(new Matcher<Tile>([] (__attribute__((unused)) const Tile& tile) {
-        return true;
-    })), textures::terrains::grid);
-
-    return ts;
-}
-
 TextureSet<miscellaneous::Type> TextureSetFactory::getSelectionTextureSet() {
     TextureSet<miscellaneous::Type> ts(Resources::loadTexture("textures/miscellaneous.png"));
 
@@ -610,6 +600,30 @@ TextureSet<tileenums::Direction> TextureSetFactory::getPathTextureSet() {
     {
         return direction == tileenums::Direction::TopLeft;
     })), textures::miscellaneous::topLeft);
+
+    return ts;
+}
+
+TextureSet<players::TileVisibility> TextureSetFactory::getFogTextureSet() {
+    TextureSet<players::TileVisibility> ts(Resources::loadTexture("textures/terrains.png"));
+
+    ts.add(std::shared_ptr<const Matcher<players::TileVisibility>>(
+        new Matcher<players::TileVisibility>([] (const players::TileVisibility& visibility)
+    {
+        return visibility == players::TileVisibility::VisibleKnown;
+    })), textures::terrains::visibleKnown);
+
+    ts.add(std::shared_ptr<const Matcher<players::TileVisibility>>(
+        new Matcher<players::TileVisibility>([] (const players::TileVisibility& visibility)
+    {
+        return visibility == players::TileVisibility::UnvisibleKnown;
+    })), textures::terrains::unvisibleKnown);
+
+    ts.add(std::shared_ptr<const Matcher<players::TileVisibility>>(
+        new Matcher<players::TileVisibility>([] (const players::TileVisibility& visibility)
+    {
+        return visibility == players::TileVisibility::Unknown;
+    })), textures::terrains::unknown);
 
     return ts;
 }

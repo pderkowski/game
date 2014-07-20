@@ -11,4 +11,6 @@ const sf::VertexArray textures::terrains::plains = makeQuad(96, 48, sf::Vector2f
 const sf::VertexArray textures::terrains::forest = makeQuad(96, 48, sf::Vector2f(1, 50));
 const sf::VertexArray textures::terrains::desert = makeQuad(96, 48, sf::Vector2f(1, 1));
 
-const sf::VertexArray textures::terrains::grid = makeQuad(96, 48, sf::Vector2f(98, 50));
+const sf::VertexArray textures::terrains::visibleKnown = makeQuad(96, 48, sf::Vector2f(98, 50));
+const sf::VertexArray textures::terrains::unvisibleKnown = makeQuad(96, 48, sf::Vector2f(98, 99));
+const sf::VertexArray textures::terrains::unknown = makeQuad(96, 48, sf::Vector2f(98, 148));

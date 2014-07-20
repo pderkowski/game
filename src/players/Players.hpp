@@ -1,7 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef PLAYERS_HPP_
-#define PLAYERS_HPP_
+#ifndef PLAYERS_PLAYERS_HPP_
+#define PLAYERS_PLAYERS_HPP_
 
 #include <vector>
 #include <memory>
@@ -13,6 +13,10 @@
 #include "units/Unit.hpp"
 class MapModel;
 
+
+namespace players {
+
+
 class Players {
 public:
     Players(int numberOfPlayers, const MapModel* model, const MapRenderer* renderer);
@@ -22,15 +26,13 @@ public:
 
     void draw() const;
 
-    std::vector<const units::Unit*> getAllUnits() const;
+    std::vector<units::Unit> getAllUnits() const;
 
     void handleLeftClick(const sf::Event& e);
     void handleRightClick(const sf::Event& e);
     void handleAPressed();
 
 private:
-    void moveUnit(units::Unit* unit, const std::vector<Tile>& path);
-
     std::shared_ptr<const Tile> getClickedTile(const sf::Vector2i& clickedPoint);
 
     bool isDestinationConfirmed(const Tile& destination) const;
@@ -47,4 +49,7 @@ private:
     PlayersDrawer drawer_;
 };
 
-#endif  // PLAYERS_HPP_
+
+}  // namespace players
+
+#endif  // PLAYERS_PLAYERS_HPP_

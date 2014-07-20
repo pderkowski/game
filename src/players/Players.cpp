@@ -10,11 +10,15 @@
 #include "units/Unit.hpp"
 #include "Pathfinder.hpp"
 
+
+namespace players {
+
+
 Players::Players(int numberOfPlayers, const MapModel* model, const MapRenderer* renderer)
     : currentPlayer_(0), model_(model), renderer_(renderer), drawer_(this, renderer)
 {
     for (int i = 1; i <= numberOfPlayers; ++i) {
-        players_.push_back(Player("Player " + std::to_string(i)));
+        players_.push_back(Player(model_, "Player " + std::to_string(i)));
     }
 }
 
@@ -35,8 +39,8 @@ void Players::draw() const {
     drawer_.draw();
 }
 
-std::vector<const units::Unit*> Players::getAllUnits() const {
-    std::vector<const units::Unit*> res;
+std::vector<units::Unit> Players::getAllUnits() const {
+    std::vector<units::Unit> res;
 
     for (auto& player : players_) {
         auto playerUnits = player.getAllUnits();
@@ -50,7 +54,7 @@ void Players::handleLeftClick(const sf::Event& e) {
     selection_.clear();
     selection_.setSource(getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)));
 
-    drawer_.updatePathLayer(std::vector<Tile>());
+    drawer_.clearPathLayer();
     drawer_.updateSelectionLayer(selection_);
 }
 
@@ -60,6 +64,7 @@ void Players::handleAPressed() {
             units::Unit(selection_.getSource()->coords, units::Type::Phalanx, model_));
 
         drawer_.updateUnitLayer();
+        drawer_.updateFogLayer(getCurrentPlayer()->getFog());
     }
 }
 
@@ -68,37 +73,30 @@ void Players::handleRightClick(const sf::Event& e) {
         auto source = selection_.getSource();
         auto destination = getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 
-        units::Unit* selectedUnit = getCurrentPlayer()->getUnitAtCoords(source->coords);
+        Player::UnitControler unit = getCurrentPlayer()->getUnitAtCoords(source->coords);
 
-        Pathfinder pathfinder(selectedUnit->getMovingCosts());
+        Pathfinder pathfinder(unit.get().getMovingCosts());
         if (pathfinder.doesPathExist(*source, *destination)) {
             std::vector<Tile> path = pathfinder.findPath(*source, *destination);
 
             if (isDestinationConfirmed(*destination)) {
-                moveUnit(selectedUnit, path);
+                unit.move(path);
 
                 selection_.clear();
                 selection_.setSource(destination);
 
-                path.clear();
+                drawer_.clearPathLayer();
+                drawer_.updateFogLayer(getCurrentPlayer()->getFog());
+                drawer_.updateUnitLayer();
             } else {
                 selection_.setDestination(destination);
-            }
 
-            drawer_.updatePathLayer(path);
+                drawer_.updatePathLayer(path);
+            }
         }
     }
 
     drawer_.updateSelectionLayer(selection_);
-}
-
-void Players::moveUnit(units::Unit* unit, const std::vector<Tile>& path) {
-    for (size_t i = 0; i + 1 < path.size(); ++i) {
-        auto direction = path[i].getDirection(path[i + 1]);
-        unit->moveTo(direction);
-    }
-
-    drawer_.updateUnitLayer();
 }
 
 std::shared_ptr<const Tile> Players::getClickedTile(const sf::Vector2i& clickedPoint) {
@@ -108,4 +106,7 @@ std::shared_ptr<const Tile> Players::getClickedTile(const sf::Vector2i& clickedP
 
 bool Players::isDestinationConfirmed(const Tile& destination) const {
     return selection_.isDestinationSelected() && *(selection_.getDestination()) == destination;
+}
+
+
 }

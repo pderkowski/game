@@ -1,7 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef PLAYERSDRAWER_HPP_
-#define PLAYERSDRAWER_HPP_
+#ifndef PLAYERS_PLAYERSDRAWER_HPP_
+#define PLAYERS_PLAYERSDRAWER_HPP_
 
 #include <memory>
 #include "SFML/Graphics.hpp"
@@ -12,6 +12,12 @@
 #include "MapRenderer.hpp"
 #include "Selection.hpp"
 #include "Tile.hpp"
+#include "Fog.hpp"
+
+
+namespace players {
+
+
 class Players;
 
 class PlayersDrawer {
@@ -23,6 +29,9 @@ public:
     void updateUnitLayer();
     void updateSelectionLayer(const Selection& selection);
     void updatePathLayer(const std::vector<Tile>& path);
+    void updateFogLayer(const Fog& fog);
+
+    void clearPathLayer();
 
 private:
     const Players* players_;
@@ -30,8 +39,12 @@ private:
     Layer<tileenums::Direction> pathLayer_;
     Layer<miscellaneous::Type> selectionLayer_;
     Layer<units::Unit> unitLayer_;
+    Layer<TileVisibility> fogLayer_;
 
     const MapRenderer* renderer_;
 };
 
-#endif  // PLAYERSDRAWER_HPP_
+
+}  // namespace players
+
+#endif  // PLAYERS_PLAYERSDRAWER_HPP_

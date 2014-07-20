@@ -7,6 +7,7 @@
 #include "Tile.hpp"
 #include "units/Unit.hpp"
 #include "MiscellaneousEnums.hpp"
+#include "players/Fog.hpp"
 
 class TextureSetFactory {
 public:
@@ -16,10 +17,10 @@ public:
     static TextureSet<Tile> getAttributeTextureSet();
     static TextureSet<units::Unit> getUnitTextureSet();
 
-    static TextureSet<Tile> getGridTextureSet();
-
     static TextureSet<miscellaneous::Type> getSelectionTextureSet();
     static TextureSet<tileenums::Direction> getPathTextureSet();
+
+    static TextureSet<players::TileVisibility> getFogTextureSet();
 };
 
 #endif  // TEXTURESETFACTORY_HPP_

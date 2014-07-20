@@ -4,6 +4,10 @@
 #include "Selection.hpp"
 #include "Player.hpp"
 
+
+namespace players {
+
+
 Selection::Selection()
     : source_(nullptr), destination_(nullptr)
 { }
@@ -44,3 +48,6 @@ std::shared_ptr<const Tile> Selection::getSource() const {
 std::shared_ptr<const Tile> Selection::getDestination() const {
     return destination_;
 }
+
+
+}  // namespace players

@@ -7,7 +7,7 @@
 #include "Menu.hpp"
 #include "Game.hpp"
 #include "TileEnums.hpp"
-#include "Players.hpp"
+#include "players/Players.hpp"
 #include "MapRenderer.hpp"
 
 Game::Game(int rows, int columns, int numberOfPlayers)

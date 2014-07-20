@@ -5,7 +5,7 @@
 
 #include <string>
 #include <stdexcept>
-#include "boost/functional/hash.hpp"
+#include <functional>
 
 namespace tileenums {
 
@@ -41,12 +41,8 @@ struct hash<tileenums::Direction>
 {
     std::size_t operator()(const tileenums::Direction& direction) const
     {
-        std::size_t seed = 0;
-
         static std::hash<int> typeHasher;
-        boost::hash_combine(seed, typeHasher(static_cast<int>(direction)));
-
-        return seed;
+        return typeHasher(static_cast<int>(direction));
     }
 };
 

@@ -8,7 +8,9 @@
 #include "SFML/Graphics.hpp"
 #include "Map.hpp"
 #include "Menu.hpp"
-#include "Players.hpp"
+#include "players/Players.hpp"
+
+using players::Players;
 
 class Game {
 public:
