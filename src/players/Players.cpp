@@ -20,15 +20,19 @@ Players::Players(int numberOfPlayers, const MapModel* model, const MapRenderer* 
     for (int i = 1; i <= numberOfPlayers; ++i) {
         players_.push_back(Player(model_, "Player " + std::to_string(i)));
     }
+
+    drawer_.updateFogLayer(getCurrentPlayer()->getFog());
 }
 
 void Players::switchToNextPlayer() {
     currentPlayer_ = (currentPlayer_ + 1) % players_.size();
 
+    std::cout << "Switching to " << players_[currentPlayer_].getName() << "\n";
+
     selection_.clear();
     drawer_.updateSelectionLayer(selection_);
-
-    std::cout << "Switching to " << players_[currentPlayer_].getName() << "\n";
+    drawer_.clearPathLayer();
+    drawer_.updateFogLayer(getCurrentPlayer()->getFog());
 }
 
 Player* Players::getCurrentPlayer() {
