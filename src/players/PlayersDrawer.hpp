@@ -28,7 +28,7 @@ public:
 
     void toggleFog();
 
-    void updateUnitLayer();
+    void updateUnitLayer(const Fog& fog);
     void updateSelectionLayer(const Selection& selection);
     void updatePathLayer(const std::vector<Tile>& path);
     void updateFogLayer(const Fog& fog);

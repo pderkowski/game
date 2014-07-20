@@ -32,6 +32,7 @@ void Players::switchToNextPlayer() {
     selection_.clear();
     drawer_.updateSelectionLayer(selection_);
     drawer_.clearPathLayer();
+    drawer_.updateUnitLayer(getCurrentPlayer()->getFog());
     drawer_.updateFogLayer(getCurrentPlayer()->getFog());
 }
 
@@ -67,7 +68,7 @@ void Players::handleAPressed() {
         getCurrentPlayer()->addUnit(
             units::Unit(selection_.getSource()->coords, units::Type::Phalanx, model_));
 
-        drawer_.updateUnitLayer();
+        drawer_.updateUnitLayer(getCurrentPlayer()->getFog());
         drawer_.updateFogLayer(getCurrentPlayer()->getFog());
     }
 }
@@ -95,7 +96,7 @@ void Players::handleRightClick(const sf::Event& e) {
 
                 drawer_.clearPathLayer();
                 drawer_.updateFogLayer(getCurrentPlayer()->getFog());
-                drawer_.updateUnitLayer();
+                drawer_.updateUnitLayer(getCurrentPlayer()->getFog());
             } else {
                 selection_.setDestination(destination);
 

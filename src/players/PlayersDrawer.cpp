@@ -41,17 +41,20 @@ void PlayersDrawer::toggleFog() {
     isFogToggledOn_ = !isFogToggledOn_;
 }
 
-void PlayersDrawer::updateUnitLayer() {
+void PlayersDrawer::updateUnitLayer(const Fog& fog) {
     unitLayer_.clear();
 
     for (const units::Unit& unit : players_->getAllUnits()) {
         auto tile = unit.getPosition();
+        IntIsoPoint coords(tile->coords.toIsometric());
 
-        auto tilePosition = renderer_->getPosition(IntIsoPoint(tile->coords.toIsometric()));
-        auto dualTilePosition = renderer_->getDualPosition(IntIsoPoint(tile->coords.toIsometric()));
+        if (fog(coords.y, coords.x) == TileVisibility::VisibleKnown) {
+            auto tilePosition = renderer_->getPosition(IntIsoPoint(tile->coords.toIsometric()));
+            auto dualTilePosition = renderer_->getDualPosition(IntIsoPoint(tile->coords.toIsometric()));
 
-        unitLayer_.add(unit, tilePosition);
-        unitLayer_.add(unit, dualTilePosition);
+            unitLayer_.add(unit, tilePosition);
+            unitLayer_.add(unit, dualTilePosition);
+        }
     }
 }
 
