@@ -115,7 +115,7 @@ void Game::handleRightClick(const sf::Event& event) {
 void Game::handleMouseWheelMoved(const sf::Event& event) {
     if (!menu_.isVisible()) {
         map_.handleMouseWheelMoved(event);
-        minimap_.updateFocus();
+        minimap_.updateDisplayedRectangle();
     }
 }
 
@@ -124,27 +124,28 @@ void Game::handleMouseMoved(const sf::Event& event) {
         menu_.handleMouseMoved(event);
     } else {
         map_.handleMouseMoved(event);
-        minimap_.updateFocus();
+        minimap_.updateDisplayedRectangle();
     }
 }
 
 void Game::handleAPressed() {
     if (!menu_.isVisible()) {
         players_.handleAPressed();
-        minimap_.rebuild(map_.getModel().get(), players_.getCurrentPlayer()->getFog());
+        minimap_.updateFog(players_.getCurrentPlayer()->getFog());
     }
 }
 
 void Game::handleFPressed() {
     if (!menu_.isVisible()) {
         players_.handleFPressed();
+        minimap_.toggleFog();
     }
 }
 
 void Game::handleEnterPressed() {
     if (!menu_.isVisible()) {
         players_.switchToNextPlayer();
-        minimap_.rebuild(map_.getModel().get(), players_.getCurrentPlayer()->getFog());
+        minimap_.updateFog(players_.getCurrentPlayer()->getFog());
     }
 }
 

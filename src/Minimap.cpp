@@ -1,6 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include <map>
+#include <functional>
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
 #include "Resources.hpp"
@@ -16,7 +17,7 @@ Minimap::Minimap(const MapModel* model, const players::Fog& fog, const MapRender
     fog_(fog),
     renderer_(renderer),
     tileColors_{
-        { tileenums::Type::Empty, sf::Color(0, 0, 0) },
+        { tileenums::Type::Empty, sf::Color(160, 160, 160) },
         { tileenums::Type::Water, sf::Color(127, 201, 255) },
         { tileenums::Type::Hills, sf::Color(198, 148, 4) },
         { tileenums::Type::Plains, sf::Color(77, 173, 36) },
@@ -27,20 +28,14 @@ Minimap::Minimap(const MapModel* model, const players::Fog& fog, const MapRender
     },
     horizontalPixelsPerTile_(2),
     verticalPixelsPerTile_(horizontalPixelsPerTile_ / 2),
-    width_(IsoPoint(model->getColumnsNo(), 0 ).toCartesian().x * horizontalPixelsPerTile_),
-    height_(IsoPoint(0, model->getRowsNo()).toCartesian().y * verticalPixelsPerTile_),
-    minimapBorders_(createMinimapBorders()),
-    displayedRectangle_(createDisplayedRectangle()),
-    minimapBackground_(createMinimapBackground())
+    isFogToggledOn_(true)
 {
-    minimap_.create(width_, height_);
-
     rebuild(model, fog);
-
-    updateFocus();
 }
 
 void Minimap::rebuild(const MapModel* model, const players::Fog& fog) {
+    using namespace std::placeholders;
+
     model_ = model;
     fog_ = fog;
 
@@ -49,9 +44,12 @@ void Minimap::rebuild(const MapModel* model, const players::Fog& fog) {
 
     minimapBorders_ = createMinimapBorders();
     displayedRectangle_ = createDisplayedRectangle(),
-    minimapBackground_ = createMinimapBackground();
+    minimapBackground_ = createTexture(std::bind(&Minimap::getBackgroundPixel, this, _1, _2));
+    fogTexture_ = createTexture(std::bind(&Minimap::getFogPixel, this, _1, _2));
 
-    updateFocus();
+    minimap_.create(width_, height_);
+
+    updateDisplayedRectangle();
 }
 
 sf::RectangleShape Minimap::createMinimapBorders() {
@@ -72,16 +70,31 @@ sf::RectangleShape Minimap::createDisplayedRectangle() {
     return view;
 }
 
-sf::Texture Minimap::createMinimapBackground() {
-    sf::Texture background;
-    background.loadFromImage(createMinimapImage());
-    return background;
+sf::Color Minimap::getBackgroundPixel(int row, int column) const {
+    IntIsoPoint pixelIsoCoords(CartPoint(column, row).toIsometric());
+    return tileColors_.at(model_->getTile(pixelIsoCoords)->type);
 }
 
-sf::Image Minimap::createMinimapImage() {
-    sf::Uint8* pixels;
+sf::Color Minimap::getFogPixel(int row, int column) const {
+    IntIsoPoint pixelIsoCoords(CartPoint(column, row).toIsometric());
+    auto tile = model_->getTile(pixelIsoCoords);
+    IntIsoPoint tileIsoCoords(tile->coords.toIsometric());
+
+    if (fog_(tileIsoCoords.y, tileIsoCoords.x) == players::TileVisibility::Unknown) {
+        return sf::Color(0, 0, 0);
+    } else {
+        return sf::Color(0, 0, 0, 0);
+    }
+}
+
+sf::Texture Minimap::createTexture(std::function<sf::Color(int row, int column)> pixelGetter) {
+    sf::Texture texture;
+    texture.loadFromImage(createImageFromPixels(createPixels(pixelGetter)));
+    return texture;
+}
+
+sf::Image Minimap::createImageFromPixels(sf::Uint8* pixels) {
     try {
-        pixels = createMinimapPixels();
         sf::Image image;
         image.create(width_, height_, pixels);
         delete[] pixels;
@@ -92,14 +105,14 @@ sf::Image Minimap::createMinimapImage() {
     }
 }
 
-sf::Uint8* Minimap::createMinimapPixels() {
+sf::Uint8* Minimap::createPixels(std::function<sf::Color(int row, int column)> pixelGetter) {
     sf::Uint8* pixels = new sf::Uint8[4 * width_ * height_];
 
     for (int r = 0; r < height_; ++r) {
         for (int c = 0; c < width_; ++c) {
             int pixelNo = (r * width_ + c) * 4;
 
-            sf::Color color = getPixelColor(r / verticalPixelsPerTile_,
+            sf::Color color = pixelGetter(r / verticalPixelsPerTile_,
                 c / horizontalPixelsPerTile_);
             pixels[pixelNo + 0] = color.r;
             pixels[pixelNo + 1] = color.g;
@@ -111,17 +124,6 @@ sf::Uint8* Minimap::createMinimapPixels() {
     return pixels;
 }
 
-sf::Color Minimap::getPixelColor(int row, int column) const {
-    IntIsoPoint pixelIsoCoords(CartPoint(column, row).toIsometric());
-    auto tile = model_->getTile(pixelIsoCoords);
-    IntIsoPoint tileIsoCoords(tile->coords.toIsometric());
-
-    if (fog_(tileIsoCoords.y, tileIsoCoords.x) == players::TileVisibility::Unknown) {
-        return tileColors_.at(tileenums::Type::Empty);
-    } else {
-        return tileColors_.at(tile->type);
-    }
-}
 
 void Minimap::draw() const {
     sf::Sprite minimapSprite;
@@ -136,16 +138,40 @@ void Minimap::draw() const {
     target.get()->draw(minimapSprite);
 }
 
-void Minimap::updateFocus() {
+void Minimap::updateDisplayedRectangle() {
     sf::FloatRect bounds = renderer_->getDisplayedRectangle();
-
-    minimap_.clear();
-    minimap_.draw(sf::Sprite(minimapBackground_));
     displayedRectangle_.setPosition(sf::Vector2f(bounds.left * width_, bounds.top * height_));
     displayedRectangle_.setSize(sf::Vector2f(bounds.width * width_, bounds.height * height_));
+
+    render();
+}
+
+void Minimap::updateFog(const players::Fog& fog) {
+    using namespace std::placeholders;
+
+    fog_ = fog;
+
+    fogTexture_ = createTexture(std::bind(&Minimap::getFogPixel, this, _1, _2));
+
+    render();
+}
+
+void Minimap::toggleFog() {
+    isFogToggledOn_ = !isFogToggledOn_;
+
+    render();
+}
+
+void Minimap::render() {
+    minimap_.clear();
+    minimap_.draw(sf::Sprite(minimapBackground_));
+    if (isFogToggledOn_) {
+        minimap_.draw(sf::Sprite(fogTexture_));
+    }
     minimap_.draw(displayedRectangle_);
-    displayedRectangle_.move(-width_, 0);
+    displayedRectangle_.move(-width_, 0); // needed to draw the rectangle wrapped around the borders
     minimap_.draw(displayedRectangle_);
+    displayedRectangle_.move(width_, 0);
     minimap_.draw(minimapBorders_);
     minimap_.display();
 }
