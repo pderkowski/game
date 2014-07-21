@@ -8,7 +8,6 @@
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
 #include "MapDrawer.hpp"
-#include "MinimapDrawer.hpp"
 #include "MapRenderer.hpp"
 
 class Map {
@@ -34,7 +33,6 @@ private:
     MapRenderer renderer_;
 
     MapDrawer mapDrawer_;
-    MinimapDrawer minimapDrawer_;
 };
 
 #endif  // MAP_HPP_

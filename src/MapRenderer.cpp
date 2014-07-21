@@ -4,6 +4,7 @@
 #include <memory>
 #include <cmath>
 #include <algorithm>
+#include <utility>
 #include "Utils.hpp"
 #include "Coordinates.hpp"
 #include "SFML/Graphics.hpp"
@@ -43,14 +44,16 @@ sf::Vector2u MapRenderer::getSize() const {
     return target_->getSize();
 }
 
-std::shared_ptr<sf::RenderTarget> MapRenderer::getFixedView() const {
+MapRenderer::TargetProxy MapRenderer::getFixedTarget() const {
+    sf::View savedView = target_->getView();
     target_->setView(target_->getDefaultView());
-    return target_;
+    return TargetProxy(this, savedView);
 }
 
-std::shared_ptr<sf::RenderTarget> MapRenderer::getDynamicView() const {
+MapRenderer::TargetProxy MapRenderer::getDynamicTarget() const {
+    sf::View savedView = target_->getView();
     target_->setView(mapView_);
-    return target_;
+    return TargetProxy(this, savedView);
 }
 
 IntIsoPoint MapRenderer::getMapCoords(const sf::Vector2i& position) const {
@@ -143,3 +146,15 @@ sf::FloatRect MapRenderer::getDisplayedRectangle() const {
         (rightBottomCoords.x - leftTopCoords.x) / getMapWidth(),
         (rightBottomCoords.y - leftTopCoords.y) / getMapHeight());
 }
+
+MapRenderer::TargetProxy::~TargetProxy() {
+    renderer_->target_->setView(savedView_);
+}
+
+std::shared_ptr<sf::RenderTarget> MapRenderer::TargetProxy::get() const {
+    return renderer_->target_;
+}
+
+MapRenderer::TargetProxy::TargetProxy(const MapRenderer* renderer, const sf::View& savedView)
+    : renderer_(renderer), savedView_(savedView)
+{ }

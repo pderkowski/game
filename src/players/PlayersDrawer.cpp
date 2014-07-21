@@ -28,12 +28,12 @@ PlayersDrawer::PlayersDrawer(const Players* players, const MapRenderer* renderer
 { }
 
 void PlayersDrawer::draw() const {
-    auto target = renderer_->getDynamicView();
-    target->draw(pathLayer_);
-    target->draw(selectionLayer_);
-    target->draw(unitLayer_);
+    MapRenderer::TargetProxy target = renderer_->getDynamicTarget();
+    target.get()->draw(pathLayer_);
+    target.get()->draw(selectionLayer_);
+    target.get()->draw(unitLayer_);
     if (isFogToggledOn_) {
-        target->draw(fogLayer_);
+        target.get()->draw(fogLayer_);
     }
 }
 

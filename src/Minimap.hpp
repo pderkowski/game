@@ -1,26 +1,23 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MINIMAPDRAWER_HPP_
-#define MINIMAPDRAWER_HPP_
+#ifndef MINIMAP_HPP_
+#define MINIMAP_HPP_
 
-#include <memory>
 #include <map>
 #include "SFML/Graphics.hpp"
-#include "Resources.hpp"
 #include "MapModel.hpp"
-#include "Tile.hpp"
 #include "TileEnums.hpp"
 #include "MapRenderer.hpp"
 
-class MinimapDrawer {
+class Minimap {
 public:
-    MinimapDrawer(std::shared_ptr<const MapModel>, const MapRenderer* renderer);
-
-    void updateMinimap(const sf::FloatRect& boundsOfDisplayedRectangle);
+    Minimap(const MapModel* model, const MapRenderer* renderer);
 
     void draw() const;
 
-    void setModel(std::shared_ptr<const MapModel> model);
+    void setModel(const MapModel* model);
+
+    void update();
 
 private:
     sf::RectangleShape createMinimapBorders();
@@ -33,7 +30,7 @@ private:
     sf::Color getColorFromModel(int row, int column) const;
 
 private:
-    std::shared_ptr<const MapModel> model_;
+    const MapModel* model_;
 
     const MapRenderer* renderer_;
 
@@ -50,4 +47,4 @@ private:
     sf::RenderTexture minimap_;
 };
 
-#endif  // MINIMAPDRAWER_HPP_
+#endif  // MINIMAP_HPP_

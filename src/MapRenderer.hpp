@@ -10,6 +10,9 @@
 
 class MapRenderer {
 public:
+    class TargetProxy;
+
+public:
     MapRenderer(int rows, int columns, int tileWidth, int tileHeight,
         std::shared_ptr<sf::RenderTarget> target);
 
@@ -21,8 +24,8 @@ public:
 
     sf::Vector2u getSize() const;
 
-    std::shared_ptr<sf::RenderTarget> getFixedView() const;
-    std::shared_ptr<sf::RenderTarget> getDynamicView() const;
+    TargetProxy getFixedTarget() const;
+    TargetProxy getDynamicTarget() const;
 
     IntIsoPoint getMapCoords(const sf::Vector2i& position) const;
 
@@ -44,6 +47,29 @@ private:
     std::shared_ptr<sf::RenderTarget> target_;
 
     sf::View mapView_;
+
+public:
+    class TargetProxy {
+    public:
+        TargetProxy(const TargetProxy&) = delete;
+        TargetProxy& operator =(const TargetProxy&) = delete;
+
+        TargetProxy(TargetProxy&&) = default;
+        TargetProxy& operator =(TargetProxy&&) = default;
+
+        ~TargetProxy();
+
+        std::shared_ptr<sf::RenderTarget> get() const;
+    private:
+        friend class MapRenderer;
+
+        TargetProxy(const MapRenderer* renderer, const sf::View& savedView);
+
+    private:
+        const MapRenderer* renderer_;
+
+        sf::View savedView_;
+    };
 };
 
 #endif  // MAPRENDERER_HPP_

@@ -9,6 +9,8 @@
 #include "TileEnums.hpp"
 #include "players/Players.hpp"
 #include "MapRenderer.hpp"
+#include "Minimap.hpp"
+
 
 Game::Game(int rows, int columns, int numberOfPlayers)
         : window_(std::make_shared<sf::RenderWindow>(
@@ -17,6 +19,7 @@ Game::Game(int rows, int columns, int numberOfPlayers)
             sf::Style::Fullscreen)),
         map_(rows, columns, window_),
         players_(numberOfPlayers, map_.getModel().get(), map_.getRenderer()),
+        minimap_(map_.getModel().get(), map_.getRenderer()),
         menu_(window_)
 {
     menu_.addItem("Return", [this] () { toggleMenu(); });
@@ -31,6 +34,7 @@ void Game::start() {
         window_->clear();
         map_.draw();
         players_.draw();
+        minimap_.draw();
         if (menu_.isVisible()) {
             menu_.draw();
         }
@@ -40,6 +44,7 @@ void Game::start() {
 
 void Game::restart() {
     map_.generateMap();
+    minimap_.setModel(map_.getModel().get());
 }
 
 void Game::quit() {
@@ -109,6 +114,7 @@ void Game::handleRightClick(const sf::Event& event) {
 void Game::handleMouseWheelMoved(const sf::Event& event) {
     if (!menu_.isVisible()) {
         map_.handleMouseWheelMoved(event);
+        minimap_.update();
     }
 }
 
@@ -117,6 +123,7 @@ void Game::handleMouseMoved(const sf::Event& event) {
         menu_.handleMouseMoved(event);
     } else {
         map_.handleMouseMoved(event);
+        minimap_.update();
     }
 }
 

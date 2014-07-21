@@ -42,9 +42,9 @@ void MapDrawer::addTileToLayers(std::shared_ptr<const Tile> tile) {
 }
 
 void MapDrawer::draw() const {
-    auto target = renderer_->getDynamicView();
+    MapRenderer::TargetProxy target = renderer_->getDynamicTarget();
 
     for (const auto& layer : layers_) {
-        target->draw(layer);
+        target.get()->draw(layer);
     }
 }

@@ -12,15 +12,11 @@
 Map::Map(int rows, int columns, std::shared_ptr<sf::RenderTarget> target)
     : model_(std::make_shared<MapModel>(MapGenerator::generateMap(rows, columns))),
     renderer_(rows, columns, 96, 48, target),
-    mapDrawer_(*model_, &renderer_),
-    minimapDrawer_(model_, &renderer_)
-{
-    minimapDrawer_.updateMinimap(renderer_.getDisplayedRectangle());
-}
+    mapDrawer_(*model_, &renderer_)
+{ }
 
 void Map::draw() const {
     mapDrawer_.draw();
-    minimapDrawer_.draw();
 }
 
 std::shared_ptr<const MapModel> Map::getModel() const {
@@ -34,20 +30,16 @@ const MapRenderer* Map::getRenderer() const {
 void Map::generateMap() {
     *model_ = MapGenerator::generateMap(model_->getRowsNo(), model_->getColumnsNo());
     mapDrawer_.setModel(*model_);
-    minimapDrawer_.setModel(model_);
-    minimapDrawer_.updateMinimap(renderer_.getDisplayedRectangle());
 }
 
 void Map::handleMouseWheelMoved(const sf::Event& event) {
     renderer_.zoomView(event.mouseWheel.delta,
         sf::Vector2i(event.mouseWheel.x, event.mouseWheel.y));
-    minimapDrawer_.updateMinimap(renderer_.getDisplayedRectangle());
 }
 
 void Map::handleMouseMoved(const sf::Event& event)  {
     renderer_.scrollView(calculateHorizontalShift(event.mouseMove.x),
         calculateVerticalShift(event.mouseMove.y));
-    minimapDrawer_.updateMinimap(renderer_.getDisplayedRectangle());
 }
 
 int Map::calculateHorizontalShift(float mouseXPosition) const {

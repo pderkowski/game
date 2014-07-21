@@ -9,6 +9,7 @@
 #include "Map.hpp"
 #include "Menu.hpp"
 #include "players/Players.hpp"
+#include "Minimap.hpp"
 
 using players::Players;
 
@@ -34,6 +35,7 @@ private:
     std::shared_ptr<sf::RenderWindow> window_;
     Map map_;
     Players players_;
+    Minimap minimap_;
     Menu menu_;
 };
 
