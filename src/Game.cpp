@@ -19,7 +19,7 @@ Game::Game(int rows, int columns, int numberOfPlayers)
             sf::Style::Fullscreen)),
         map_(rows, columns, window_),
         players_(numberOfPlayers, map_.getModel().get(), map_.getRenderer()),
-        minimap_(map_.getModel().get(), map_.getRenderer()),
+        minimap_(map_.getModel().get(), players_.getCurrentPlayer()->getFog(), map_.getRenderer()),
         menu_(window_)
 {
     menu_.addItem("Return", [this] () { toggleMenu(); });
@@ -44,7 +44,7 @@ void Game::start() {
 
 void Game::restart() {
     map_.generateMap();
-    minimap_.setModel(map_.getModel().get());
+    minimap_.rebuild(map_.getModel().get(), players_.getCurrentPlayer()->getFog());
 }
 
 void Game::quit() {
@@ -108,13 +108,14 @@ void Game::handleLeftClick(const sf::Event& event) {
 void Game::handleRightClick(const sf::Event& event) {
     if (!menu_.isVisible()) {
         players_.handleRightClick(event);
+        minimap_.rebuild(map_.getModel().get(), players_.getCurrentPlayer()->getFog());
     }
 }
 
 void Game::handleMouseWheelMoved(const sf::Event& event) {
     if (!menu_.isVisible()) {
         map_.handleMouseWheelMoved(event);
-        minimap_.update();
+        minimap_.updateFocus();
     }
 }
 
@@ -123,13 +124,14 @@ void Game::handleMouseMoved(const sf::Event& event) {
         menu_.handleMouseMoved(event);
     } else {
         map_.handleMouseMoved(event);
-        minimap_.update();
+        minimap_.updateFocus();
     }
 }
 
 void Game::handleAPressed() {
     if (!menu_.isVisible()) {
         players_.handleAPressed();
+        minimap_.rebuild(map_.getModel().get(), players_.getCurrentPlayer()->getFog());
     }
 }
 
@@ -142,6 +144,7 @@ void Game::handleFPressed() {
 void Game::handleEnterPressed() {
     if (!menu_.isVisible()) {
         players_.switchToNextPlayer();
+        minimap_.rebuild(map_.getModel().get(), players_.getCurrentPlayer()->getFog());
     }
 }
 

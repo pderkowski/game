@@ -9,12 +9,14 @@
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
 #include "MapRenderer.hpp"
+#include "players/Fog.hpp"
 
-Minimap::Minimap(const MapModel* model, const MapRenderer* renderer)
+Minimap::Minimap(const MapModel* model, const players::Fog& fog, const MapRenderer* renderer)
     : model_(model),
+    fog_(fog),
     renderer_(renderer),
     tileColors_{
-        { tileenums::Type::Empty, sf::Color(160, 160, 160) },
+        { tileenums::Type::Empty, sf::Color(0, 0, 0) },
         { tileenums::Type::Water, sf::Color(127, 201, 255) },
         { tileenums::Type::Hills, sf::Color(198, 148, 4) },
         { tileenums::Type::Plains, sf::Color(77, 173, 36) },
@@ -33,18 +35,23 @@ Minimap::Minimap(const MapModel* model, const MapRenderer* renderer)
 {
     minimap_.create(width_, height_);
 
-    update();
+    rebuild(model, fog);
+
+    updateFocus();
 }
 
-void Minimap::setModel(const MapModel* model) {
+void Minimap::rebuild(const MapModel* model, const players::Fog& fog) {
     model_ = model;
+    fog_ = fog;
+
     width_ = IsoPoint(model->getColumnsNo(), 0 ).toCartesian().x * horizontalPixelsPerTile_;
     height_ = IsoPoint(0, model->getRowsNo()).toCartesian().y * verticalPixelsPerTile_;
+
     minimapBorders_ = createMinimapBorders();
     displayedRectangle_ = createDisplayedRectangle(),
     minimapBackground_ = createMinimapBackground();
 
-    update();
+    updateFocus();
 }
 
 sf::RectangleShape Minimap::createMinimapBorders() {
@@ -92,7 +99,7 @@ sf::Uint8* Minimap::createMinimapPixels() {
         for (int c = 0; c < width_; ++c) {
             int pixelNo = (r * width_ + c) * 4;
 
-            sf::Color color = getColorFromModel(r / verticalPixelsPerTile_,
+            sf::Color color = getPixelColor(r / verticalPixelsPerTile_,
                 c / horizontalPixelsPerTile_);
             pixels[pixelNo + 0] = color.r;
             pixels[pixelNo + 1] = color.g;
@@ -104,9 +111,16 @@ sf::Uint8* Minimap::createMinimapPixels() {
     return pixels;
 }
 
-sf::Color Minimap::getColorFromModel(int row, int column) const {
-    IntIsoPoint p(CartPoint(column, row).toIsometric());
-    return tileColors_.at(model_->getTile(p)->type);
+sf::Color Minimap::getPixelColor(int row, int column) const {
+    IntIsoPoint pixelIsoCoords(CartPoint(column, row).toIsometric());
+    auto tile = model_->getTile(pixelIsoCoords);
+    IntIsoPoint tileIsoCoords(tile->coords.toIsometric());
+
+    if (fog_(tileIsoCoords.y, tileIsoCoords.x) == players::TileVisibility::Unknown) {
+        return tileColors_.at(tileenums::Type::Empty);
+    } else {
+        return tileColors_.at(tile->type);
+    }
 }
 
 void Minimap::draw() const {
@@ -122,7 +136,7 @@ void Minimap::draw() const {
     target.get()->draw(minimapSprite);
 }
 
-void Minimap::update() {
+void Minimap::updateFocus() {
     sf::FloatRect bounds = renderer_->getDisplayedRectangle();
 
     minimap_.clear();

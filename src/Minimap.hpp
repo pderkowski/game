@@ -8,16 +8,16 @@
 #include "MapModel.hpp"
 #include "TileEnums.hpp"
 #include "MapRenderer.hpp"
+#include "players/Fog.hpp"
 
 class Minimap {
 public:
-    Minimap(const MapModel* model, const MapRenderer* renderer);
+    Minimap(const MapModel* model, const players::Fog& fog, const MapRenderer* renderer);
 
     void draw() const;
 
-    void setModel(const MapModel* model);
-
-    void update();
+    void updateFocus();
+    void rebuild(const MapModel* model, const players::Fog& fog);
 
 private:
     sf::RectangleShape createMinimapBorders();
@@ -27,10 +27,12 @@ private:
     sf::Image createMinimapImage();
     sf::Uint8* createMinimapPixels();
 
-    sf::Color getColorFromModel(int row, int column) const;
+    sf::Color getPixelColor(int row, int column) const;
 
 private:
     const MapModel* model_;
+
+    players::Fog fog_;
 
     const MapRenderer* renderer_;
 
