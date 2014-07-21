@@ -8,7 +8,6 @@
 #include "Coordinates.hpp"
 #include "MapModel.hpp"
 #include "units/Unit.hpp"
-#include "Pathfinder.hpp"
 
 
 namespace players {
@@ -83,13 +82,9 @@ void Players::handleRightClick(const sf::Event& e) {
         auto destination = getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 
         Player::UnitControler unit = getCurrentPlayer()->getUnitAtCoords(source->coords);
-
-        Pathfinder pathfinder(unit.get().getMovingCosts());
-        if (pathfinder.doesPathExist(*source, *destination)) {
-            std::vector<Tile> path = pathfinder.findPath(*source, *destination);
-
+        if (unit.canMoveTo(*destination)) {
             if (isDestinationConfirmed(*destination)) {
-                unit.move(path);
+                unit.moveTo(*destination);
 
                 selection_.clear();
                 selection_.setSource(destination);
@@ -100,7 +95,7 @@ void Players::handleRightClick(const sf::Event& e) {
             } else {
                 selection_.setDestination(destination);
 
-                drawer_.updatePathLayer(path);
+                drawer_.updatePathLayer(unit.getPathTo(*destination));
             }
         }
     }

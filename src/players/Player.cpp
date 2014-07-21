@@ -11,6 +11,7 @@
 #include "Tile.hpp"
 #include "Fog.hpp"
 #include "MapModel.hpp"
+#include "Pathfinder.hpp"
 
 namespace players {
 
@@ -90,9 +91,18 @@ units::Unit Player::UnitControler::get() const {
     return *unit_;
 }
 
-void Player::UnitControler::move(const std::vector<Tile>& path) {
-    if (path.empty() || path[0] != *(unit_->getPosition()))
-        throw std::logic_error("The unit is not at the beginning of the path.");
+bool Player::UnitControler::canMoveTo(const Tile& destination) const {
+    Pathfinder pathfinder(unit_->getMovingCosts(), player_->fog_);
+    return pathfinder.doesPathExist(*(unit_->getPosition()), destination);
+}
+
+std::vector<Tile> Player::UnitControler::getPathTo(const Tile& destination) const {
+    Pathfinder pathfinder(unit_->getMovingCosts(), player_->fog_);
+    return pathfinder.findPath(*(unit_->getPosition()), destination);
+}
+
+void Player::UnitControler::moveTo(const Tile& destination) {
+    auto path = getPathTo(destination);
 
     player_->fog_.removeVisible(player_->getSurroundingTiles(*unit_));
 

@@ -36,7 +36,9 @@ public:
     public:
         units::Unit get() const;
 
-        void move(const std::vector<Tile>& path);
+        bool canMoveTo(const Tile& destination) const;
+        std::vector<Tile> getPathTo(const Tile& destination) const;
+        void moveTo(const Tile& destination);
 
     private:
         friend class Player;

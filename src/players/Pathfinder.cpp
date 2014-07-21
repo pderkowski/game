@@ -13,9 +13,13 @@
 #include "TileEnums.hpp"
 #include "Pathfinder.hpp"
 #include "Coordinates.hpp"
+#include "Fog.hpp"
 
-Pathfinder::Pathfinder(const std::map<tileenums::Type, unsigned>& cost)
-    : cost_(cost)
+namespace players {
+
+
+Pathfinder::Pathfinder(const std::map<tileenums::Type, unsigned>& cost, const Fog& fog)
+    : cost_(cost), fog_(fog)
 { }
 
 bool Pathfinder::doesPathExist(const Tile& source, const Tile& goal) const {
@@ -35,7 +39,7 @@ bool Pathfinder::doesPathExist(const Tile& source, const Tile& goal) const {
 
         std::vector<std::shared_ptr<const Tile>> neighbors = current.getNeighbors();
         for (auto neighbor : neighbors) {
-            if (!reached.count(*neighbor) && isPassable(neighbor->type)) {
+            if (!reached.count(*neighbor) && isPassable(*neighbor)) {
                 reached.insert(*neighbor);
                 queue.push(*neighbor);
             }
@@ -65,7 +69,7 @@ std::vector<Tile> Pathfinder::findPath(const Tile& source, const Tile& goal) con
 
             std::vector<std::shared_ptr<const Tile>> neighbors = current.tile.getNeighbors();
             for (auto neighbor : neighbors) {
-                if (isPassable(neighbor->type) && !visited.count(*neighbor)) {
+                if (isPassable(*neighbor) && !visited.count(*neighbor)) {
                     unsigned newDistance = current.distance + cost_.at(neighbor->type);
                     if (!distance.count(*neighbor) || (newDistance < distance.at(*neighbor))) {
                         distance[*neighbor] = newDistance;
@@ -94,10 +98,15 @@ std::vector<Tile> Pathfinder::readPath(const Tile& source, const Tile& goal,
     return pathBackwards;
 }
 
-bool Pathfinder::isPassable(tileenums::Type type) const {
-    return cost_.at(type) != std::numeric_limits<unsigned>::max();
+bool Pathfinder::isPassable(const Tile& tile) const {\
+    IntIsoPoint coords(tile.coords.toIsometric());
+    return cost_.at(tile.type) != std::numeric_limits<unsigned>::max()
+        && fog_(coords.y, coords.x) != TileVisibility::Unknown;
 }
 
 bool Pathfinder::Node::operator > (const Node& rhs) const {
     return distance > rhs.distance;
 }
+
+
+}  // namespace players

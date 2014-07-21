@@ -1,17 +1,22 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef PATHFINDER_HPP_
-#define PATHFINDER_HPP_
+#ifndef PLAYERS_PATHFINDER_HPP_
+#define PLAYERS_PATHFINDER_HPP_
 
 #include <vector>
 #include <map>
 #include <unordered_map>
 #include "Tile.hpp"
 #include "TileEnums.hpp"
+#include "Fog.hpp"
+
+
+namespace players {
+
 
 class Pathfinder {
 public:
-    explicit Pathfinder(const std::map<tileenums::Type, unsigned>& cost);
+    Pathfinder(const std::map<tileenums::Type, unsigned>& cost, const Fog& fog);
 
     bool doesPathExist(const Tile& source, const Tile& goal) const;
     std::vector<Tile> findPath(const Tile& source, const Tile& goal) const;
@@ -28,9 +33,16 @@ private:
 private:
     std::vector<Tile> readPath(const Tile& source, const Tile& goal,
         const std::unordered_map<Tile, Tile>& previous) const;
-    bool isPassable(tileenums::Type type) const;
+    bool isPassable(const Tile& tile) const;
 
+private:
     std::map<tileenums::Type, unsigned> cost_;
+
+    Fog fog_;
 };
 
-#endif  // PATHFINDER_HPP_
+
+}  // namespace players
+
+
+#endif  // PLAYERS_PATHFINDER_HPP_
