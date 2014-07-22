@@ -42,7 +42,6 @@ void Minimap::rebuild(const MapModel* model, const players::Fog& fog) {
     width_ = IsoPoint(model->getColumnsNo(), 0 ).toCartesian().x * horizontalPixelsPerTile_;
     height_ = IsoPoint(0, model->getRowsNo()).toCartesian().y * verticalPixelsPerTile_;
 
-    minimapBorders_ = createMinimapBorders();
     displayedRectangle_ = createDisplayedRectangle(),
     minimapBackground_ = createTexture(std::bind(&Minimap::getBackgroundPixel, this, _1, _2));
     fogTexture_ = createTexture(std::bind(&Minimap::getFogPixel, this, _1, _2));
@@ -50,15 +49,6 @@ void Minimap::rebuild(const MapModel* model, const players::Fog& fog) {
     minimap_.create(width_, height_);
 
     updateDisplayedRectangle();
-}
-
-sf::RectangleShape Minimap::createMinimapBorders() {
-    sf::RectangleShape borders;
-    borders.setSize(sf::Vector2f(width_, height_));
-    borders.setFillColor(sf::Color(0, 0, 0, 0));
-    borders.setOutlineColor(sf::Color(0, 0, 0, 255));
-    borders.setOutlineThickness(-1);
-    return borders;
 }
 
 sf::RectangleShape Minimap::createDisplayedRectangle() {
@@ -128,13 +118,9 @@ sf::Uint8* Minimap::createPixels(std::function<sf::Color(int row, int column)> p
 void Minimap::draw() const {
     sf::Sprite minimapSprite;
     minimapSprite.setTexture(minimap_.getTexture());
+    minimapSprite.setPosition(basePosition_);
 
     MapRenderer::TargetProxy target = renderer_->getFixedTarget();
-
-    sf::Vector2f basePosition = target.get()->mapPixelToCoords(
-        sf::Vector2i(renderer_->getSize().x - width_, renderer_->getSize().y - height_));
-    minimapSprite.setPosition(basePosition);
-
     target.get()->draw(minimapSprite);
 }
 
@@ -172,6 +158,14 @@ void Minimap::render() {
     displayedRectangle_.move(-width_, 0); // needed to draw the rectangle wrapped around the borders
     minimap_.draw(displayedRectangle_);
     displayedRectangle_.move(width_, 0);
-    minimap_.draw(minimapBorders_);
     minimap_.display();
+}
+
+
+sf::Vector2f Minimap::getSize() {
+    return sf::Vector2f(width_, height_);
+}
+
+void Minimap::setPosition(const sf::Vector2f& position) {
+    basePosition_ = position;
 }

@@ -10,6 +10,7 @@
 #include "players/Players.hpp"
 #include "MapRenderer.hpp"
 #include "Minimap.hpp"
+#include "Interface.hpp"
 
 
 Game::Game(int rows, int columns, int numberOfPlayers)
@@ -20,8 +21,11 @@ Game::Game(int rows, int columns, int numberOfPlayers)
         map_(rows, columns, window_),
         players_(numberOfPlayers, map_.getModel().get(), map_.getRenderer()),
         minimap_(map_.getModel().get(), players_.getCurrentPlayer()->getFog(), map_.getRenderer()),
+        interface_(map_.getRenderer(), minimap_.getSize()),
         menu_(window_)
 {
+    minimap_.setPosition(interface_.getMinimapSlotPosition());
+
     menu_.addItem("Return", [this] () { toggleMenu(); });
     menu_.addItem("New game", [this] () { restart(); });
     menu_.addItem("Quit game", [this] () { quit(); });
@@ -34,6 +38,7 @@ void Game::start() {
         window_->clear();
         map_.draw();
         players_.draw();
+        interface_.draw();
         minimap_.draw();
         if (menu_.isVisible()) {
             menu_.draw();

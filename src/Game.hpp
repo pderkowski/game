@@ -10,6 +10,7 @@
 #include "Menu.hpp"
 #include "players/Players.hpp"
 #include "Minimap.hpp"
+#include "Interface.hpp"
 
 using players::Players;
 
@@ -36,6 +37,7 @@ private:
     Map map_;
     Players players_;
     Minimap minimap_;
+    Interface interface_;
     Menu menu_;
 };
 

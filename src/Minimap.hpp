@@ -24,9 +24,11 @@ public:
 
     void rebuild(const MapModel* model, const players::Fog& fog);
 
-private:
-    sf::RectangleShape createMinimapBorders();
+    sf::Vector2f getSize();
 
+    void setPosition(const sf::Vector2f& position);
+
+private:
     sf::RectangleShape createDisplayedRectangle();
 
     sf::Texture createTexture(std::function<sf::Color(int row, int column)> pixelGetter);
@@ -54,11 +56,12 @@ private:
 
     bool isFogToggledOn_;
 
-    sf::RectangleShape minimapBorders_;
     sf::RectangleShape displayedRectangle_;
     sf::Texture minimapBackground_;
     sf::Texture fogTexture_;
     sf::RenderTexture minimap_;
+
+    sf::Vector2f basePosition_;
 };
 
 #endif  // MINIMAP_HPP_
