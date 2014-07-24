@@ -125,6 +125,22 @@ IntRotPoint Tile::getNeighborCoords(Direction direction) const {
     }
 }
 
+std::vector<std::shared_ptr<const Tile>> Tile::getTilesInRadius(int radius) const {
+    std::vector<std::shared_ptr<const Tile>> res;
+
+    for (int x = -radius; x <= radius; ++x) {
+        for (int y = -radius; y <= radius; ++y) {
+            IntRotPoint p(coords.x + x, coords.y + y);
+            IntIsoPoint pIso(p.toIsometric());
+
+            if (model_->isInBounds(pIso))
+                res.push_back(model_->getTile(pIso));
+        }
+    }
+
+    return res;
+}
+
 
 
 bool operator == (const Tile& lhs, const Tile& rhs) {

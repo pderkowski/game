@@ -70,13 +70,11 @@ units::Unit Player::getUnitAtCoords(const IntRotPoint& coords) const {
 
 std::vector<Tile> Player::getSurroundingTiles(const units::Unit& unit) const {
     std::shared_ptr<const Tile> position = unit.getPosition();
-    std::vector<std::shared_ptr<const Tile>> neighbors = position->getNeighbors();
+    std::vector<std::shared_ptr<const Tile>> surroundingTilesPtrs = position->getTilesInRadius(2);
 
     std::vector<Tile> res;
-
-    res.push_back(*position);
-    for (auto neighbor : neighbors) {
-        res.push_back(*neighbor);
+    for (auto tilePtr : surroundingTilesPtrs) {
+        res.push_back(*tilePtr);
     }
 
     return res;

@@ -23,6 +23,8 @@ public:
     std::vector<std::shared_ptr<const Tile>> getNeighbors() const;
     std::vector<std::shared_ptr<const Tile>> getAdjacentNeighbors() const;
 
+    std::vector<std::shared_ptr<const Tile>> getTilesInRadius(int radius) const;
+
     Direction getDirection(const Tile& neighbor) const;
 
     IntRotPoint coords;
