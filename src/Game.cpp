@@ -91,6 +91,9 @@ void Game::handleEvents() {
             case sf::Keyboard::Key::Return:
                 handleEnterPressed();
                 break;
+            case sf::Keyboard::Key::P:
+                handlePrintScreenPressed();
+                break;
             default:
                 break;
             }
@@ -154,3 +157,6 @@ void Game::handleEnterPressed() {
     }
 }
 
+void Game::handlePrintScreenPressed() {
+    window_->capture().saveToFile("screenshot.png");
+}

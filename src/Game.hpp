@@ -32,6 +32,7 @@ private:
     void handleAPressed();
     void handleFPressed();
     void handleEnterPressed();
+    void handlePrintScreenPressed();
 
     std::shared_ptr<sf::RenderWindow> window_;
     Map map_;
