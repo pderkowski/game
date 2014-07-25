@@ -32,6 +32,7 @@ public:
     void handleRightClick(const sf::Event& e);
     void handleAPressed();
     void handleFPressed();
+    void handleDPressed();
 
 private:
     const Tile& getClickedTile(const sf::Vector2i& clickedPoint) const;

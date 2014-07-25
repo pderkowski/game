@@ -108,6 +108,21 @@ void Players::handleRightClick(const sf::Event& e) {
     drawer_.updateSelectionLayer(selection_);
 }
 
+void Players::handleDPressed() {
+    if (selection_.isUnitSelected(getCurrentPlayer())) {
+        auto source = selection_.getSource();
+
+        Player::UnitControler unit = getCurrentPlayer()->getUnitAtCoords(source.coords);
+        unit.destroyUnit();
+
+        drawer_.updateFogLayer(getCurrentPlayer()->getFog());
+        drawer_.updateUnitLayer(getCurrentPlayer()->getFog());
+        selection_.clear();
+        drawer_.updateSelectionLayer(selection_);
+        drawer_.clearPathLayer();
+    }
+}
+
 const Tile& Players::getClickedTile(const sf::Vector2i& clickedPoint) const {
     IntIsoPoint clickedCoords = renderer_->getMapCoords(clickedPoint);
     return model_->getTile(clickedCoords);

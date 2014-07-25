@@ -31,6 +31,7 @@ private:
     void handleMouseMoved(const sf::Event& event);
     void handleAPressed();
     void handleFPressed();
+    void handleDPressed();
     void handleEnterPressed();
     void handlePrintScreenPressed();
 

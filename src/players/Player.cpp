@@ -108,5 +108,13 @@ void Player::UnitControler::moveTo(const Tile& destination) {
     player_->fog_.addVisible(player_->getSurroundingTiles(*unit_));
 }
 
+void Player::UnitControler::destroyUnit() {
+    player_->fog_.removeVisible(player_->getSurroundingTiles(*unit_));
+
+    player_->units_.erase(std::find(player_->units_.begin(), player_->units_.end(), *unit_));
+
+    unit_ = nullptr;
+}
+
 
 }  // namespace players

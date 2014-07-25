@@ -40,6 +40,8 @@ public:
         std::vector<Tile> getPathTo(const Tile& destination) const;
         void moveTo(const Tile& destination);
 
+        void destroyUnit();
+
     private:
         friend class Player;
 

@@ -88,6 +88,9 @@ void Game::handleEvents() {
             case sf::Keyboard::Key::F:
                 handleFPressed();
                 break;
+            case sf::Keyboard::Key::D:
+                handleDPressed();
+                break;
             case sf::Keyboard::Key::Return:
                 handleEnterPressed();
                 break;
@@ -147,6 +150,12 @@ void Game::handleFPressed() {
     if (!menu_.isVisible()) {
         players_.handleFPressed();
         minimap_.toggleFog();
+    }
+}
+
+void Game::handleDPressed() {
+    if (!menu_.isVisible()) {
+        players_.handleDPressed();
     }
 }
 
