@@ -68,16 +68,9 @@ units::Unit Player::getUnitAtCoords(const IntRotPoint& coords) const {
     }
 }
 
-std::vector<Tile> Player::getSurroundingTiles(const units::Unit& unit) const {
-    std::shared_ptr<const Tile> position = unit.getPosition();
-    std::vector<std::shared_ptr<const Tile>> surroundingTilesPtrs = position->getTilesInRadius(2);
-
-    std::vector<Tile> res;
-    for (auto tilePtr : surroundingTilesPtrs) {
-        res.push_back(*tilePtr);
-    }
-
-    return res;
+std::vector<const Tile*> Player::getSurroundingTiles(const units::Unit& unit) const {
+    Tile position = unit.getPosition();
+    return position.getTilesInRadius(2);
 }
 
 
@@ -91,12 +84,12 @@ units::Unit Player::UnitControler::get() const {
 
 bool Player::UnitControler::canMoveTo(const Tile& destination) const {
     Pathfinder pathfinder(unit_->getMovingCosts(), player_->fog_);
-    return pathfinder.doesPathExist(*(unit_->getPosition()), destination);
+    return pathfinder.doesPathExist(unit_->getPosition(), destination);
 }
 
 std::vector<Tile> Player::UnitControler::getPathTo(const Tile& destination) const {
     Pathfinder pathfinder(unit_->getMovingCosts(), player_->fog_);
-    return pathfinder.findPath(*(unit_->getPosition()), destination);
+    return pathfinder.findPath(unit_->getPosition(), destination);
 }
 
 void Player::UnitControler::moveTo(const Tile& destination) {

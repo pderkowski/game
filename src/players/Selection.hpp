@@ -3,7 +3,6 @@
 #ifndef PLAYERS_SELECTION_HPP_
 #define PLAYERS_SELECTION_HPP_
 
-#include <memory>
 #include "Tile.hpp"
 #include "units/Unit.hpp"
 class MapModel;
@@ -15,23 +14,22 @@ class Player;
 
 class Selection {
 public:
-    Selection();
-    explicit Selection(std::shared_ptr<const Tile> source);
+    explicit Selection(const Tile& source = Tile(), const Tile& destination = Tile());
 
-    void setSource(std::shared_ptr<const Tile> source);
-    void setDestination(std::shared_ptr<const Tile> destination);
+    void setSource(const Tile& source);
+    void setDestination(const Tile& destination);
     void clear();
 
     bool isUnitSelected(const Player* player) const;
     bool isSourceSelected() const;
     bool isDestinationSelected() const;
 
-    std::shared_ptr<const Tile> getSource() const;
-    std::shared_ptr<const Tile> getDestination() const;
+    Tile getSource() const;
+    Tile getDestination() const;
 
 private:
-    std::shared_ptr<const Tile> source_;
-    std::shared_ptr<const Tile> destination_;
+    Tile source_;
+    Tile destination_;
 };
 
 

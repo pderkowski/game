@@ -1,10 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#include <iostream>
 #include <algorithm>
 #include <stdexcept>
-#include <memory>
-#include <queue>
 #include "Tile.hpp"
 #include "Coordinates.hpp"
 #include "MapModel.hpp"
@@ -22,10 +19,10 @@ void Tile::setModel(MapModel* model) {
 
 bool Tile::hasNeighbor(Direction direction) const {
     auto neighborCoords = getNeighborCoords(direction);
-    return model_->isInBounds(model_->getTile(IntIsoPoint(neighborCoords.toIsometric())));
+    return model_->isInBounds(IntIsoPoint(neighborCoords.toIsometric()));
 }
 
-std::shared_ptr<const Tile> Tile::getNeighbor(Direction direction) const {
+const Tile& Tile::getNeighbor(Direction direction) const {
     if (isValid()) {
         if (hasNeighbor(direction)) {
             return model_->getTile(IntIsoPoint(getNeighborCoords(direction).toIsometric()));
@@ -37,60 +34,71 @@ std::shared_ptr<const Tile> Tile::getNeighbor(Direction direction) const {
     }
 }
 
-std::vector<std::shared_ptr<const Tile>> Tile::getNeighbors() const {
-    std::vector<std::shared_ptr<const Tile>> neighbors;
+std::vector<const Tile*> Tile::getNeighbors() const {
+    std::vector<const Tile*> neighbors;
 
     if (hasNeighbor(Direction::Top))
-        neighbors.push_back(getNeighbor(Direction::Top));
+        neighbors.push_back(&getNeighbor(Direction::Top));
     if (hasNeighbor(Direction::TopRight))
-        neighbors.push_back(getNeighbor(Direction::TopRight));
+        neighbors.push_back(&getNeighbor(Direction::TopRight));
     if (hasNeighbor(Direction::Right))
-        neighbors.push_back(getNeighbor(Direction::Right));
+        neighbors.push_back(&getNeighbor(Direction::Right));
     if (hasNeighbor(Direction::BottomRight))
-        neighbors.push_back(getNeighbor(Direction::BottomRight));
+        neighbors.push_back(&getNeighbor(Direction::BottomRight));
     if (hasNeighbor(Direction::Bottom))
-        neighbors.push_back(getNeighbor(Direction::Bottom));
+        neighbors.push_back(&getNeighbor(Direction::Bottom));
     if (hasNeighbor(Direction::BottomLeft))
-        neighbors.push_back(getNeighbor(Direction::BottomLeft));
+        neighbors.push_back(&getNeighbor(Direction::BottomLeft));
     if (hasNeighbor(Direction::Left))
-        neighbors.push_back(getNeighbor(Direction::Left));
+        neighbors.push_back(&getNeighbor(Direction::Left));
     if (hasNeighbor(Direction::TopLeft))
-        neighbors.push_back(getNeighbor(Direction::TopLeft));
+        neighbors.push_back(&getNeighbor(Direction::TopLeft));
 
     return neighbors;
 }
 
-std::vector<std::shared_ptr<const Tile>> Tile::getAdjacentNeighbors() const {
-    std::vector<std::shared_ptr<const Tile>> neighbors;
+std::vector<const Tile*> Tile::getAdjacentNeighbors() const {
+    std::vector<const Tile*> neighbors;
 
     if (hasNeighbor(Direction::Top))
-        neighbors.push_back(getNeighbor(Direction::Top));
+        neighbors.push_back(&getNeighbor(Direction::Top));
     if (hasNeighbor(Direction::Right))
-        neighbors.push_back(getNeighbor(Direction::Right));
+        neighbors.push_back(&getNeighbor(Direction::Right));
     if (hasNeighbor(Direction::Bottom))
-        neighbors.push_back(getNeighbor(Direction::Bottom));
+        neighbors.push_back(&getNeighbor(Direction::Bottom));
     if (hasNeighbor(Direction::Left))
-        neighbors.push_back(getNeighbor(Direction::Left));
+        neighbors.push_back(&getNeighbor(Direction::Left));
 
     return neighbors;
+}
+
+std::vector<Tile*> Tile::getAdjacentNeighbors() {
+    std::vector<const Tile*> neighbors = static_cast<const Tile*>(this)->getAdjacentNeighbors();
+
+    std::vector<Tile*> res(neighbors.size());
+    for (size_t i = 0; i < neighbors.size(); ++i) {
+        res[i] = const_cast<Tile*>(neighbors[i]);
+    }
+
+    return res;
 }
 
 Direction Tile::getDirection(const Tile& neighbor) const {
-    if (hasNeighbor(Direction::Top) && neighbor == *getNeighbor(Direction::Top)) {
+    if (hasNeighbor(Direction::Top) && neighbor == getNeighbor(Direction::Top)) {
         return Direction::Top;
-    } else if (hasNeighbor(Direction::TopRight) && neighbor == *getNeighbor(Direction::TopRight)) {
+    } else if (hasNeighbor(Direction::TopRight) && neighbor == getNeighbor(Direction::TopRight)) {
         return Direction::TopRight;
-    } else if (hasNeighbor(Direction::Right) && neighbor == *getNeighbor(Direction::Right)) {
+    } else if (hasNeighbor(Direction::Right) && neighbor == getNeighbor(Direction::Right)) {
         return Direction::Right;
-    } else if (hasNeighbor(Direction::BottomRight) && neighbor == *getNeighbor(Direction::BottomRight)) {
+    } else if (hasNeighbor(Direction::BottomRight) && neighbor == getNeighbor(Direction::BottomRight)) {
         return Direction::BottomRight;
-    } else if (hasNeighbor(Direction::Bottom) && neighbor == *getNeighbor(Direction::Bottom)) {
+    } else if (hasNeighbor(Direction::Bottom) && neighbor == getNeighbor(Direction::Bottom)) {
         return Direction::Bottom;
-    } else if (hasNeighbor(Direction::BottomLeft) && neighbor == *getNeighbor(Direction::BottomLeft)) {
+    } else if (hasNeighbor(Direction::BottomLeft) && neighbor == getNeighbor(Direction::BottomLeft)) {
         return Direction::BottomLeft;
-    } else if (hasNeighbor(Direction::Left) && neighbor == *getNeighbor(Direction::Left)) {
+    } else if (hasNeighbor(Direction::Left) && neighbor == getNeighbor(Direction::Left)) {
         return Direction::Left;
-    } else if (hasNeighbor(Direction::TopLeft) && neighbor == *getNeighbor(Direction::TopLeft)) {
+    } else if (hasNeighbor(Direction::TopLeft) && neighbor == getNeighbor(Direction::TopLeft)) {
         return Direction::TopLeft;
     } else {
         throw std::invalid_argument("Tile " + toString(neighbor.coords) + " is not a neighbor of "
@@ -125,8 +133,8 @@ IntRotPoint Tile::getNeighborCoords(Direction direction) const {
     }
 }
 
-std::vector<std::shared_ptr<const Tile>> Tile::getTilesInRadius(int radius) const {
-    std::vector<std::shared_ptr<const Tile>> res;
+std::vector<const Tile*> Tile::getTilesInRadius(int radius) const {
+    std::vector<const Tile*> res;
 
     for (int x = -radius; x <= radius; ++x) {
         for (int y = -radius; y <= radius; ++y) {
@@ -134,7 +142,7 @@ std::vector<std::shared_ptr<const Tile>> Tile::getTilesInRadius(int radius) cons
             IntIsoPoint pIso(p.toIsometric());
 
             if (model_->isInBounds(pIso))
-                res.push_back(model_->getTile(pIso));
+                res.push_back(&(model_->getTile(pIso)));
         }
     }
 

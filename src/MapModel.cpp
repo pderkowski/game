@@ -1,7 +1,5 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#include <iostream>
-#include <tuple>
 #include <vector>
 #include <memory>
 #include <algorithm>
@@ -13,25 +11,23 @@
 #include "TileEnums.hpp"
 
 MapModel::MapModel(int rowsNo, int columnsNo)
-    : rowsNo_(rowsNo), columnsNo_(columnsNo)
+    : rowsNo_(rowsNo), columnsNo_(columnsNo), tiles_(rowsNo, std::vector<Tile>(columnsNo))
 {
-    for (int r = 0; r < rowsNo; ++r) {
-        tiles_.push_back(std::vector<std::shared_ptr<Tile>>(columnsNo));
-        for (int c = 0; c < columnsNo; ++c) {
-            tiles_[r][c] = std::shared_ptr<Tile>(new Tile(IntRotPoint(IntIsoPoint(c, r).toRotated()),
-                tileenums::Type::Empty, this));
+    for (int r = 0; r < rowsNo_; ++r) {
+        for (int c = 0; c < columnsNo_; ++c) {
+            tiles_[r][c] = Tile(IntRotPoint(IntIsoPoint(c, r).toRotated()), tileenums::Type::Empty, this);
         }
     }
 }
 
 MapModel::MapModel(const MapModel& other)
-    : rowsNo_(other.rowsNo_), columnsNo_(other.columnsNo_)
+    : rowsNo_(other.rowsNo_), columnsNo_(other.columnsNo_),
+    tiles_(other.rowsNo_, std::vector<Tile>(other.columnsNo_))
 {
     for (int r = 0; r < rowsNo_; ++r) {
-        tiles_.push_back(std::vector<std::shared_ptr<Tile>>(columnsNo_));
         for (int c = 0; c < columnsNo_; ++c) {
-            tiles_[r][c] = std::shared_ptr<Tile>(new Tile(*(other.tiles_[r][c])));
-            tiles_[r][c]->setModel(this);
+            tiles_[r][c] = Tile(other.tiles_[r][c]);
+            tiles_[r][c].setModel(this);
         }
     }
 }
@@ -60,45 +56,22 @@ bool MapModel::isInBounds(const IntIsoPoint& p) const {
     return 0 <= p.y && p.y < getRowsNo();
 }
 
-bool MapModel::isInBounds(std::shared_ptr<const Tile> tile) const {
-    const IntIsoPoint coords(tile->coords.toIsometric());
-    return isInBounds(coords);
+
+const Tile& MapModel::getTile(const IntIsoPoint& p) const {
+    return tiles_[p.y][utils::positiveModulo(p.x, columnsNo_)];
 }
 
-
-std::shared_ptr<const Tile> MapModel::getTile(const IntIsoPoint& p) const {
-    if (!isInBounds(p)) {
-        return std::shared_ptr<const Tile>(new Tile(IntRotPoint(p.toRotated())));
-    } else {
-        return tiles_[p.y][utils::positiveModulo(p.x, columnsNo_)];
-    }
+Tile& MapModel::getTile(const IntIsoPoint& p) {
+    return tiles_[p.y][utils::positiveModulo(p.x, columnsNo_)];
 }
 
-std::shared_ptr<Tile> MapModel::getTile(const IntIsoPoint& p) {
-    return std::const_pointer_cast<Tile>(static_cast<const MapModel&>(*this).getTile(p));
-}
+std::vector<Tile*> MapModel::getTiles(std::function<bool(Tile&)> selector) {
+    std::vector<Tile*> res;
 
-std::vector<std::shared_ptr<const Tile>> MapModel::getTilesByType(tileenums::Type type) const {
-    std::vector<std::shared_ptr<const Tile>> res;
-
-    for (const auto& row : tiles_) {
-        for (const auto& tilePtr : row) {
-            if (tilePtr->type == type) {
-                res.push_back(tilePtr);
-            }
-        }
-    }
-
-    return res;
-}
-
-std::vector<std::shared_ptr<const Tile>> MapModel::getTiles(std::function<bool(const Tile&)> selector) const {
-    std::vector<std::shared_ptr<const Tile>> res;
-
-    for (const auto& row : tiles_) {
-        for (const auto& tilePtr : row) {
-            if (selector(*tilePtr)) {
-                res.push_back(tilePtr);
+    for (auto& row : tiles_) {
+        for (Tile& tile : row) {
+            if (selector(tile)) {
+                res.push_back(&tile);
             }
         }
     }
@@ -107,9 +80,9 @@ std::vector<std::shared_ptr<const Tile>> MapModel::getTiles(std::function<bool(c
 }
 
 void MapModel::changeTiles(std::function<void(Tile&)> transformation) {
-    for (const auto& row : tiles_) {
-        for (const auto& tilePtr : row) {
-            transformation(*tilePtr);
+    for (auto& row : tiles_) {
+        for (Tile& tile : row) {
+            transformation(tile);
         }
     }
 }
@@ -117,9 +90,9 @@ void MapModel::changeTiles(std::function<void(Tile&)> transformation) {
 
 
 void MapModel::setModelInTiles(MapModel* model) {
-    for (const auto& row : tiles_) {
-        for (const auto& tilePtr : row) {
-            tilePtr->setModel(model);
+    for (auto& row : tiles_) {
+        for (Tile& tile : row) {
+            tile.setModel(model);
         }
     }
 }

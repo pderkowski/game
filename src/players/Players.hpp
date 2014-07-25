@@ -34,7 +34,7 @@ public:
     void handleFPressed();
 
 private:
-    std::shared_ptr<const Tile> getClickedTile(const sf::Vector2i& clickedPoint);
+    const Tile& getClickedTile(const sf::Vector2i& clickedPoint) const;
 
     bool isDestinationConfirmed(const Tile& destination) const;
 

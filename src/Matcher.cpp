@@ -32,7 +32,7 @@ NeighborTypesMatcher::NeighborTypesMatcher(Type type, const NeighborTypes& neigh
                 case Any:
                     break;
                 case Same:
-                    if ((tile.hasNeighbor(directions[i]) && tile.getNeighbor(directions[i])->type == type)
+                    if ((tile.hasNeighbor(directions[i]) && tile.getNeighbor(directions[i]).type == type)
                         || !tile.hasNeighbor(directions[i]))
                     {
                         break;
@@ -40,7 +40,7 @@ NeighborTypesMatcher::NeighborTypesMatcher(Type type, const NeighborTypes& neigh
                     else
                         return false;
                 case Different:
-                    if (tile.hasNeighbor(directions[i]) && tile.getNeighbor(directions[i])->type != type)
+                    if (tile.hasNeighbor(directions[i]) && tile.getNeighbor(directions[i]).type != type)
                         break;
                     else
                         return false;

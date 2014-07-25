@@ -1,6 +1,5 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#include <memory>
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
 #include "MapDrawer.hpp"
@@ -31,13 +30,13 @@ void MapDrawer::setModel(const MapModel& model) {
     }
 }
 
-void MapDrawer::addTileToLayers(std::shared_ptr<const Tile> tile) {
+void MapDrawer::addTileToLayers(const Tile& tile) {
     for (auto& layer : layers_) {
-        auto tilePosition = renderer_->getPosition(IntIsoPoint(tile->coords.toIsometric()));
-        auto dualTilePosition = renderer_->getDualPosition(IntIsoPoint(tile->coords.toIsometric()));
+        auto tilePosition = renderer_->getPosition(IntIsoPoint(tile.coords.toIsometric()));
+        auto dualTilePosition = renderer_->getDualPosition(IntIsoPoint(tile.coords.toIsometric()));
 
-        layer.add(*tile, tilePosition);
-        layer.add(*tile, dualTilePosition);
+        layer.add(tile, tilePosition);
+        layer.add(tile, dualTilePosition);
     }
 }
 

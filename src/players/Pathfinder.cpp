@@ -37,7 +37,7 @@ bool Pathfinder::doesPathExist(const Tile& source, const Tile& goal) const {
             return true;
         }
 
-        std::vector<std::shared_ptr<const Tile>> neighbors = current.getNeighbors();
+        std::vector<const Tile*> neighbors = current.getNeighbors();
         for (auto neighbor : neighbors) {
             if (!reached.count(*neighbor) && isPassable(*neighbor)) {
                 reached.insert(*neighbor);
@@ -67,7 +67,7 @@ std::vector<Tile> Pathfinder::findPath(const Tile& source, const Tile& goal) con
         } else if (!visited.count(current.tile)) {
             visited.insert(current.tile);
 
-            std::vector<std::shared_ptr<const Tile>> neighbors = current.tile.getNeighbors();
+            std::vector<const Tile*> neighbors = current.tile.getNeighbors();
             for (auto neighbor : neighbors) {
                 if (isPassable(*neighbor) && !visited.count(*neighbor)) {
                     unsigned newDistance = current.distance + cost_.at(neighbor->type);

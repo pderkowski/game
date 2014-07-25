@@ -29,15 +29,15 @@ size_t Fog::getColumnsNo() const {
     return columns_;
 }
 
-void Fog::addVisible(const std::vector<Tile>& tiles) {
-    for (const auto& tile : tiles) {
-        IntIsoPoint coords(tile.coords.toIsometric());
+void Fog::addVisible(const std::vector<const Tile*>& tiles) {
+    for (const Tile* tile : tiles) {
+        IntIsoPoint coords(tile->coords.toIsometric());
         tiles_[coords.y][coords.x] = TileVisibility::VisibleKnown;
     }
 }
-void Fog::addKnown(const std::vector<Tile>& tiles) {
-    for (const auto& tile : tiles) {
-        IntIsoPoint coords(tile.coords.toIsometric());
+void Fog::addKnown(const std::vector<const Tile*>& tiles) {
+    for (const Tile* tile : tiles) {
+        IntIsoPoint coords(tile->coords.toIsometric());
 
         if (tiles_[coords.y][coords.x] == TileVisibility::Unknown) {
             tiles_[coords.y][coords.x] = TileVisibility::UnvisibleKnown;
@@ -45,9 +45,9 @@ void Fog::addKnown(const std::vector<Tile>& tiles) {
     }
 }
 
-void Fog::removeVisible(const std::vector<Tile>& tiles) {
-    for (const auto& tile : tiles) {
-        IntIsoPoint coords(tile.coords.toIsometric());
+void Fog::removeVisible(const std::vector<const Tile*>& tiles) {
+    for (const Tile* tile : tiles) {
+        IntIsoPoint coords(tile->coords.toIsometric());
 
         if (tiles_[coords.y][coords.x] == TileVisibility::VisibleKnown) {
             tiles_[coords.y][coords.x] = TileVisibility::UnvisibleKnown;

@@ -25,7 +25,7 @@ Type Unit::getType() const {
     return type_;
 }
 
-std::shared_ptr<const Tile> Unit::getPosition() const {
+Tile Unit::getPosition() const {
     if (model_ != nullptr)
         return model_->getTile(IntIsoPoint(coords_.toIsometric()));
     else
@@ -37,11 +37,11 @@ IntRotPoint Unit::getCoords() const {
 }
 
 bool Unit::canMoveTo(tileenums::Direction direction) const {
-    return getPosition()->hasNeighbor(direction);
+    return getPosition().hasNeighbor(direction);
 }
 
 void Unit::moveTo(tileenums::Direction direction) {
-    coords_ = getPosition()->getNeighbor(direction)->coords;
+    coords_ = getPosition().getNeighbor(direction).coords;
 }
 
 std::map<tileenums::Type, unsigned> Unit::getMovingCosts() const {

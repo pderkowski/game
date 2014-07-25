@@ -65,7 +65,7 @@ void Players::handleLeftClick(const sf::Event& e) {
 void Players::handleAPressed() {
     if (selection_.isSourceSelected()) {
         getCurrentPlayer()->addUnit(
-            units::Unit(selection_.getSource()->coords, units::Type::Phalanx, model_));
+            units::Unit(selection_.getSource().coords, units::Type::Phalanx, model_));
 
         drawer_.updateUnitLayer(getCurrentPlayer()->getFog());
         drawer_.updateFogLayer(getCurrentPlayer()->getFog());
@@ -81,10 +81,10 @@ void Players::handleRightClick(const sf::Event& e) {
         auto source = selection_.getSource();
         auto destination = getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 
-        Player::UnitControler unit = getCurrentPlayer()->getUnitAtCoords(source->coords);
-        if (unit.canMoveTo(*destination)) {
-            if (isDestinationConfirmed(*destination)) {
-                unit.moveTo(*destination);
+        Player::UnitControler unit = getCurrentPlayer()->getUnitAtCoords(source.coords);
+        if (unit.canMoveTo(destination)) {
+            if (isDestinationConfirmed(destination)) {
+                unit.moveTo(destination);
 
                 selection_.clear();
                 selection_.setSource(destination);
@@ -95,7 +95,7 @@ void Players::handleRightClick(const sf::Event& e) {
             } else {
                 selection_.setDestination(destination);
 
-                drawer_.updatePathLayer(unit.getPathTo(*destination));
+                drawer_.updatePathLayer(unit.getPathTo(destination));
             }
         }
     }
@@ -103,13 +103,13 @@ void Players::handleRightClick(const sf::Event& e) {
     drawer_.updateSelectionLayer(selection_);
 }
 
-std::shared_ptr<const Tile> Players::getClickedTile(const sf::Vector2i& clickedPoint) {
+const Tile& Players::getClickedTile(const sf::Vector2i& clickedPoint) const {
     IntIsoPoint clickedCoords = renderer_->getMapCoords(clickedPoint);
     return model_->getTile(clickedCoords);
 }
 
 bool Players::isDestinationConfirmed(const Tile& destination) const {
-    return selection_.isDestinationSelected() && *(selection_.getDestination()) == destination;
+    return selection_.isDestinationSelected() && selection_.getDestination() == destination;
 }
 
 

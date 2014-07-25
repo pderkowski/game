@@ -59,7 +59,7 @@ MapConstructor& MapConstructor::createRiverFlow() {
     });
 
     for (const auto& source : sources) {
-        for (auto lowerNeighbor = findRandomLowerNeighbor(source), current = std::const_pointer_cast<Tile>(source);
+        for (auto lowerNeighbor = findRandomLowerNeighbor(source), current = source;
             current->type != tileenums::Type::Water;
             current = lowerNeighbor,
             lowerNeighbor = findRandomLowerNeighbor(lowerNeighbor))
@@ -82,12 +82,12 @@ MapConstructor& MapConstructor::createRiverFlow() {
     return *this;
 }
 
-std::shared_ptr<Tile> MapConstructor::findRandomLowerNeighbor(std::shared_ptr<const Tile> tile) const {
-    auto neighbors = tile->getAdjacentNeighbors();
-    std::vector<std::shared_ptr<const Tile>> lowerNeighbors;
+Tile* MapConstructor::findRandomLowerNeighbor(Tile* tile) {
+    std::vector<Tile*> neighbors = tile->getAdjacentNeighbors();
+    std::vector<Tile*> lowerNeighbors;
 
     std::copy_if(neighbors.begin(), neighbors.end(), std::back_inserter(lowerNeighbors),
-        [tile, this] (std::shared_ptr<const Tile> neighbor) {
+        [tile, this] (Tile* neighbor) {
             const IntIsoPoint tileCoords(tile->coords.toIsometric());
             const IntIsoPoint neighCoords(neighbor->coords.toIsometric());
             return heightMap_(neighCoords.y, neighCoords.x) < (heightMap_(tileCoords.y, tileCoords.x));
@@ -95,18 +95,17 @@ std::shared_ptr<Tile> MapConstructor::findRandomLowerNeighbor(std::shared_ptr<co
 
     if (lowerNeighbors.size() > 0) {
         lowerNeighbors.push_back(findLowest(lowerNeighbors)); // lowest has 2 times bigger chance
-        return std::const_pointer_cast<Tile>(lowerNeighbors[(*generator_)() % lowerNeighbors.size()]);
+        return lowerNeighbors[(*generator_)() % lowerNeighbors.size()];
     } else {
         return nullptr;
     }
 }
 
-std::shared_ptr<const Tile> MapConstructor::findLowest(
-    std::vector<std::shared_ptr<const Tile>> tiles) const
+Tile* MapConstructor::findLowest(std::vector<Tile*> tiles) const
 {
-    auto lowest = tiles.front();
+    Tile* lowest = tiles.front();
 
-    for (auto tile : tiles) {
+    for (Tile* tile : tiles) {
         const IntIsoPoint tileCoords(tile->coords.toIsometric());
         const IntIsoPoint lowestCoords(lowest->coords.toIsometric());
 

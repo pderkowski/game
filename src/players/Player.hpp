@@ -50,7 +50,7 @@ public:
     };
 
 private:
-    std::vector<Tile> getSurroundingTiles(const units::Unit& unit) const;
+    std::vector<const Tile*> getSurroundingTiles(const units::Unit& unit) const;
 
 private:
     std::string name_;

@@ -27,10 +27,10 @@ public:
     size_t getRowsNo() const;
     size_t getColumnsNo() const;
 
-    void addVisible(const std::vector<Tile>& tiles);
-    void addKnown(const std::vector<Tile>& tiles);
+    void addVisible(const std::vector<const Tile*>& tiles);
+    void addKnown(const std::vector<const Tile*>& tiles);
 
-    void removeVisible(const std::vector<Tile>& tiles);
+    void removeVisible(const std::vector<const Tile*>& tiles);
 
 private:
     size_t rows_;

@@ -26,7 +26,7 @@ public:
 
     Type getType() const;
 
-    std::shared_ptr<const Tile> getPosition() const;
+    Tile getPosition() const;
     IntRotPoint getCoords() const;
 
     bool canMoveTo(tileenums::Direction direction) const;

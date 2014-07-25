@@ -3,7 +3,6 @@
 #ifndef TILE_HPP_
 #define TILE_HPP_
 
-#include <memory>
 #include "Attributes.hpp"
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
@@ -19,17 +18,17 @@ public:
     void setModel(MapModel* model);
 
     bool hasNeighbor(Direction direction) const;
-    std::shared_ptr<const Tile> getNeighbor(Direction direction) const;
-    std::vector<std::shared_ptr<const Tile>> getNeighbors() const;
-    std::vector<std::shared_ptr<const Tile>> getAdjacentNeighbors() const;
+    const Tile& getNeighbor(Direction direction) const;
+    std::vector<const Tile*> getNeighbors() const;
 
-    std::vector<std::shared_ptr<const Tile>> getTilesInRadius(int radius) const;
+    std::vector<const Tile*> getAdjacentNeighbors() const;
+    std::vector<Tile*> getAdjacentNeighbors();
+
+    std::vector<const Tile*> getTilesInRadius(int radius) const;
 
     Direction getDirection(const Tile& neighbor) const;
 
-    IntRotPoint coords;
-    Type type;
-    Attributes attributes;
+    bool isValid() const;
 
 private:
     friend bool operator == (const Tile& lhs, const Tile& rhs);
@@ -38,8 +37,13 @@ private:
     friend class std::hash<Tile>;
 
     IntRotPoint getNeighborCoords(Direction direction) const;
-    bool isValid() const;
 
+public:
+    IntRotPoint coords;
+    Type type;
+    Attributes attributes;
+
+private:
     MapModel* model_;
 };
 

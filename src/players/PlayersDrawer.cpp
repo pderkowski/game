@@ -46,11 +46,11 @@ void PlayersDrawer::updateUnitLayer(const Fog& fog) {
 
     for (const units::Unit& unit : players_->getAllUnits()) {
         auto tile = unit.getPosition();
-        IntIsoPoint coords(tile->coords.toIsometric());
+        IntIsoPoint coords(tile.coords.toIsometric());
 
         if (fog(coords.y, coords.x) == TileVisibility::VisibleKnown) {
-            auto tilePosition = renderer_->getPosition(IntIsoPoint(tile->coords.toIsometric()));
-            auto dualTilePosition = renderer_->getDualPosition(IntIsoPoint(tile->coords.toIsometric()));
+            auto tilePosition = renderer_->getPosition(IntIsoPoint(tile.coords.toIsometric()));
+            auto dualTilePosition = renderer_->getDualPosition(IntIsoPoint(tile.coords.toIsometric()));
 
             unitLayer_.add(unit, tilePosition);
             unitLayer_.add(unit, dualTilePosition);
@@ -64,8 +64,8 @@ void PlayersDrawer::updateSelectionLayer(const Selection& selection) {
     if (selection.isSourceSelected()) {
         auto source = selection.getSource();
 
-        auto sourcePosition = renderer_->getPosition(IntIsoPoint(source->coords.toIsometric()));
-        auto sourceDualPosition = renderer_->getDualPosition(IntIsoPoint(source->coords.toIsometric()));
+        auto sourcePosition = renderer_->getPosition(IntIsoPoint(source.coords.toIsometric()));
+        auto sourceDualPosition = renderer_->getDualPosition(IntIsoPoint(source.coords.toIsometric()));
 
         selectionLayer_.add(miscellaneous::Type::Source, sourcePosition);
         selectionLayer_.add(miscellaneous::Type::Source, sourceDualPosition);
@@ -74,8 +74,8 @@ void PlayersDrawer::updateSelectionLayer(const Selection& selection) {
     if (selection.isDestinationSelected()) {
         auto destination = selection.getDestination();
 
-        auto destinationPosition = renderer_->getPosition(IntIsoPoint(destination->coords.toIsometric()));
-        auto destinationDualPosition = renderer_->getDualPosition(IntIsoPoint(destination->coords.toIsometric()));
+        auto destinationPosition = renderer_->getPosition(IntIsoPoint(destination.coords.toIsometric()));
+        auto destinationDualPosition = renderer_->getDualPosition(IntIsoPoint(destination.coords.toIsometric()));
 
         selectionLayer_.add(miscellaneous::Type::Destination, destinationPosition);
         selectionLayer_.add(miscellaneous::Type::Destination, destinationDualPosition);

@@ -3,7 +3,6 @@
 #ifndef MAPDRAWER_HPP_
 #define MAPDRAWER_HPP_
 
-#include <memory>
 #include <vector>
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
@@ -20,7 +19,7 @@ public:
     void setModel(const MapModel& model);
 
 private:
-    void addTileToLayers(std::shared_ptr<const Tile> tile);
+    void addTileToLayers(const Tile& tile);
 
 private:
     std::vector<Layer<Tile>> layers_;

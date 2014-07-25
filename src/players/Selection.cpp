@@ -1,4 +1,3 @@
-#include <memory>
 #include "Tile.hpp"
 #include "units/Unit.hpp"
 #include "Selection.hpp"
@@ -8,44 +7,41 @@
 namespace players {
 
 
-Selection::Selection()
-    : source_(nullptr), destination_(nullptr)
+
+Selection::Selection(const Tile& source, const Tile& destination)
+    : source_(source), destination_(destination)
 { }
 
-Selection::Selection(std::shared_ptr<const Tile> source)
-    : source_(source), destination_(nullptr)
-{ }
-
-void Selection::setSource(std::shared_ptr<const Tile> source) {
+void Selection::setSource(const Tile& source) {
     source_ = source;
 }
 
-void Selection::setDestination(std::shared_ptr<const Tile> destination) {
+void Selection::setDestination(const Tile& destination) {
     destination_ = destination;
 }
 
 void Selection::clear() {
-    source_ = nullptr;
-    destination_ = nullptr;
+    source_ = Tile();
+    destination_ = Tile();
 }
 
 bool Selection::isUnitSelected(const Player* player) const {
-    return isSourceSelected() && player->hasUnitAtCoords(source_->coords);
+    return isSourceSelected() && player->hasUnitAtCoords(source_.coords);
 }
 
 bool Selection::isSourceSelected() const {
-    return static_cast<bool>(source_);
+    return source_.isValid();
 }
 
 bool Selection::isDestinationSelected() const {
-    return static_cast<bool>(destination_);
+    return destination_.isValid();
 }
 
-std::shared_ptr<const Tile> Selection::getSource() const {
+Tile Selection::getSource() const {
     return source_;
 }
 
-std::shared_ptr<const Tile> Selection::getDestination() const {
+Tile Selection::getDestination() const {
     return destination_;
 }
 

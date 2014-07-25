@@ -62,13 +62,13 @@ sf::RectangleShape Minimap::createDisplayedRectangle() {
 
 sf::Color Minimap::getBackgroundPixel(int row, int column) const {
     IntIsoPoint pixelIsoCoords(CartPoint(column, row).toIsometric());
-    return tileColors_.at(model_->getTile(pixelIsoCoords)->type);
+    return tileColors_.at(model_->getTile(pixelIsoCoords).type);
 }
 
 sf::Color Minimap::getFogPixel(int row, int column) const {
     IntIsoPoint pixelIsoCoords(CartPoint(column, row).toIsometric());
     auto tile = model_->getTile(pixelIsoCoords);
-    IntIsoPoint tileIsoCoords(tile->coords.toIsometric());
+    IntIsoPoint tileIsoCoords(tile.coords.toIsometric());
 
     if (fog_(tileIsoCoords.y, tileIsoCoords.x) == players::TileVisibility::Unknown) {
         return sf::Color(0, 0, 0);
