@@ -13,7 +13,8 @@ class Tile;
 namespace units {
 
 enum class Type {
-    Phalanx
+    Phalanx,
+    Trireme
 };
 
 class Unit {

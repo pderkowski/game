@@ -10,6 +10,7 @@ namespace textures {
 namespace units {
 
 extern const sf::VertexArray phalanx;
+extern const sf::VertexArray trireme;
 
 }  // units
 

@@ -528,6 +528,10 @@ TextureSet<units::Unit> TextureSetFactory::getUnitTextureSet() {
         return unit.getType() == units::Type::Phalanx;
     })), textures::units::phalanx);
 
+    ts.add(std::shared_ptr<const Matcher<Unit>>(new Matcher<Unit>([] (const Unit& unit) {
+        return unit.getType() == units::Type::Trireme;
+    })), textures::units::trireme);
+
     return ts;
 }
 

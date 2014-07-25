@@ -64,8 +64,13 @@ void Players::handleLeftClick(const sf::Event& e) {
 
 void Players::handleAPressed() {
     if (selection_.isSourceSelected()) {
-        getCurrentPlayer()->addUnit(
-            units::Unit(selection_.getSource().coords, units::Type::Phalanx, model_));
+        if (selection_.getSource().type == tileenums::Type::Water) {
+            getCurrentPlayer()->addUnit(
+                units::Unit(selection_.getSource().coords, units::Type::Trireme, model_));
+        } else {
+            getCurrentPlayer()->addUnit(
+                units::Unit(selection_.getSource().coords, units::Type::Phalanx, model_));
+        }
 
         drawer_.updateUnitLayer(getCurrentPlayer()->getFog());
         drawer_.updateFogLayer(getCurrentPlayer()->getFog());
