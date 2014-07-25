@@ -3,8 +3,6 @@
 #ifndef UNITS_UNIT_HPP_
 #define UNITS_UNIT_HPP_
 
-#include <memory>
-#include <map>
 #include <functional>
 #include "TileEnums.hpp"
 #include "Coordinates.hpp"
@@ -32,14 +30,13 @@ public:
     bool canMoveTo(tileenums::Direction direction) const;
     void moveTo(tileenums::Direction direction);
 
-    std::map<tileenums::Type, unsigned> getMovingCosts() const;
-
 private:
     friend bool operator == (const Unit& lhs, const Unit& rhs);
     friend class std::hash<units::Unit>;
 
     IntRotPoint coords_;
     Type type_;
+
     const MapModel* model_;
 };
 

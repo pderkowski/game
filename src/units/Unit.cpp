@@ -1,9 +1,6 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#include <memory>
 #include <stdexcept>
-#include <vector>
-#include <climits>
 #include "Unit.hpp"
 #include "Tile.hpp"
 #include "Coordinates.hpp"
@@ -43,20 +40,6 @@ bool Unit::canMoveTo(tileenums::Direction direction) const {
 void Unit::moveTo(tileenums::Direction direction) {
     coords_ = getPosition().getNeighbor(direction).coords;
 }
-
-std::map<tileenums::Type, unsigned> Unit::getMovingCosts() const {
-    return std::map<tileenums::Type, unsigned>{
-        { tileenums::Type::Empty, UINT_MAX },
-        { tileenums::Type::Water, UINT_MAX },
-        { tileenums::Type::Grassland, 1 },
-        { tileenums::Type::Plains, 1 },
-        { tileenums::Type::Forest, 2 },
-        { tileenums::Type::Desert, 1 },
-        { tileenums::Type::Hills, 2 },
-        { tileenums::Type::Mountains, UINT_MAX }
-    };
-}
-
 
 bool operator == (const Unit& lhs, const Unit& rhs) {
     return (lhs.coords_ == rhs.coords_) && (lhs.type_ == rhs.type_) && (lhs.model_ == rhs.model_);

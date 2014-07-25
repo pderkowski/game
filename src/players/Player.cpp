@@ -7,6 +7,7 @@
 #include <vector>
 #include "Player.hpp"
 #include "units/Unit.hpp"
+#include "units/MovingCosts.hpp"
 #include "Coordinates.hpp"
 #include "Tile.hpp"
 #include "Fog.hpp"
@@ -83,12 +84,12 @@ units::Unit Player::UnitControler::get() const {
 }
 
 bool Player::UnitControler::canMoveTo(const Tile& destination) const {
-    Pathfinder pathfinder(unit_->getMovingCosts(), player_->fog_);
+    Pathfinder pathfinder(units::getMovingCosts(unit_->getType()), player_->fog_);
     return pathfinder.doesPathExist(unit_->getPosition(), destination);
 }
 
 std::vector<Tile> Player::UnitControler::getPathTo(const Tile& destination) const {
-    Pathfinder pathfinder(unit_->getMovingCosts(), player_->fog_);
+    Pathfinder pathfinder(units::getMovingCosts(unit_->getType()), player_->fog_);
     return pathfinder.findPath(unit_->getPosition(), destination);
 }
 
