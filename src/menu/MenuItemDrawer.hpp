@@ -1,11 +1,15 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MENUITEMDRAWER_HPP_
-#define MENUITEMDRAWER_HPP_
+#ifndef MENU_MENUITEMDRAWER_HPP_
+#define MENU_MENUITEMDRAWER_HPP_
 
 #include <memory>
 #include "SFML/Graphics.hpp"
 #include "MenuItem.hpp"
+
+
+namespace menu {
+
 
 class MenuItemDrawer {
 public:
@@ -35,4 +39,7 @@ private:
     std::shared_ptr<sf::RenderTarget> target_;
 };
 
-#endif  // MENUITEMDRAWER_HPP_
+
+}  // namespace menu
+
+#endif  // MENU_MENUITEMDRAWER_HPP_

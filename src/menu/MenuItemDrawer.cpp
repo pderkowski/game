@@ -4,6 +4,10 @@
 #include "MenuItemDrawer.hpp"
 #include "MenuItem.hpp"
 
+
+namespace menu {
+
+
 MenuItemDrawer::MenuItemDrawer(std::shared_ptr<MenuItem> item,
     float fontHeightFactor,
     float relativeYPosition,
@@ -50,3 +54,6 @@ std::shared_ptr<MenuItem> MenuItemDrawer::getObjectByPosition(const sf::Vector2i
 void MenuItemDrawer::setColor(const sf::Color& color) {
     text_.setColor(color);
 }
+
+
+}  // namespace menu

@@ -7,7 +7,7 @@
 #include <vector>
 #include "SFML/Graphics.hpp"
 #include "Map.hpp"
-#include "Menu.hpp"
+#include "menu/Menu.hpp"
 #include "players/Players.hpp"
 #include "Minimap.hpp"
 #include "Interface.hpp"
@@ -40,7 +40,7 @@ private:
     Players players_;
     Minimap minimap_;
     Interface interface_;
-    Menu menu_;
+    menu::Menu menu_;
 };
 
 #endif  // GAME_HPP_

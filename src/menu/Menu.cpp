@@ -9,6 +9,10 @@
 #include "MenuModel.hpp"
 #include "MenuItem.hpp"
 
+
+namespace menu {
+
+
 Menu::Menu(std::shared_ptr<sf::RenderWindow> target)
     : model_(std::make_shared<MenuModel>()),
     drawer_(model_, target),
@@ -51,3 +55,6 @@ bool Menu::isVisible() const {
 void Menu::toggleVisibility() {
     isVisible_ = !isVisible_;
 }
+
+
+}  // namespace menu

@@ -1,7 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MENU_HPP_
-#define MENU_HPP_
+#ifndef MENU_MENU_HPP_
+#define MENU_MENU_HPP_
 
 #include <memory>
 #include <string>
@@ -10,6 +10,10 @@
 #include "SFML/Graphics.hpp"
 #include "MenuDrawer.hpp"
 #include "MenuModel.hpp"
+
+
+namespace menu {
+
 
 class Menu {
 public:
@@ -33,4 +37,8 @@ private:
     bool isVisible_;
 };
 
-#endif  // MENU_HPP_
+
+}  // namespace menu
+
+
+#endif  // MENU_MENU_HPP_

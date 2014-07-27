@@ -1,10 +1,14 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MENUITEM_HPP_
-#define MENUITEM_HPP_
+#ifndef MENU_MENUITEM_HPP_
+#define MENU_MENUITEM_HPP_
 
 #include <string>
 #include <functional>
+
+
+namespace menu {
+
 
 class MenuItem {
 public:
@@ -18,4 +22,8 @@ private:
     std::function<void()> callback_;
 };
 
-#endif  // MENUITEM_HPP_
+
+}  // namespace menu
+
+
+#endif  // MENU_MENUITEM_HPP_

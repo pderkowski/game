@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 #include "Map.hpp"
-#include "Menu.hpp"
+#include "menu/Menu.hpp"
 #include "Game.hpp"
 #include "TileEnums.hpp"
 #include "players/Players.hpp"

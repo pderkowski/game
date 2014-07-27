@@ -1,13 +1,17 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MENUMODEL_HPP_
-#define MENUMODEL_HPP_
+#ifndef MENU_MENUMODEL_HPP_
+#define MENU_MENUMODEL_HPP_
 
 #include <memory>
 #include <string>
 #include <vector>
 #include <functional>
 #include "MenuItem.hpp"
+
+
+namespace menu {
+
 
 class MenuModel {
 public:
@@ -20,4 +24,7 @@ private:
     friend class MenuDrawer;
 };
 
-#endif  // MENUMODEL_HPP_
+
+}  // namespace menu
+
+#endif  // MENU_MENUMODEL_HPP_

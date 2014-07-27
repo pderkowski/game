@@ -8,6 +8,10 @@
 #include "MenuDrawer.hpp"
 #include "Resources.hpp"
 
+
+namespace menu {
+
+
 const float MenuDrawer::fontHeightFactor_ = 1.0 / 25;
 const float MenuDrawer::lineSpacingFactor_ = fontHeightFactor_ / 4;
 
@@ -88,3 +92,6 @@ std::shared_ptr<MenuItemDrawer> MenuDrawer::getDrawerByObject(
 
     return std::shared_ptr<MenuItemDrawer>();
 }
+
+
+}  // namespace menu

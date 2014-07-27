@@ -1,7 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MENU_DRAWER_HPP_
-#define MENU_DRAWER_HPP_
+#ifndef MENU_MENUDRAWER_HPP_
+#define MENU_MENUDRAWER_HPP_
 
 #include <memory>
 #include <vector>
@@ -9,6 +9,10 @@
 #include "MenuModel.hpp"
 #include "MenuItem.hpp"
 #include "MenuItemDrawer.hpp"
+
+
+namespace menu {
+
 
 class MenuDrawer {
 public:
@@ -44,4 +48,8 @@ private:
     std::vector<std::shared_ptr<MenuItemDrawer>> itemDrawers_;
 };
 
-#endif  // MENU_DRAWER_HPP_
+
+}  // namespace menu
+
+
+#endif  // MENU_MENUDRAWER_HPP_
