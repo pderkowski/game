@@ -29,6 +29,10 @@ using namespace tileenums;
 #define BOTTOM Direction::Bottom
 #define LEFT Direction::Left
 
+
+namespace textures {
+
+
 TextureSet<Tile> TextureSetFactory::getBaseTextureSet() {
     TextureSet<Tile> ts(Resources::loadTexture("textures/terrains.png"));
 
@@ -519,35 +523,35 @@ TextureSet<Tile> TextureSetFactory::getAttributeTextureSet() {
     return ts;
 }
 
-TextureSet<units::Unit> TextureSetFactory::getUnitTextureSet() {
-    using namespace units;
+TextureSet<::units::Unit> TextureSetFactory::getUnitTextureSet() {
+    using namespace ::units;
 
     TextureSet<Unit> ts(Resources::loadTexture("textures/units.png"));
 
     ts.add(std::shared_ptr<const Matcher<Unit>>(new Matcher<Unit>([] (const Unit& unit) {
-        return unit.getType() == units::Type::Phalanx;
+        return unit.getType() == ::units::Type::Phalanx;
     })), textures::units::phalanx);
 
     ts.add(std::shared_ptr<const Matcher<Unit>>(new Matcher<Unit>([] (const Unit& unit) {
-        return unit.getType() == units::Type::Trireme;
+        return unit.getType() == ::units::Type::Trireme;
     })), textures::units::trireme);
 
     return ts;
 }
 
-TextureSet<miscellaneous::Type> TextureSetFactory::getSelectionTextureSet() {
-    TextureSet<miscellaneous::Type> ts(Resources::loadTexture("textures/miscellaneous.png"));
+TextureSet<::miscellaneous::Type> TextureSetFactory::getSelectionTextureSet() {
+    TextureSet<::miscellaneous::Type> ts(Resources::loadTexture("textures/miscellaneous.png"));
 
-    ts.add(std::shared_ptr<const Matcher<miscellaneous::Type>>(
-        new Matcher<miscellaneous::Type>([] (const miscellaneous::Type& type)
+    ts.add(std::shared_ptr<const Matcher<::miscellaneous::Type>>(
+        new Matcher<::miscellaneous::Type>([] (const ::miscellaneous::Type& type)
     {
-        return type == miscellaneous::Type::Source;
+        return type == ::miscellaneous::Type::Source;
     })), textures::miscellaneous::source);
 
-    ts.add(std::shared_ptr<const Matcher<miscellaneous::Type>>(
-        new Matcher<miscellaneous::Type>([] (const miscellaneous::Type& type)
+    ts.add(std::shared_ptr<const Matcher<::miscellaneous::Type>>(
+        new Matcher<::miscellaneous::Type>([] (const ::miscellaneous::Type& type)
     {
-        return type == miscellaneous::Type::Destination;
+        return type == ::miscellaneous::Type::Destination;
     })), textures::miscellaneous::destination);
 
     return ts;
@@ -631,3 +635,6 @@ TextureSet<players::TileVisibility> TextureSetFactory::getFogTextureSet() {
 
     return ts;
 }
+
+
+}  // namespace textures

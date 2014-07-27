@@ -5,8 +5,8 @@
 #include "PlayersDrawer.hpp"
 #include "units/Unit.hpp"
 #include "MiscellaneousEnums.hpp"
-#include "TextureSet.hpp"
-#include "TextureSetFactory.hpp"
+#include "textures/TextureSet.hpp"
+#include "textures/TextureSetFactory.hpp"
 #include "Players.hpp"
 #include "MapRenderer.hpp"
 #include "Coordinates.hpp"
@@ -19,10 +19,10 @@ namespace players {
 
 PlayersDrawer::PlayersDrawer(const Players* players, const MapRenderer* renderer)
     : players_(players),
-    pathLayer_(TextureSetFactory::getPathTextureSet()),
-    selectionLayer_(TextureSetFactory::getSelectionTextureSet()),
-    unitLayer_(TextureSetFactory::getUnitTextureSet()),
-    fogLayer_(TextureSetFactory::getFogTextureSet()),
+    pathLayer_(textures::TextureSetFactory::getPathTextureSet()),
+    selectionLayer_(textures::TextureSetFactory::getSelectionTextureSet()),
+    unitLayer_(textures::TextureSetFactory::getUnitTextureSet()),
+    fogLayer_(textures::TextureSetFactory::getFogTextureSet()),
     renderer_(renderer),
     isFogToggledOn_(true)
 { }

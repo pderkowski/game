@@ -1,13 +1,17 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MATCHER_HPP_
-#define MATCHER_HPP_
+#ifndef TEXTURES_MATCHER_HPP_
+#define TEXTURES_MATCHER_HPP_
 
 #include <functional>
 #include <vector>
 #include <memory>
 #include "Tile.hpp"
 #include "TileEnums.hpp"
+
+
+namespace textures {
+
 
 template <class T>
 class Matcher {
@@ -56,4 +60,8 @@ bool Matcher<T>::match(const T& t) const {
     return predicate_(t);
 }
 
-#endif  // MATCHER_HPP_
+
+}  // namespace textures
+
+
+#endif  // TEXTURES_MATCHER_HPP_

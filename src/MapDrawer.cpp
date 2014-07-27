@@ -5,7 +5,7 @@
 #include "MapDrawer.hpp"
 #include "Tile.hpp"
 #include "Coordinates.hpp"
-#include "TextureSetFactory.hpp"
+#include "textures/TextureSetFactory.hpp"
 #include "Layer.hpp"
 #include "MapRenderer.hpp"
 
@@ -17,10 +17,10 @@ MapDrawer::MapDrawer(const MapModel& model, const MapRenderer* renderer)
 
 void MapDrawer::setModel(const MapModel& model) {
     layers_.clear();
-    layers_.push_back(Layer<Tile>(TextureSetFactory::getBaseTextureSet()));
-    layers_.push_back(Layer<Tile>(TextureSetFactory::getBlendTextureSet()));
-    layers_.push_back(Layer<Tile>(TextureSetFactory::getOverlayTextureSet()));
-    layers_.push_back(Layer<Tile>(TextureSetFactory::getAttributeTextureSet()));
+    layers_.push_back(Layer<Tile>(textures::TextureSetFactory::getBaseTextureSet()));
+    layers_.push_back(Layer<Tile>(textures::TextureSetFactory::getBlendTextureSet()));
+    layers_.push_back(Layer<Tile>(textures::TextureSetFactory::getOverlayTextureSet()));
+    layers_.push_back(Layer<Tile>(textures::TextureSetFactory::getAttributeTextureSet()));
 
     for (int r = 0; r < model.getRowsNo(); ++r) {
         for (int c = 0; c < model.getColumnsNo(); ++c) {

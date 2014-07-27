@@ -9,6 +9,10 @@
 
 using namespace tileenums;
 
+
+namespace textures {
+
+
 TileTypeMatcher::TileTypeMatcher(Type type)
     : Matcher<Tile>([type] (const Tile& tile) {
         return tile.type == type;
@@ -50,3 +54,6 @@ NeighborTypesMatcher::NeighborTypesMatcher(Type type, const NeighborTypes& neigh
         return true;
     })
 { }
+
+
+}  // namespace textures

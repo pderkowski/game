@@ -1,13 +1,17 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef TEXTURESET_HPP_
-#define TEXTURESET_HPP_
+#ifndef TEXTURES_TEXTURESET_HPP_
+#define TEXTURES_TEXTURESET_HPP_
 
 #include <vector>
 #include <memory>
 #include <utility>
 #include "SFML/Graphics.hpp"
 #include "Matcher.hpp"
+
+
+namespace textures {
+
 
 template <class T>
 class TextureSet {
@@ -54,4 +58,8 @@ std::shared_ptr<const sf::Texture> TextureSet<T>::getActualTexture() const {
     return texture_;
 }
 
-#endif  // TEXTURESET_HPP_
+
+}  // namespace textures
+
+
+#endif  // TEXTURES_TEXTURESET_HPP_

@@ -9,14 +9,14 @@
 #include <utility>
 #include <stdexcept>
 #include "SFML/Graphics.hpp"
-#include "TextureSet.hpp"
+#include "textures/TextureSet.hpp"
 #include "Utils.hpp"
 #include "boost/functional/hash.hpp"
 
 template <class T>
 class Layer : public sf::Drawable {
 public:
-    explicit Layer(const TextureSet<T>& textureSet);
+    explicit Layer(const textures::TextureSet<T>& textureSet);
     virtual ~Layer() { }
 
     void draw(sf::RenderTarget& target,
@@ -48,13 +48,13 @@ private:
     void removeVertices(const VertexPosition& position);
     void updatePositions(const VertexPosition& position);
 
-    TextureSet<T> textureSet_;
+    textures::TextureSet<T> textureSet_;
     sf::VertexArray vertices_;
     std::unordered_map<Key, VertexPosition, KeyHasher> positions_;
 };
 
 template <class T>
-Layer<T>::Layer(const TextureSet<T>& textureSet)
+Layer<T>::Layer(const textures::TextureSet<T>& textureSet)
     : textureSet_(textureSet),
     vertices_(sf::Quads)
 { }

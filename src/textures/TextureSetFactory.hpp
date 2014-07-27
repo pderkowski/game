@@ -1,13 +1,16 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef TEXTURESETFACTORY_HPP_
-#define TEXTURESETFACTORY_HPP_
+#ifndef TEXTURES_TEXTURESETFACTORY_HPP_
+#define TEXTURES_TEXTURESETFACTORY_HPP_
 
 #include "TextureSet.hpp"
 #include "Tile.hpp"
 #include "units/Unit.hpp"
 #include "MiscellaneousEnums.hpp"
 #include "players/Fog.hpp"
+
+
+namespace textures {
 
 class TextureSetFactory {
 public:
@@ -23,4 +26,8 @@ public:
     static TextureSet<players::TileVisibility> getFogTextureSet();
 };
 
-#endif  // TEXTURESETFACTORY_HPP_
+
+}  // namespace textures
+
+
+#endif  // TEXTURES_TEXTURESETFACTORY_HPP_
