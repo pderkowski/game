@@ -10,8 +10,11 @@
 namespace units {
 
 
+unsigned long long Unit::idSequence = 0;
+
+
 Unit::Unit(const IntRotPoint& coords, Type type, const MapModel* model)
-    : coords_(coords), type_(type), model_(model)
+    : coords_(coords), type_(type), model_(model), id_(idSequence++)
 { }
 
 void Unit::setModel(const MapModel* model) {
@@ -20,6 +23,10 @@ void Unit::setModel(const MapModel* model) {
 
 Type Unit::getType() const {
     return type_;
+}
+
+unsigned long long Unit::getId() const {
+    return id_;
 }
 
 Tile Unit::getPosition() const {

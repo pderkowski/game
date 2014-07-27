@@ -1,5 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <map>
+#include <utility>
 #include <string>
 #include <algorithm>
 #include <stdexcept>
@@ -64,6 +66,28 @@ units::Unit Player::getUnitAtCoords(const IntRotPoint& coords) const {
         return *unitIt;
     } else {
         throw std::logic_error("There is no unit at the requested coords.");
+    }
+}
+
+int Player::getMovementPointsLeft(const units::Unit& unit) const {
+    if (movementPoints_.find(unit.getId()) != movementPoints_.end()) {
+        return movementPoints_.at(unit.getId());
+    } else {
+        return 0;
+    }
+}
+
+void Player::setMovementPointsLeft(const units::Unit& unit, int pointsLeft) {
+    if (movementPoints_.find(unit.getId()) != movementPoints_.end()) {
+        movementPoints_.at(unit.getId()) = pointsLeft;
+    }
+}
+
+void Player::resetMovementPoints() {
+    movementPoints_.clear();
+
+    for (auto& unit : units_) {
+        movementPoints_.insert(std::make_pair(unit.getId(), 2));
     }
 }
 

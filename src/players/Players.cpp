@@ -24,6 +24,7 @@ Players::Players(int numberOfPlayers, const MapModel* model, const MapRenderer* 
 
 void Players::switchToNextPlayer() {
     currentPlayer_ = (currentPlayer_ + 1) % players_.size();
+    getCurrentPlayer()->resetMovementPoints();
 
     std::cout << "Switching to " << players_[currentPlayer_].getName() << "\n";
 
@@ -90,17 +91,15 @@ void Players::handleRightClick(const sf::Event& e) {
             if (isDestinationConfirmed(destination)) {
                 unit.moveTo(destination);
 
-                selection_.clear();
-                selection_.setSource(destination);
+                selection_.setSource(unit.get().getPosition());
 
-                drawer_.clearPathLayer();
                 drawer_.updateFogLayer(getCurrentPlayer()->getFog());
                 drawer_.updateUnitLayer(getCurrentPlayer()->getFog());
             } else {
                 selection_.setDestination(destination);
-
-                drawer_.updatePathLayer(unit.getPathTo(destination));
             }
+
+            drawer_.updatePathLayer(unit.getPathTo(destination));
         }
     }
 

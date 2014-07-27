@@ -25,6 +25,8 @@ public:
 
     Type getType() const;
 
+    unsigned long long getId() const;
+
     Tile getPosition() const;
     IntRotPoint getCoords() const;
 
@@ -35,10 +37,16 @@ private:
     friend bool operator == (const Unit& lhs, const Unit& rhs);
     friend class std::hash<units::Unit>;
 
+private:
+    static unsigned long long idSequence;
+
+private:
     IntRotPoint coords_;
     Type type_;
 
     const MapModel* model_;
+
+    unsigned long long id_;
 };
 
 bool operator == (const Unit& lhs, const Unit& rhs);

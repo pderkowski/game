@@ -19,6 +19,12 @@ class Player {
 public:
     explicit Player(const MapModel* model, const std::string& name = "");
 
+    Player(const Player&) = delete;
+    Player& operator =(const Player&) = delete;
+
+    Player(Player&&) = default;
+    Player& operator =(Player&&) = default;
+
     std::string getName() const;
     Fog getFog() const;
 
@@ -31,6 +37,10 @@ public:
 
     void addUnit(const units::Unit& unit);
 
+    int getMovementPointsLeft(const units::Unit& unit) const;
+    void setMovementPointsLeft(const units::Unit& unit, int pointsLeft);
+    void resetMovementPoints();
+
 public:
     friend class UnitController;
 
@@ -41,6 +51,7 @@ private:
     std::string name_;
 
     std::vector<units::Unit> units_;
+    std::map<unsigned long long, int> movementPoints_;
 
     Fog fog_;
 };
