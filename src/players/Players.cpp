@@ -7,8 +7,7 @@
 #include "Players.hpp"
 #include "Coordinates.hpp"
 #include "MapModel.hpp"
-#include "units/Unit.hpp"
-
+#include "UnitController.hpp"
 
 namespace players {
 
@@ -86,7 +85,7 @@ void Players::handleRightClick(const sf::Event& e) {
         auto source = selection_.getSource();
         auto destination = getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 
-        Player::UnitControler unit = getCurrentPlayer()->getUnitAtCoords(source.coords);
+        UnitController unit = getCurrentPlayer()->getUnitAtCoords(source.coords);
         if (unit.canMoveTo(destination)) {
             if (isDestinationConfirmed(destination)) {
                 unit.moveTo(destination);
@@ -112,7 +111,7 @@ void Players::handleDPressed() {
     if (selection_.isUnitSelected(getCurrentPlayer())) {
         auto source = selection_.getSource();
 
-        Player::UnitControler unit = getCurrentPlayer()->getUnitAtCoords(source.coords);
+        UnitController unit = getCurrentPlayer()->getUnitAtCoords(source.coords);
         unit.destroyUnit();
 
         drawer_.updateFogLayer(getCurrentPlayer()->getFog());

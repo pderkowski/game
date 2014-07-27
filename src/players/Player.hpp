@@ -9,6 +9,7 @@
 #include "Coordinates.hpp"
 #include "Tile.hpp"
 #include "Fog.hpp"
+#include "UnitController.hpp"
 class MapModel;
 
 namespace players {
@@ -23,8 +24,7 @@ public:
 
     bool hasUnitAtCoords(const IntRotPoint& coords) const;
 
-    class UnitControler;
-    UnitControler getUnitAtCoords(const IntRotPoint& coords);
+    UnitController getUnitAtCoords(const IntRotPoint& coords);
     units::Unit getUnitAtCoords(const IntRotPoint& coords) const;
 
     std::vector<units::Unit> getAllUnits() const;
@@ -32,24 +32,7 @@ public:
     void addUnit(const units::Unit& unit);
 
 public:
-    class UnitControler {
-    public:
-        units::Unit get() const;
-
-        bool canMoveTo(const Tile& destination) const;
-        std::vector<Tile> getPathTo(const Tile& destination) const;
-        void moveTo(const Tile& destination);
-
-        void destroyUnit();
-
-    private:
-        friend class Player;
-
-        UnitControler(units::Unit* unit, Player* player);
-
-        units::Unit* unit_;
-        Player* player_;
-    };
+    friend class UnitController;
 
 private:
     std::vector<const Tile*> getSurroundingTiles(const units::Unit& unit) const;
