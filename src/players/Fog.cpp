@@ -10,15 +10,11 @@ namespace players {
 
 Fog::Fog(size_t rows, size_t columns)
     : rows_(rows), columns_(columns),
-    tiles_(rows, std::vector<TileVisibility>(columns, TileVisibility::Unknown))
+    tiles_(rows, std::vector<int>(columns, -1))
 { }
 
-const TileVisibility& Fog::operator ()(size_t row, size_t column) const {
-    return tiles_[row][column];
-}
-
-TileVisibility& Fog::operator ()(size_t row, size_t column) {
-    return tiles_[row][column];
+TileVisibility Fog::operator ()(size_t row, size_t column) const {
+    return translate(tiles_[row][column]);
 }
 
 size_t Fog::getRowsNo() const {
@@ -32,15 +28,10 @@ size_t Fog::getColumnsNo() const {
 void Fog::addVisible(const std::vector<const Tile*>& tiles) {
     for (const Tile* tile : tiles) {
         IntIsoPoint coords(tile->coords.toIsometric());
-        tiles_[coords.y][coords.x] = TileVisibility::VisibleKnown;
-    }
-}
-void Fog::addKnown(const std::vector<const Tile*>& tiles) {
-    for (const Tile* tile : tiles) {
-        IntIsoPoint coords(tile->coords.toIsometric());
-
-        if (tiles_[coords.y][coords.x] == TileVisibility::Unknown) {
-            tiles_[coords.y][coords.x] = TileVisibility::UnvisibleKnown;
+        if (tiles_[coords.y][coords.x] < 0) {
+            tiles_[coords.y][coords.x] = 1;
+        } else {
+            ++tiles_[coords.y][coords.x];
         }
     }
 }
@@ -48,11 +39,19 @@ void Fog::addKnown(const std::vector<const Tile*>& tiles) {
 void Fog::removeVisible(const std::vector<const Tile*>& tiles) {
     for (const Tile* tile : tiles) {
         IntIsoPoint coords(tile->coords.toIsometric());
-
-        if (tiles_[coords.y][coords.x] == TileVisibility::VisibleKnown) {
-            tiles_[coords.y][coords.x] = TileVisibility::UnvisibleKnown;
-        }
+        --tiles_[coords.y][coords.x];
     }
 }
+
+TileVisibility Fog::translate(int code) const {
+    if (code < 0) {
+        return TileVisibility::Unknown;
+    } else if (code == 0) {
+        return TileVisibility::UnvisibleKnown;
+    } else {
+        return TileVisibility::VisibleKnown;
+    }
+}
+
 
 }  // namespace players

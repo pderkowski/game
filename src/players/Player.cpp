@@ -96,16 +96,14 @@ std::vector<Tile> Player::UnitControler::getPathTo(const Tile& destination) cons
 void Player::UnitControler::moveTo(const Tile& destination) {
     auto path = getPathTo(destination);
 
-    player_->fog_.removeVisible(player_->getSurroundingTiles(*unit_));
-
     for (size_t i = 0; i + 1 < path.size(); ++i) {
+        player_->fog_.removeVisible(player_->getSurroundingTiles(*unit_));
+
         auto direction = path[i].getDirection(path[i + 1]);
         unit_->moveTo(direction);
 
-        player_->fog_.addKnown(player_->getSurroundingTiles(*unit_));
+        player_->fog_.addVisible(player_->getSurroundingTiles(*unit_));
     }
-
-    player_->fog_.addVisible(player_->getSurroundingTiles(*unit_));
 }
 
 void Player::UnitControler::destroyUnit() {

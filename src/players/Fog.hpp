@@ -21,22 +21,22 @@ class Fog {
 public:
     Fog(size_t rows, size_t columns);
 
-    TileVisibility& operator ()(size_t row, size_t column);
-    const TileVisibility& operator ()(size_t row, size_t column) const;
+    TileVisibility operator ()(size_t row, size_t column) const;
 
     size_t getRowsNo() const;
     size_t getColumnsNo() const;
 
     void addVisible(const std::vector<const Tile*>& tiles);
-    void addKnown(const std::vector<const Tile*>& tiles);
-
     void removeVisible(const std::vector<const Tile*>& tiles);
+
+private:
+    TileVisibility translate(int code) const;
 
 private:
     size_t rows_;
     size_t columns_;
 
-    std::vector<std::vector<TileVisibility>> tiles_;
+    std::vector<std::vector<int>> tiles_;
 };
 
 
