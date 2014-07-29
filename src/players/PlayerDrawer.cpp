@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "SFML/Graphics.hpp"
-#include "PlayersDrawer.hpp"
+#include "PlayerDrawer.hpp"
 #include "units/Unit.hpp"
 #include "MiscellaneousEnums.hpp"
 #include "textures/TextureSet.hpp"
@@ -17,50 +17,48 @@
 namespace players {
 
 
-PlayersDrawer::PlayersDrawer(const Players* players, const MapRenderer* renderer)
-    : players_(players),
+PlayerDrawer::PlayerDrawer(const Player* player, const MapRenderer* renderer)
+    : player_(player),
     pathLayer_(textures::TextureSetFactory::getPathTextureSet()),
     selectionLayer_(textures::TextureSetFactory::getSelectionTextureSet()),
     unitLayer_(textures::TextureSetFactory::getUnitTextureSet()),
     fogLayer_(textures::TextureSetFactory::getFogTextureSet()),
-    renderer_(renderer),
-    isFogToggledOn_(true)
-{ }
+    renderer_(renderer)
+{
+    updateUnitLayer(player_->players_->getVisibleUnits());
+    updateFogLayer();
+}
 
-void PlayersDrawer::draw() const {
+void PlayerDrawer::draw() const {
     MapRenderer::TargetProxy target = renderer_->getDynamicTarget();
+
     target.get()->draw(pathLayer_);
     target.get()->draw(selectionLayer_);
     target.get()->draw(unitLayer_);
-    if (isFogToggledOn_) {
+
+    if (player_->isFogToggledOn_) {
         target.get()->draw(fogLayer_);
     }
 }
 
-void PlayersDrawer::toggleFog() {
-    isFogToggledOn_ = !isFogToggledOn_;
-}
-
-void PlayersDrawer::updateUnitLayer(const Fog& fog) {
+void PlayerDrawer::updateUnitLayer(const std::vector<units::Unit>& visibleUnits) {
     unitLayer_.clear();
 
-    for (const units::Unit& unit : players_->getAllUnits()) {
+    for (const units::Unit& unit : visibleUnits) {
         auto tile = unit.getPosition();
-        IntIsoPoint coords(tile.coords.toIsometric());
 
-        if (fog(coords.y, coords.x) == TileVisibility::VisibleKnown) {
-            auto tilePosition = renderer_->getPosition(IntIsoPoint(tile.coords.toIsometric()));
-            auto dualTilePosition = renderer_->getDualPosition(IntIsoPoint(tile.coords.toIsometric()));
+        auto tilePosition = renderer_->getPosition(IntIsoPoint(tile.coords.toIsometric()));
+        auto dualTilePosition = renderer_->getDualPosition(IntIsoPoint(tile.coords.toIsometric()));
 
-            unitLayer_.add(unit, tilePosition);
-            unitLayer_.add(unit, dualTilePosition);
-        }
+        unitLayer_.add(unit, tilePosition);
+        unitLayer_.add(unit, dualTilePosition);
     }
 }
 
-void PlayersDrawer::updateSelectionLayer(const Selection& selection) {
+void PlayerDrawer::updateSelectionLayer() {
     selectionLayer_.clear();
 
+    const Selection& selection = player_->selection_;
     if (selection.isSourceSelected()) {
         auto source = selection.getSource();
 
@@ -82,7 +80,7 @@ void PlayersDrawer::updateSelectionLayer(const Selection& selection) {
     }
 }
 
-void PlayersDrawer::updatePathLayer(const std::vector<Tile>& path) {
+void PlayerDrawer::updatePathLayer(const std::vector<Tile>& path) {
     pathLayer_.clear();
 
     for (size_t i = 0; i + 1 < path.size(); ++i) {
@@ -97,9 +95,10 @@ void PlayersDrawer::updatePathLayer(const std::vector<Tile>& path) {
     }
 }
 
-void PlayersDrawer::updateFogLayer(const Fog& fog) {
+void PlayerDrawer::updateFogLayer() {
     fogLayer_.clear();
 
+    const Fog& fog = player_->fog_;
     for (size_t r = 0; r < fog.getRowsNo(); ++r) {
         for (size_t c = 0; c < fog.getColumnsNo(); ++c) {
             auto position = renderer_->getPosition(IntIsoPoint(c, r));
@@ -111,8 +110,13 @@ void PlayersDrawer::updateFogLayer(const Fog& fog) {
     }
 }
 
-void PlayersDrawer::clearPathLayer() {
+void PlayerDrawer::clearPathLayer() {
     pathLayer_.clear();
 }
+
+void PlayerDrawer::setPointer(const Player* player) {
+    player_ = player;
+}
+
 
 }  // namespace players

@@ -4,25 +4,22 @@
 #define MINIMAP_HPP_
 
 #include <map>
-#include <functional>
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
 #include "TileEnums.hpp"
 #include "MapRenderer.hpp"
-#include "players/Fog.hpp"
+#include "players/Players.hpp"
 
 class Minimap {
 public:
-    Minimap(const MapModel* model, const players::Fog& fog, const MapRenderer* renderer);
+    Minimap(const MapModel* model, const players::Players* players, const MapRenderer* renderer);
 
     void draw() const;
 
     void updateDisplayedRectangle();
-    void updateFog(const players::Fog& fog);
+    void updateBackground();
 
-    void toggleFog();
-
-    void rebuild(const MapModel* model, const players::Fog& fog);
+    void setModel(const MapModel* model);
 
     sf::Vector2f getSize();
 
@@ -31,19 +28,18 @@ public:
 private:
     sf::RectangleShape createDisplayedRectangle();
 
-    sf::Texture createTexture(std::function<sf::Color(int row, int column)> pixelGetter);
+    sf::Texture createTexture();
     sf::Image createImageFromPixels(sf::Uint8* pixels);
-    sf::Uint8* createPixels(std::function<sf::Color(int row, int column)> pixelGetter);
+    sf::Uint8* createPixels();
 
-    sf::Color getBackgroundPixel(int row, int column) const;
-    sf::Color getFogPixel(int row, int column) const;
+    sf::Color getPixel(int row, int column) const;
 
     void render();
 
 private:
     const MapModel* model_;
 
-    players::Fog fog_;
+    const players::Players* players_;
 
     const MapRenderer* renderer_;
 
@@ -54,11 +50,8 @@ private:
     int width_;
     int height_;
 
-    bool isFogToggledOn_;
-
     sf::RectangleShape displayedRectangle_;
     sf::Texture minimapBackground_;
-    sf::Texture fogTexture_;
     sf::RenderTexture minimap_;
 
     sf::Vector2f basePosition_;

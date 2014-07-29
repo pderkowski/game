@@ -4,15 +4,10 @@
 #define PLAYERS_PLAYERS_HPP_
 
 #include <vector>
-#include <memory>
-#include "Player.hpp"
-#include "PlayersDrawer.hpp"
-#include "MapRenderer.hpp"
-#include "Selection.hpp"
-#include "Tile.hpp"
 #include "units/Unit.hpp"
+#include "Player.hpp"
 class MapModel;
-
+class MapRenderer;
 
 namespace players {
 
@@ -22,11 +17,13 @@ public:
     Players(int numberOfPlayers, const MapModel* model, const MapRenderer* renderer);
 
     void switchToNextPlayer();
+
     Player* getCurrentPlayer();
+    const Player* getCurrentPlayer() const;
+
+    std::vector<units::Unit> getVisibleUnits() const;
 
     void draw() const;
-
-    std::vector<units::Unit> getAllUnits() const;
 
     void handleLeftClick(const sf::Event& e);
     void handleRightClick(const sf::Event& e);
@@ -35,20 +32,8 @@ public:
     void handleDPressed();
 
 private:
-    const Tile& getClickedTile(const sf::Vector2i& clickedPoint) const;
-
-    bool isDestinationConfirmed(const Tile& destination) const;
-
-private:
     unsigned currentPlayer_;
     std::vector<Player> players_;
-
-    Selection selection_;
-
-    const MapModel* model_;
-
-    const MapRenderer* renderer_;
-    PlayersDrawer drawer_;
 };
 
 

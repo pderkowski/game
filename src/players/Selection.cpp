@@ -1,7 +1,7 @@
+/* Copyright 2014 <Piotr Derkowski> */
+
 #include "Tile.hpp"
-#include "units/Unit.hpp"
 #include "Selection.hpp"
-#include "Player.hpp"
 
 
 namespace players {
@@ -25,16 +25,16 @@ void Selection::clear() {
     destination_ = Tile();
 }
 
-bool Selection::isUnitSelected(const Player* player) const {
-    return isSourceSelected() && player->hasUnitAtCoords(source_.coords);
-}
-
 bool Selection::isSourceSelected() const {
     return source_.isValid();
 }
 
 bool Selection::isDestinationSelected() const {
     return destination_.isValid();
+}
+
+bool Selection::isDestinationConfirmed(const Tile& destination) const {
+    return isDestinationSelected() && getDestination() == destination;
 }
 
 Tile Selection::getSource() const {

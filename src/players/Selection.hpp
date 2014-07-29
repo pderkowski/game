@@ -4,13 +4,11 @@
 #define PLAYERS_SELECTION_HPP_
 
 #include "Tile.hpp"
-#include "units/Unit.hpp"
 class MapModel;
 
 
 namespace players {
 
-class Player;
 
 class Selection {
 public:
@@ -20,9 +18,9 @@ public:
     void setDestination(const Tile& destination);
     void clear();
 
-    bool isUnitSelected(const Player* player) const;
     bool isSourceSelected() const;
     bool isDestinationSelected() const;
+    bool isDestinationConfirmed(const Tile& destination) const;
 
     Tile getSource() const;
     Tile getDestination() const;

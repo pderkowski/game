@@ -1,9 +1,8 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef PLAYERS_PLAYERSDRAWER_HPP_
-#define PLAYERS_PLAYERSDRAWER_HPP_
+#ifndef PLAYERS_PLAYERDRAWER_HPP_
+#define PLAYERS_PLAYERDRAWER_HPP_
 
-#include <memory>
 #include "SFML/Graphics.hpp"
 #include "Layer.hpp"
 #include "units/Unit.hpp"
@@ -18,25 +17,25 @@
 namespace players {
 
 
-class Players;
+class Player;
 
-class PlayersDrawer {
+class PlayerDrawer {
 public:
-    PlayersDrawer(const Players* players, const MapRenderer* renderer);
+    PlayerDrawer(const Player* player, const MapRenderer* renderer);
 
     void draw() const;
 
-    void toggleFog();
-
-    void updateUnitLayer(const Fog& fog);
-    void updateSelectionLayer(const Selection& selection);
+    void updateUnitLayer(const std::vector<units::Unit>& visibleUnits);
+    void updateSelectionLayer();
     void updatePathLayer(const std::vector<Tile>& path);
-    void updateFogLayer(const Fog& fog);
+    void updateFogLayer();
 
     void clearPathLayer();
 
+    void setPointer(const Player* player);
+
 private:
-    const Players* players_;
+    const Player* player_;
 
     Layer<tileenums::Direction> pathLayer_;
     Layer<miscellaneous::Type> selectionLayer_;
@@ -45,10 +44,9 @@ private:
 
     const MapRenderer* renderer_;
 
-    bool isFogToggledOn_;
 };
 
 
 }  // namespace players
 
-#endif  // PLAYERS_PLAYERSDRAWER_HPP_
+#endif  // PLAYERS_PLAYERDRAWER_HPP_
