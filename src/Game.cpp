@@ -11,6 +11,7 @@
 #include "MapRenderer.hpp"
 #include "Minimap.hpp"
 #include "Interface.hpp"
+#include "Timer.hpp"
 
 
 Game::Game(int rows, int columns, int numberOfPlayers)
@@ -29,11 +30,14 @@ Game::Game(int rows, int columns, int numberOfPlayers)
     menu_.addItem("Return", [this] () { toggleMenu(); });
     menu_.addItem("New game", [this] () { restart(); });
     menu_.addItem("Quit game", [this] () { quit(); });
+
+    timers_.push_back(Timer(50, [this] () { scrollView(); }));
 }
 
 void Game::start() {
     while (window_->isOpen()) {
         handleEvents();
+        handleTimers();
 
         window_->clear();
         map_.draw();
@@ -110,6 +114,14 @@ void Game::handleEvents() {
     }
 }
 
+void Game::handleTimers() {
+    for (auto& timer : timers_) {
+        if (timer.elapsed()) {
+            timer.executeCallback();
+        }
+    }
+}
+
 void Game::handleLeftClick(const sf::Event& event) {
     if (menu_.isVisible()) {
         menu_.handleLeftClick(event);
@@ -135,9 +147,6 @@ void Game::handleMouseWheelMoved(const sf::Event& event) {
 void Game::handleMouseMoved(const sf::Event& event) {
     if (menu_.isVisible()) {
         menu_.handleMouseMoved(event);
-    } else {
-        map_.handleMouseMoved(event);
-        minimap_.updateDisplayedRectangle();
     }
 }
 
@@ -170,4 +179,14 @@ void Game::switchToNextPlayer() {
 
 void Game::captureScreenToFile() {
     window_->capture().saveToFile("screenshot.png");
+}
+
+void Game::scrollView() {
+    if (!menu_.isVisible()) {
+        sf::Vector2f actualShift = map_.scrollView();
+
+        if (actualShift != sf::Vector2f(0, 0)) {
+            minimap_.updateDisplayedRectangle();
+        }
+    }
 }

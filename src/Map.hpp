@@ -22,11 +22,11 @@ public:
     void generateMap();
 
     void handleMouseWheelMoved(const sf::Event& event);
-    void handleMouseMoved(const sf::Event& event);
+    sf::Vector2f scrollView();
 
 private:
-    int calculateHorizontalShift(float mouseXPosition) const;
-    int calculateVerticalShift(float mouseYPosition) const;
+    int calculateHorizontalShift(int mouseXPosition) const;
+    int calculateVerticalShift(int mouseYPosition) const;
 
     std::shared_ptr<MapModel> model_;
 

@@ -5,7 +5,6 @@
 
 #include <vector>
 #include "Tile.hpp"
-class MapModel;
 
 
 namespace players {

@@ -37,31 +37,31 @@ void Map::handleMouseWheelMoved(const sf::Event& event) {
         sf::Vector2i(event.mouseWheel.x, event.mouseWheel.y));
 }
 
-void Map::handleMouseMoved(const sf::Event& event)  {
-    renderer_.scrollView(calculateHorizontalShift(event.mouseMove.x),
-        calculateVerticalShift(event.mouseMove.y));
+sf::Vector2f Map::scrollView()  {
+    sf::Vector2i mousePosition = sf::Mouse::getPosition();
+    return renderer_.scrollView(calculateHorizontalShift(mousePosition.x) * 2,
+        calculateVerticalShift(mousePosition.y) * 2);
 }
 
-int Map::calculateHorizontalShift(float mouseXPosition) const {
-    const int scrollMarginSize = 20;
+int Map::calculateHorizontalShift(int mouseXPosition) const {
+    const int scrollMarginSize = 50;
 
     if (mouseXPosition < scrollMarginSize) {
         return mouseXPosition - scrollMarginSize;
-    } else if (mouseXPosition > renderer_.getSize().x - scrollMarginSize) {
-        return scrollMarginSize - (renderer_.getSize().x - mouseXPosition);
+    } else if (mouseXPosition > static_cast<int>(renderer_.getSize().x) - scrollMarginSize) {
+        return scrollMarginSize - (static_cast<int>(renderer_.getSize().x) - mouseXPosition);
     } else {
         return 0;
     }
 }
 
-int Map::calculateVerticalShift(float mouseYPosition) const {
-
-    const int scrollMarginSize = 20;
+int Map::calculateVerticalShift(int mouseYPosition) const {
+    const int scrollMarginSize = 50;
 
     if (mouseYPosition < scrollMarginSize) {
         return mouseYPosition - scrollMarginSize;
-    } else if (mouseYPosition > renderer_.getSize().y - scrollMarginSize) {
-        return scrollMarginSize - (renderer_.getSize().y - mouseYPosition);
+    } else if (mouseYPosition > static_cast<int>(renderer_.getSize().y) - scrollMarginSize) {
+        return scrollMarginSize - (static_cast<int>(renderer_.getSize().y) - mouseYPosition);
     } else {
         return 0;
     }

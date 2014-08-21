@@ -29,7 +29,7 @@ public:
 
     IntIsoPoint getMapCoords(const sf::Vector2i& position) const;
 
-    void scrollView(int x, int y);
+    sf::Vector2f scrollView(int x, int y);
     void zoomView(int delta, const sf::Vector2i& mousePosition);
 
     sf::FloatRect getDisplayedRectangle() const;

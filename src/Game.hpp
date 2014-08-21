@@ -11,6 +11,7 @@
 #include "players/Players.hpp"
 #include "Minimap.hpp"
 #include "Interface.hpp"
+#include "Timer.hpp"
 
 
 class Game {
@@ -29,8 +30,12 @@ public:
     void deleteSelectedUnit();
     void switchToNextPlayer();
 
+    void scrollView();
+
 private:
     void handleEvents();
+    void handleTimers();
+
     void handleLeftClick(const sf::Event& event);
     void handleRightClick(const sf::Event& event);
     void handleMouseWheelMoved(const sf::Event& event);
@@ -43,6 +48,8 @@ private:
     Minimap minimap_;
     Interface interface_;
     menu::Menu menu_;
+
+    std::vector<Timer> timers_;
 };
 
 #endif  // GAME_HPP_

@@ -87,9 +87,13 @@ IntIsoPoint MapRenderer::getMapCoords(const sf::Vector2i& position) const {
     return isometric;
 }
 
-void MapRenderer::scrollView(int x, int y) {
-    mapView_.move(boundShift(x, y));
+sf::Vector2f MapRenderer::scrollView(int x, int y) {
+    sf::Vector2f actualShift = boundShift(x, y);
+
+    mapView_.move(actualShift);
     target_->setView(mapView_);
+
+    return actualShift;
 }
 
 sf::Vector2f MapRenderer::boundShift(int x, int y) const {
