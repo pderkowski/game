@@ -7,12 +7,12 @@
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
 #include "TileEnums.hpp"
-#include "MapRenderer.hpp"
+#include "Renderer.hpp"
 #include "players/Players.hpp"
 
 class Minimap {
 public:
-    Minimap(const MapModel* model, const players::Players* players, const MapRenderer* renderer);
+    Minimap(const MapModel* model, const players::Players* players, const Renderer* renderer);
 
     void draw() const;
 
@@ -41,7 +41,7 @@ private:
 
     const players::Players* players_;
 
-    const MapRenderer* renderer_;
+    const Renderer* renderer_;
 
     std::map<tileenums::Type, sf::Color> tileColors_;
 

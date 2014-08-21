@@ -5,11 +5,11 @@
 
 #include <vector>
 #include "SFML/Graphics.hpp"
-class MapRenderer;
+class Renderer;
 
 class Interface {
 public:
-    Interface(const MapRenderer* renderer, const sf::Vector2f& minimapSize);
+    Interface(const Renderer* renderer, const sf::Vector2f& minimapSize);
 
     sf::Vector2f getMinimapSlotPosition() const;
 
@@ -24,7 +24,7 @@ private:
         float thickness) const;
 
 private:
-    const MapRenderer* renderer_;
+    const Renderer* renderer_;
 
     std::vector<sf::RectangleShape> components_;
 

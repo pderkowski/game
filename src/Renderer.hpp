@@ -1,19 +1,19 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MAPRENDERER_HPP_
-#define MAPRENDERER_HPP_
+#ifndef RENDERER_HPP_
+#define RENDERER_HPP_
 
 #include <vector>
 #include <memory>
 #include "Coordinates.hpp"
 #include "SFML/Graphics.hpp"
 
-class MapRenderer {
+class Renderer {
 public:
     class TargetProxy;
 
 public:
-    MapRenderer(int rows, int columns, int tileWidth, int tileHeight,
+    Renderer(int rows, int columns, int tileWidth, int tileHeight,
         std::shared_ptr<sf::RenderTarget> target);
 
     sf::Vector2f getPosition(const IntIsoPoint& coords) const;
@@ -61,15 +61,15 @@ public:
 
         std::shared_ptr<sf::RenderTarget> get() const;
     private:
-        friend class MapRenderer;
+        friend class Renderer;
 
-        TargetProxy(const MapRenderer* renderer, const sf::View& savedView);
+        TargetProxy(const Renderer* renderer, const sf::View& savedView);
 
     private:
-        const MapRenderer* renderer_;
+        const Renderer* renderer_;
 
         sf::View savedView_;
     };
 };
 
-#endif  // MAPRENDERER_HPP_
+#endif  // RENDERER_HPP_

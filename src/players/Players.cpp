@@ -6,12 +6,12 @@
 #include "Players.hpp"
 #include "PlayersDrawer.hpp"
 #include "MapModel.hpp"
-#include "MapRenderer.hpp"
+#include "Renderer.hpp"
 
 namespace players {
 
 
-Players::Players(int numberOfPlayers, const MapModel* model, const MapRenderer* renderer)
+Players::Players(int numberOfPlayers, const MapModel* model, const Renderer* renderer)
     : currentPlayer_(0), model_(model), renderer_(renderer), drawer_(renderer)
 {
     for (int i = 1; i <= numberOfPlayers; ++i) {

@@ -8,9 +8,9 @@
 #include "Utils.hpp"
 #include "Coordinates.hpp"
 #include "SFML/Graphics.hpp"
-#include "MapRenderer.hpp"
+#include "Renderer.hpp"
 
-MapRenderer::MapRenderer(int rows, int columns, int tileWidth, int tileHeight,
+Renderer::Renderer(int rows, int columns, int tileWidth, int tileHeight,
     std::shared_ptr<sf::RenderTarget> target)
         : rows_(rows),
         columns_(columns),
@@ -20,43 +20,43 @@ MapRenderer::MapRenderer(int rows, int columns, int tileWidth, int tileHeight,
         mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y))
 { }
 
-sf::Vector2f MapRenderer::getPosition(const IntIsoPoint& coords) const {
+sf::Vector2f Renderer::getPosition(const IntIsoPoint& coords) const {
     CartPoint cartCoords = coords.toCartesian();
     return sf::Vector2f(utils::positiveModulo(cartCoords.x * tileWidth_ / 2, 2 * getMapWidth()),
         cartCoords.y * tileHeight_ / 2);
 }
 
-sf::Vector2f MapRenderer::getDualPosition(const IntIsoPoint& coords) const {
+sf::Vector2f Renderer::getDualPosition(const IntIsoPoint& coords) const {
     sf::Vector2f primaryPosition = getPosition(coords);
     return sf::Vector2f(utils::positiveModulo(primaryPosition.x + getMapWidth(), 2 * getMapWidth()),
         primaryPosition.y);
 }
 
-unsigned MapRenderer::getMapWidth() const {
+unsigned Renderer::getMapWidth() const {
     return columns_ * tileWidth_;
 }
 
-unsigned MapRenderer::getMapHeight() const {
+unsigned Renderer::getMapHeight() const {
     return (rows_ - 1) * tileHeight_ / 2;
 }
 
-sf::Vector2u MapRenderer::getSize() const {
+sf::Vector2u Renderer::getSize() const {
     return target_->getSize();
 }
 
-MapRenderer::TargetProxy MapRenderer::getFixedTarget() const {
+Renderer::TargetProxy Renderer::getFixedTarget() const {
     sf::View savedView = target_->getView();
     target_->setView(target_->getDefaultView());
     return TargetProxy(this, savedView);
 }
 
-MapRenderer::TargetProxy MapRenderer::getDynamicTarget() const {
+Renderer::TargetProxy Renderer::getDynamicTarget() const {
     sf::View savedView = target_->getView();
     target_->setView(mapView_);
     return TargetProxy(this, savedView);
 }
 
-IntIsoPoint MapRenderer::getMapCoords(const sf::Vector2i& position) const {
+IntIsoPoint Renderer::getMapCoords(const sf::Vector2i& position) const {
     const int halfWidth = tileWidth_ / 2;
     const int halfHeight = tileHeight_ / 2;
 
@@ -87,7 +87,7 @@ IntIsoPoint MapRenderer::getMapCoords(const sf::Vector2i& position) const {
     return isometric;
 }
 
-sf::Vector2f MapRenderer::scrollView(int x, int y) {
+sf::Vector2f Renderer::scrollView(int x, int y) {
     sf::Vector2f actualShift = boundShift(x, y);
 
     mapView_.move(actualShift);
@@ -96,7 +96,7 @@ sf::Vector2f MapRenderer::scrollView(int x, int y) {
     return actualShift;
 }
 
-sf::Vector2f MapRenderer::boundShift(int x, int y) const {
+sf::Vector2f Renderer::boundShift(int x, int y) const {
     sf::Vector2f safeShift;
 
     sf::IntRect bounds(0, 0, getMapWidth(), getMapHeight());
@@ -116,7 +116,7 @@ sf::Vector2f MapRenderer::boundShift(int x, int y) const {
     return safeShift;
 }
 
-void MapRenderer::zoomView(int delta, const sf::Vector2i& mousePosition) {
+void Renderer::zoomView(int delta, const sf::Vector2i& mousePosition) {
     target_->setView(mapView_);
     const float zoomFactor = (delta > 0)? 4.0 / 5 : 5.0 / 4;
 
@@ -131,12 +131,12 @@ void MapRenderer::zoomView(int delta, const sf::Vector2i& mousePosition) {
     }
 }
 
-bool MapRenderer::canZoom(float zoomFactor) const {
+bool Renderer::canZoom(float zoomFactor) const {
     return mapView_.getSize().x * zoomFactor < getMapWidth()
         && mapView_.getSize().y * zoomFactor < getMapHeight();
 }
 
-sf::FloatRect MapRenderer::getDisplayedRectangle() const {
+sf::FloatRect Renderer::getDisplayedRectangle() const {
     target_->setView(mapView_);
     sf::Vector2i leftTop(0, 0);
     sf::Vector2i rightBottom(target_->getSize().x - 1, target_->getSize().y - 1);
@@ -151,14 +151,14 @@ sf::FloatRect MapRenderer::getDisplayedRectangle() const {
         (rightBottomCoords.y - leftTopCoords.y) / getMapHeight());
 }
 
-MapRenderer::TargetProxy::~TargetProxy() {
+Renderer::TargetProxy::~TargetProxy() {
     renderer_->target_->setView(savedView_);
 }
 
-std::shared_ptr<sf::RenderTarget> MapRenderer::TargetProxy::get() const {
+std::shared_ptr<sf::RenderTarget> Renderer::TargetProxy::get() const {
     return renderer_->target_;
 }
 
-MapRenderer::TargetProxy::TargetProxy(const MapRenderer* renderer, const sf::View& savedView)
+Renderer::TargetProxy::TargetProxy(const Renderer* renderer, const sf::View& savedView)
     : renderer_(renderer), savedView_(savedView)
 { }

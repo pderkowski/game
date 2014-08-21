@@ -8,9 +8,9 @@
 #include "Tile.hpp"
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
-#include "MapRenderer.hpp"
+#include "Renderer.hpp"
 
-Minimap::Minimap(const MapModel* model, const players::Players* players, const MapRenderer* renderer)
+Minimap::Minimap(const MapModel* model, const players::Players* players, const Renderer* renderer)
     : players_(players),
     renderer_(renderer),
     tileColors_{
@@ -107,7 +107,7 @@ void Minimap::draw() const {
     minimapSprite.setTexture(minimap_.getTexture());
     minimapSprite.setPosition(basePosition_);
 
-    MapRenderer::TargetProxy target = renderer_->getFixedTarget();
+    Renderer::TargetProxy target = renderer_->getFixedTarget();
     target.get()->draw(minimapSprite);
 }
 

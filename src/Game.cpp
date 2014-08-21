@@ -8,7 +8,7 @@
 #include "Game.hpp"
 #include "TileEnums.hpp"
 #include "players/Players.hpp"
-#include "MapRenderer.hpp"
+#include "Renderer.hpp"
 #include "Minimap.hpp"
 #include "Interface.hpp"
 #include "Timer.hpp"

@@ -8,11 +8,11 @@
 #include "MapModel.hpp"
 #include "Tile.hpp"
 #include "Layer.hpp"
-#include "MapRenderer.hpp"
+#include "Renderer.hpp"
 
 class MapDrawer {
 public:
-    MapDrawer(const MapModel& model, const MapRenderer* renderer);
+    MapDrawer(const MapModel& model, const Renderer* renderer);
 
     void draw() const;
 
@@ -24,7 +24,7 @@ private:
 private:
     std::vector<Layer<Tile>> layers_;
 
-    const MapRenderer* renderer_;
+    const Renderer* renderer_;
 };
 
 #endif  // MAPDRAWER_HPP_

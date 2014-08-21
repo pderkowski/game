@@ -8,7 +8,7 @@
 #include "units/Unit.hpp"
 #include "TileEnums.hpp"
 #include "MiscellaneousEnums.hpp"
-#include "MapRenderer.hpp"
+#include "Renderer.hpp"
 #include "Selection.hpp"
 #include "Tile.hpp"
 #include "Fog.hpp"
@@ -19,7 +19,7 @@ namespace players {
 
 class PlayersDrawer {
 public:
-    PlayersDrawer(const MapRenderer* renderer);
+    PlayersDrawer(const Renderer* renderer);
 
     void draw() const;
 
@@ -34,7 +34,7 @@ private:
     Layer<units::Unit> unitLayer_;
     Layer<TileVisibility> fogLayer_;
 
-    const MapRenderer* renderer_;
+    const Renderer* renderer_;
 };
 
 

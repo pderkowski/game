@@ -8,14 +8,14 @@
 #include "Player.hpp"
 #include "PlayersDrawer.hpp"
 class MapModel;
-class MapRenderer;
+class Renderer;
 
 namespace players {
 
 
 class Players {
 public:
-    Players(int numberOfPlayers, const MapModel* model, const MapRenderer* renderer);
+    Players(int numberOfPlayers, const MapModel* model, const Renderer* renderer);
 
     void switchToNextPlayer();
 
@@ -42,7 +42,7 @@ private:
 
     const MapModel* model_;
 
-    const MapRenderer* renderer_;
+    const Renderer* renderer_;
 
     PlayersDrawer drawer_;
 };

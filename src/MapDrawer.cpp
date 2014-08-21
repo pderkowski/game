@@ -7,9 +7,9 @@
 #include "Coordinates.hpp"
 #include "textures/TextureSetFactory.hpp"
 #include "Layer.hpp"
-#include "MapRenderer.hpp"
+#include "Renderer.hpp"
 
-MapDrawer::MapDrawer(const MapModel& model, const MapRenderer* renderer)
+MapDrawer::MapDrawer(const MapModel& model, const Renderer* renderer)
     : renderer_(renderer)
 {
     setModel(model);
@@ -41,7 +41,7 @@ void MapDrawer::addTileToLayers(const Tile& tile) {
 }
 
 void MapDrawer::draw() const {
-    MapRenderer::TargetProxy target = renderer_->getDynamicTarget();
+    Renderer::TargetProxy target = renderer_->getDynamicTarget();
 
     for (const auto& layer : layers_) {
         target.get()->draw(layer);

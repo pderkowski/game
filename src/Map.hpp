@@ -8,7 +8,7 @@
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
 #include "MapDrawer.hpp"
-#include "MapRenderer.hpp"
+#include "Renderer.hpp"
 
 class Map {
 public:
@@ -17,7 +17,7 @@ public:
     void draw() const;
 
     std::shared_ptr<const MapModel> getModel() const;
-    const MapRenderer* getRenderer() const;
+    const Renderer* getRenderer() const;
 
     void generateMap();
 
@@ -30,7 +30,7 @@ private:
 
     std::shared_ptr<MapModel> model_;
 
-    MapRenderer renderer_;
+    Renderer renderer_;
 
     MapDrawer mapDrawer_;
 };

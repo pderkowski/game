@@ -1,10 +1,10 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
 #include "SFML/Graphics.hpp"
-#include "MapRenderer.hpp"
+#include "Renderer.hpp"
 #include "Interface.hpp"
 
-Interface::Interface(const MapRenderer* renderer, const sf::Vector2f& minimapSize)
+Interface::Interface(const Renderer* renderer, const sf::Vector2f& minimapSize)
     : renderer_(renderer),
     minimapSize_(minimapSize),
     thickness_(1.0f)
@@ -44,7 +44,7 @@ sf::RectangleShape Interface::createTransparentRectangle(const sf::Vector2f& siz
 }
 
 void Interface::draw() const {
-    MapRenderer::TargetProxy target = renderer_->getFixedTarget();
+    Renderer::TargetProxy target = renderer_->getFixedTarget();
 
     for (const auto& component : components_) {
         target.get()->draw(component);

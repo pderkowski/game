@@ -7,7 +7,7 @@
 #include "MapDrawer.hpp"
 #include "MapGenerator.hpp"
 #include "Map.hpp"
-#include "MapRenderer.hpp"
+#include "Renderer.hpp"
 
 Map::Map(int rows, int columns, std::shared_ptr<sf::RenderTarget> target)
     : model_(std::make_shared<MapModel>(MapGenerator::generateMap(rows, columns))),
@@ -23,7 +23,7 @@ std::shared_ptr<const MapModel> Map::getModel() const {
     return model_;
 }
 
-const MapRenderer* Map::getRenderer() const {
+const Renderer* Map::getRenderer() const {
     return &renderer_;
 }
 

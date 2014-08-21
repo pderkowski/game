@@ -7,7 +7,7 @@
 #include "MiscellaneousEnums.hpp"
 #include "textures/TextureSet.hpp"
 #include "textures/TextureSetFactory.hpp"
-#include "MapRenderer.hpp"
+#include "Renderer.hpp"
 #include "Coordinates.hpp"
 #include "Selection.hpp"
 #include "Tile.hpp"
@@ -16,7 +16,7 @@
 namespace players {
 
 
-PlayersDrawer::PlayersDrawer(const MapRenderer* renderer)
+PlayersDrawer::PlayersDrawer(const Renderer* renderer)
     : pathLayer_(textures::TextureSetFactory::getPathTextureSet()),
     selectionLayer_(textures::TextureSetFactory::getSelectionTextureSet()),
     unitLayer_(textures::TextureSetFactory::getUnitTextureSet()),
@@ -25,7 +25,7 @@ PlayersDrawer::PlayersDrawer(const MapRenderer* renderer)
 { }
 
 void PlayersDrawer::draw() const {
-    MapRenderer::TargetProxy target = renderer_->getDynamicTarget();
+    Renderer::TargetProxy target = renderer_->getDynamicTarget();
 
     target.get()->draw(pathLayer_);
     target.get()->draw(selectionLayer_);
