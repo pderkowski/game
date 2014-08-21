@@ -34,7 +34,7 @@ std::vector<Tile> UnitController::getPathTo(const Tile& destination) const {
 void UnitController::moveTo(const Tile& destination) {
     auto path = getPathTo(destination);
 
-    for (size_t i = 0; i + 1 < path.size() && player_->getMovementPointsLeft(*unit_) > 0; ++i) {
+    for (size_t i = 0; i + 1 < path.size() && unit_->getMovesLeft() > 0; ++i) {
         player_->fog_.removeVisible(player_->getSurroundingTiles(*unit_));
 
         auto direction = path[i].getDirection(path[i + 1]);
@@ -45,7 +45,7 @@ void UnitController::moveTo(const Tile& destination) {
         std::map<tileenums::Type, unsigned> movingCosts = units::getMovingCosts(unit_->getType());
         unsigned cost = movingCosts.at(path[i + 1].type);
 
-        player_->setMovementPointsLeft(*unit_, player_->getMovementPointsLeft(*unit_) - cost);
+        unit_->setMovesLeft(unit_->getMovesLeft() - cost);
     }
 }
 

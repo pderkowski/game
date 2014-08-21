@@ -10,23 +10,21 @@
 namespace units {
 
 
-unsigned long long Unit::idSequence = 0;
-
 
 Unit::Unit(const IntRotPoint& coords, Type type, const MapModel* model)
-    : coords_(coords), type_(type), model_(model), id_(idSequence++)
+    : coords_(coords), type_(type), movesLeft_(0), model_(model)
 { }
 
 void Unit::setModel(const MapModel* model) {
     model_ = model;
 }
 
-Type Unit::getType() const {
-    return type_;
+void Unit::setMovesLeft(int movesLeft) {
+    movesLeft_ = movesLeft;
 }
 
-unsigned long long Unit::getId() const {
-    return id_;
+Type Unit::getType() const {
+    return type_;
 }
 
 Tile Unit::getPosition() const {
@@ -38,6 +36,10 @@ Tile Unit::getPosition() const {
 
 IntRotPoint Unit::getCoords() const {
     return coords_;
+}
+
+int Unit::getMovesLeft() const {
+    return movesLeft_;
 }
 
 bool Unit::canMoveTo(tileenums::Direction direction) const {

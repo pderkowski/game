@@ -1,6 +1,5 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#include <iostream>
 #include <map>
 #include <utility>
 #include <string>
@@ -30,7 +29,6 @@ Player::Player(const Player& other)
     : players_(other.players_),
     model_(other.model_),
     units_(other.units_),
-    movementPoints_(other.movementPoints_),
     fog_(other.fog_),
     selection_(other.selection_)
 { }
@@ -95,25 +93,9 @@ bool Player::doesKnowTile(const IntRotPoint& coords) const {
         || (fog_(isoCoords.y, isoCoords.x) == TileVisibility::UnvisibleKnown);
 }
 
-int Player::getMovementPointsLeft(const units::Unit& unit) const {
-    if (movementPoints_.find(unit.getId()) != movementPoints_.end()) {
-        return movementPoints_.at(unit.getId());
-    } else {
-        return 0;
-    }
-}
-
-void Player::setMovementPointsLeft(const units::Unit& unit, int pointsLeft) {
-    if (movementPoints_.find(unit.getId()) != movementPoints_.end()) {
-        movementPoints_.at(unit.getId()) = pointsLeft;
-    }
-}
-
-void Player::resetMovementPoints() {
-    movementPoints_.clear();
-
+void Player::resetMoves() {
     for (auto& unit : units_) {
-        movementPoints_.insert(std::make_pair(unit.getId(), 2));
+        unit.setMovesLeft(2);
     }
 }
 
@@ -122,9 +104,9 @@ std::vector<const Tile*> Player::getSurroundingTiles(const units::Unit& unit) co
     return position.getTilesInRadius(2);
 }
 
-void Player::handleLeftClick(const Tile& tile) {
+void Player::handleLeftClick(const Tile& clickedTile) {
     selection_.clear();
-    selection_.setSource(tile);
+    selection_.setSource(clickedTile);
 }
 
 void Player::handleAPressed() {
@@ -137,10 +119,10 @@ void Player::handleAPressed() {
     }
 }
 
-void Player::handleRightClick(const Tile& tile) {
+void Player::handleRightClick(const Tile& clickedTile) {
     if (selection_.isSourceSelected() && hasUnitAtCoords(selection_.getSource().coords)) {
         auto source = selection_.getSource();
-        auto destination = tile;
+        auto destination = clickedTile;
 
         UnitController unit = getUnitAtCoords(source.coords);
         if (unit.canMoveTo(destination)) {

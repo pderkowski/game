@@ -23,7 +23,7 @@ Players::Players(int numberOfPlayers, const MapModel* model, const MapRenderer* 
 
 void Players::switchToNextPlayer() {
     currentPlayer_ = (currentPlayer_ + 1) % players_.size();
-    getCurrentPlayer()->resetMovementPoints();
+    getCurrentPlayer()->resetMoves();
 
     updateAllLayers();
 }

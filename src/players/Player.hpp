@@ -39,12 +39,10 @@ public:
     bool doesSeeTile(const IntRotPoint& coords) const;
     bool doesKnowTile(const IntRotPoint& coords) const;
 
-    int getMovementPointsLeft(const units::Unit& unit) const;
-    void setMovementPointsLeft(const units::Unit& unit, int pointsLeft);
-    void resetMovementPoints();
+    void resetMoves();
 
-    void handleLeftClick(const Tile& tile);
-    void handleRightClick(const Tile& tile);
+    void handleLeftClick(const Tile& clickedTile);
+    void handleRightClick(const Tile& clickedTile);
     void handleAPressed();
     void handleDPressed();
     void handleFPressed();
@@ -61,7 +59,6 @@ private:
     const MapModel* model_;
 
     std::vector<units::Unit> units_;
-    std::map<unsigned long long, int> movementPoints_;
 
     Fog fog_;
 

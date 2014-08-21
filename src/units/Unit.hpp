@@ -22,13 +22,12 @@ public:
     Unit(const IntRotPoint& coords, Type type, const MapModel* model = nullptr);
 
     void setModel(const MapModel* model);
+    void setMovesLeft(int movesLeft);
 
     Type getType() const;
-
-    unsigned long long getId() const;
-
     Tile getPosition() const;
     IntRotPoint getCoords() const;
+    int getMovesLeft() const;
 
     bool canMoveTo(tileenums::Direction direction) const;
     void moveTo(tileenums::Direction direction);
@@ -38,15 +37,12 @@ private:
     friend class std::hash<units::Unit>;
 
 private:
-    static unsigned long long idSequence;
-
-private:
     IntRotPoint coords_;
     Type type_;
 
-    const MapModel* model_;
+    int movesLeft_;
 
-    unsigned long long id_;
+    const MapModel* model_;
 };
 
 bool operator == (const Unit& lhs, const Unit& rhs);
