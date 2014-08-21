@@ -10,7 +10,8 @@ namespace players {
 
 Fog::Fog(size_t rows, size_t columns)
     : rows_(rows), columns_(columns),
-    tiles_(rows, std::vector<int>(columns, -1))
+    tiles_(rows, std::vector<int>(columns, -1)),
+    isFogToggledOn_(true)
 { }
 
 TileVisibility Fog::operator ()(size_t row, size_t column) const {
@@ -36,6 +37,10 @@ void Fog::addVisible(const std::vector<const Tile*>& tiles) {
     }
 }
 
+void Fog::toggle() {
+    isFogToggledOn_ = !isFogToggledOn_;
+}
+
 void Fog::removeVisible(const std::vector<const Tile*>& tiles) {
     for (const Tile* tile : tiles) {
         IntIsoPoint coords(tile->coords.toIsometric());
@@ -44,10 +49,14 @@ void Fog::removeVisible(const std::vector<const Tile*>& tiles) {
 }
 
 TileVisibility Fog::translate(int code) const {
-    if (code < 0) {
-        return TileVisibility::Unknown;
-    } else if (code == 0) {
-        return TileVisibility::UnvisibleKnown;
+    if (isFogToggledOn_) {
+        if (code < 0) {
+            return TileVisibility::Unknown;
+        } else if (code == 0) {
+            return TileVisibility::UnvisibleKnown;
+        } else {
+            return TileVisibility::VisibleKnown;
+        }
     } else {
         return TileVisibility::VisibleKnown;
     }

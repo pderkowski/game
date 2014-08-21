@@ -1,5 +1,6 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <vector>
 #include "Tile.hpp"
 #include "Selection.hpp"
 
@@ -20,9 +21,14 @@ void Selection::setDestination(const Tile& destination) {
     destination_ = destination;
 }
 
+void Selection::setPath(const std::vector<Tile>& path) {
+    path_ = path;
+}
+
 void Selection::clear() {
     source_ = Tile();
     destination_ = Tile();
+    path_.clear();
 }
 
 bool Selection::isSourceSelected() const {
@@ -37,12 +43,20 @@ bool Selection::isDestinationConfirmed(const Tile& destination) const {
     return isDestinationSelected() && getDestination() == destination;
 }
 
+bool Selection::isPathSelected() const {
+    return !path_.empty();
+}
+
 Tile Selection::getSource() const {
     return source_;
 }
 
 Tile Selection::getDestination() const {
     return destination_;
+}
+
+std::vector<Tile> Selection::getPath() const {
+    return path_;
 }
 
 

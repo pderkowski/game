@@ -20,34 +20,20 @@
 namespace players {
 
 
-Player::Player(const Players* players, const MapModel* model, const MapRenderer* renderer)
+Player::Player(const Players* players, const MapModel* model)
     : players_(players),
     model_(model),
-    renderer_(renderer),
-    fog_(model->getRowsNo(), model->getColumnsNo()),
-    hasTurn_(false),
-    isFogToggledOn_(true),
-    drawer_(this, renderer)
+    fog_(model->getRowsNo(), model->getColumnsNo())
 { }
 
 Player::Player(const Player& other)
     : players_(other.players_),
     model_(other.model_),
-    renderer_(other.renderer_),
     units_(other.units_),
     movementPoints_(other.movementPoints_),
     fog_(other.fog_),
-    selection_(other.selection_),
-    hasTurn_(other.hasTurn_),
-    isFogToggledOn_(other.isFogToggledOn_),
-    drawer_(other.drawer_)
-{
-    drawer_.setPointer(this);
-}
-
-void Player::draw() const {
-    drawer_.draw();
-}
+    selection_(other.selection_)
+{ }
 
 bool Player::hasUnitAtCoords(const IntRotPoint& coords) const {
     return std::any_of(units_.begin(), units_.end(), [&coords] (const units::Unit& unit) {
@@ -85,42 +71,28 @@ units::Unit Player::getUnitAtCoords(const IntRotPoint& coords) const {
     }
 }
 
-std::vector<units::Unit> Player::getAllUnits() const {
+std::vector<units::Unit> Player::getUnits() const {
     return units_;
 }
 
-void Player::startTurn() {
-    hasTurn_ = true;
-    resetMovementPoints();
-
-    drawer_.updateUnitLayer(players_->getVisibleUnits());
+Fog Player::getFog() const {
+    return fog_;
 }
 
-void Player::endTurn() {
-    hasTurn_ = false;
+Selection Player::getSelection() const {
+    return selection_;
 }
 
-bool Player::hasTurn() const {
-    return hasTurn_;
-}
 
 bool Player::doesSeeTile(const IntRotPoint& coords) const {
-    if (isFogToggledOn_) {
-        IntIsoPoint isoCoords(coords.toIsometric());
-        return fog_(isoCoords.y, isoCoords.x) == TileVisibility::VisibleKnown;
-    } else {
-        return true;
-    }
+    IntIsoPoint isoCoords(coords.toIsometric());
+    return fog_(isoCoords.y, isoCoords.x) == TileVisibility::VisibleKnown;
 }
 
 bool Player::doesKnowTile(const IntRotPoint& coords) const {
-    if (isFogToggledOn_) {
-        IntIsoPoint isoCoords(coords.toIsometric());
-        return (fog_(isoCoords.y, isoCoords.x) == TileVisibility::VisibleKnown)
-            || (fog_(isoCoords.y, isoCoords.x) == TileVisibility::UnvisibleKnown);
-    } else {
-        return true;
-    }
+    IntIsoPoint isoCoords(coords.toIsometric());
+    return (fog_(isoCoords.y, isoCoords.x) == TileVisibility::VisibleKnown)
+        || (fog_(isoCoords.y, isoCoords.x) == TileVisibility::UnvisibleKnown);
 }
 
 int Player::getMovementPointsLeft(const units::Unit& unit) const {
@@ -150,12 +122,9 @@ std::vector<const Tile*> Player::getSurroundingTiles(const units::Unit& unit) co
     return position.getTilesInRadius(2);
 }
 
-void Player::handleLeftClick(const sf::Event& e) {
+void Player::handleLeftClick(const Tile& tile) {
     selection_.clear();
-    selection_.setSource(getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)));
-
-    drawer_.clearPathLayer();
-    drawer_.updateSelectionLayer();
+    selection_.setSource(tile);
 }
 
 void Player::handleAPressed() {
@@ -165,16 +134,13 @@ void Player::handleAPressed() {
         } else {
             addUnit(units::Unit(selection_.getSource().coords, units::Type::Phalanx, model_));
         }
-
-        drawer_.updateUnitLayer(players_->getVisibleUnits());
-        drawer_.updateFogLayer();
     }
 }
 
-void Player::handleRightClick(const sf::Event& e) {
+void Player::handleRightClick(const Tile& tile) {
     if (selection_.isSourceSelected() && hasUnitAtCoords(selection_.getSource().coords)) {
         auto source = selection_.getSource();
-        auto destination = getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
+        auto destination = tile;
 
         UnitController unit = getUnitAtCoords(source.coords);
         if (unit.canMoveTo(destination)) {
@@ -182,18 +148,13 @@ void Player::handleRightClick(const sf::Event& e) {
                 unit.moveTo(destination);
 
                 selection_.setSource(unit.get().getPosition());
-
-                drawer_.updateFogLayer();
-                drawer_.updateUnitLayer(players_->getVisibleUnits());
+                selection_.setPath(unit.getPathTo(destination));
             } else {
                 selection_.setDestination(destination);
+                selection_.setPath(unit.getPathTo(destination));
             }
-
-            drawer_.updatePathLayer(unit.getPathTo(destination));
         }
     }
-
-    drawer_.updateSelectionLayer();
 }
 
 void Player::handleDPressed() {
@@ -203,23 +164,12 @@ void Player::handleDPressed() {
         UnitController unit = getUnitAtCoords(source.coords);
         unit.destroyUnit();
 
-        drawer_.updateFogLayer();
-        drawer_.updateUnitLayer(players_->getVisibleUnits());
         selection_.clear();
-        drawer_.updateSelectionLayer();
-        drawer_.clearPathLayer();
     }
 }
 
-const Tile& Player::getClickedTile(const sf::Vector2i& clickedPoint) const {
-    IntIsoPoint clickedCoords = renderer_->getMapCoords(clickedPoint);
-    return model_->getTile(clickedCoords);
-}
-
-void Player::toggleFog() {
-    isFogToggledOn_ = !isFogToggledOn_;
-
-    drawer_.updateUnitLayer(players_->getVisibleUnits());
+void Player::handleFPressed() {
+    fog_.toggle();
 }
 
 

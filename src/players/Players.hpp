@@ -6,6 +6,7 @@
 #include <vector>
 #include "units/Unit.hpp"
 #include "Player.hpp"
+#include "PlayersDrawer.hpp"
 class MapModel;
 class MapRenderer;
 
@@ -21,8 +22,6 @@ public:
     Player* getCurrentPlayer();
     const Player* getCurrentPlayer() const;
 
-    std::vector<units::Unit> getVisibleUnits() const;
-
     void draw() const;
 
     void handleLeftClick(const sf::Event& e);
@@ -32,8 +31,20 @@ public:
     void handleDPressed();
 
 private:
+    void updateAllLayers();
+
+    std::vector<units::Unit> getVisibleUnits() const;
+    const Tile& getClickedTile(const sf::Vector2i& clickedPoint) const;
+
+private:
     unsigned currentPlayer_;
     std::vector<Player> players_;
+
+    const MapModel* model_;
+
+    const MapRenderer* renderer_;
+
+    PlayersDrawer drawer_;
 };
 
 

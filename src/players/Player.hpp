@@ -10,7 +10,6 @@
 #include "Fog.hpp"
 #include "UnitController.hpp"
 #include "Selection.hpp"
-#include "PlayerDrawer.hpp"
 class MapModel;
 
 namespace players {
@@ -21,25 +20,21 @@ class Players;
 
 class Player {
 public:
-    explicit Player(const Players* players, const MapModel* model, const MapRenderer* renderer);
+    explicit Player(const Players* players, const MapModel* model);
 
     Player(const Player&);
     Player& operator =(const Player&) = delete;
-
-    void draw() const;
 
     bool hasUnitAtCoords(const IntRotPoint& coords) const;
 
     UnitController getUnitAtCoords(const IntRotPoint& coords);
     units::Unit getUnitAtCoords(const IntRotPoint& coords) const;
 
-    std::vector<units::Unit> getAllUnits() const;
+    std::vector<units::Unit> getUnits() const;
+    Fog getFog() const;
+    Selection getSelection() const;
 
     void addUnit(const units::Unit& unit);
-
-    void startTurn();
-    void endTurn();
-    bool hasTurn() const;
 
     bool doesSeeTile(const IntRotPoint& coords) const;
     bool doesKnowTile(const IntRotPoint& coords) const;
@@ -48,28 +43,22 @@ public:
     void setMovementPointsLeft(const units::Unit& unit, int pointsLeft);
     void resetMovementPoints();
 
-    void handleLeftClick(const sf::Event& e);
-    void handleRightClick(const sf::Event& e);
+    void handleLeftClick(const Tile& tile);
+    void handleRightClick(const Tile& tile);
     void handleAPressed();
     void handleDPressed();
-
-    void toggleFog();
+    void handleFPressed();
 
 public:
     friend class UnitController;
-    friend class PlayerDrawer;
 
 private:
     std::vector<const Tile*> getSurroundingTiles(const units::Unit& unit) const;
-
-    const Tile& getClickedTile(const sf::Vector2i& clickedPoint) const;
 
 private:
     const Players* players_;
 
     const MapModel* model_;
-
-    const MapRenderer* renderer_;
 
     std::vector<units::Unit> units_;
     std::map<unsigned long long, int> movementPoints_;
@@ -77,12 +66,6 @@ private:
     Fog fog_;
 
     Selection selection_;
-
-    bool hasTurn_;
-
-    bool isFogToggledOn_;
-
-    PlayerDrawer drawer_;
 };
 
 

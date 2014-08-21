@@ -29,6 +29,8 @@ public:
     void addVisible(const std::vector<const Tile*>& tiles);
     void removeVisible(const std::vector<const Tile*>& tiles);
 
+    void toggle();
+
 private:
     TileVisibility translate(int code) const;
 
@@ -37,6 +39,8 @@ private:
     size_t columns_;
 
     std::vector<std::vector<int>> tiles_;
+
+    bool isFogToggledOn_;
 };
 
 
