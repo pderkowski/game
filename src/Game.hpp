@@ -12,7 +12,6 @@
 #include "Minimap.hpp"
 #include "Interface.hpp"
 
-using players::Players;
 
 class Game {
 public:
@@ -20,24 +19,27 @@ public:
 
     void start();
 
-private:
     void restart();
     void quit();
     void toggleMenu();
+    void captureScreenToFile();
+
+    void addUnit();
+    void toggleFog();
+    void deleteSelectedUnit();
+    void switchToNextPlayer();
+
+private:
     void handleEvents();
     void handleLeftClick(const sf::Event& event);
     void handleRightClick(const sf::Event& event);
     void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);
-    void handleAPressed();
-    void handleFPressed();
-    void handleDPressed();
-    void handleEnterPressed();
-    void handlePrintScreenPressed();
 
+private:
     std::shared_ptr<sf::RenderWindow> window_;
     Map map_;
-    Players players_;
+    players::Players players_;
     Minimap minimap_;
     Interface interface_;
     menu::Menu menu_;

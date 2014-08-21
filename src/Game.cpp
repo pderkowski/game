@@ -85,19 +85,19 @@ void Game::handleEvents() {
                 toggleMenu();
                 break;
             case sf::Keyboard::Key::A:
-                handleAPressed();
+                addUnit();
                 break;
             case sf::Keyboard::Key::F:
-                handleFPressed();
+                toggleFog();
                 break;
             case sf::Keyboard::Key::D:
-                handleDPressed();
+                deleteSelectedUnit();
                 break;
             case sf::Keyboard::Key::Return:
-                handleEnterPressed();
+                switchToNextPlayer();
                 break;
             case sf::Keyboard::Key::P:
-                handlePrintScreenPressed();
+                captureScreenToFile();
                 break;
             default:
                 break;
@@ -141,33 +141,33 @@ void Game::handleMouseMoved(const sf::Event& event) {
     }
 }
 
-void Game::handleAPressed() {
+void Game::addUnit() {
     if (!menu_.isVisible()) {
         players_.handleAPressed();
         minimap_.updateBackground();
     }
 }
 
-void Game::handleFPressed() {
+void Game::toggleFog() {
     if (!menu_.isVisible()) {
         players_.handleFPressed();
         minimap_.updateBackground();
     }
 }
 
-void Game::handleDPressed() {
+void Game::deleteSelectedUnit() {
     if (!menu_.isVisible()) {
         players_.handleDPressed();
     }
 }
 
-void Game::handleEnterPressed() {
+void Game::switchToNextPlayer() {
     if (!menu_.isVisible()) {
         players_.switchToNextPlayer();
         minimap_.updateBackground();
     }
 }
 
-void Game::handlePrintScreenPressed() {
+void Game::captureScreenToFile() {
     window_->capture().saveToFile("screenshot.png");
 }
