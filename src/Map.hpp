@@ -8,16 +8,16 @@
 #include "SFML/Graphics.hpp"
 #include "MapModel.hpp"
 #include "MapDrawer.hpp"
-#include "Renderer.hpp"
+class Renderer;
+
 
 class Map {
 public:
-    Map(int rows, int columns, std::shared_ptr<sf::RenderTarget> target);
+    Map(int rows, int columns, Renderer* renderer);
 
     void draw() const;
 
     std::shared_ptr<const MapModel> getModel() const;
-    const Renderer* getRenderer() const;
 
     void generateMap();
 
@@ -28,9 +28,10 @@ private:
     int calculateHorizontalShift(int mouseXPosition) const;
     int calculateVerticalShift(int mouseYPosition) const;
 
+private:
     std::shared_ptr<MapModel> model_;
 
-    Renderer renderer_;
+    Renderer* renderer_;
 
     MapDrawer mapDrawer_;
 };

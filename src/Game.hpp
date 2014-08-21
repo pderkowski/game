@@ -12,7 +12,7 @@
 #include "Minimap.hpp"
 #include "Interface.hpp"
 #include "Timer.hpp"
-
+#include "Renderer.hpp"
 
 class Game {
 public:
@@ -43,6 +43,8 @@ private:
 
 private:
     std::shared_ptr<sf::RenderWindow> window_;
+    Renderer renderer_;
+
     Map map_;
     players::Players players_;
     Minimap minimap_;

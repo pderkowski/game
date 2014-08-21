@@ -19,10 +19,11 @@ Game::Game(int rows, int columns, int numberOfPlayers)
             sf::VideoMode::getFullscreenModes()[0],
             "",
             sf::Style::Fullscreen)),
-        map_(rows, columns, window_),
-        players_(numberOfPlayers, map_.getModel().get(), map_.getRenderer()),
-        minimap_(map_.getModel().get(), &players_, map_.getRenderer()),
-        interface_(map_.getRenderer(), minimap_.getSize()),
+        renderer_(rows, columns, 96, 48, window_),
+        map_(rows, columns, &renderer_),
+        players_(numberOfPlayers, map_.getModel().get(), &renderer_),
+        minimap_(map_.getModel().get(), &players_, &renderer_),
+        interface_(&renderer_, minimap_.getSize()),
         menu_(window_)
 {
     minimap_.setPosition(interface_.getMinimapSlotPosition());
