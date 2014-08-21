@@ -15,7 +15,7 @@ Players::Players(int numberOfPlayers, const MapModel* model, const MapRenderer* 
     : currentPlayer_(0), model_(model), renderer_(renderer), drawer_(renderer)
 {
     for (int i = 1; i <= numberOfPlayers; ++i) {
-        players_.emplace_back(this, model);
+        players_.emplace_back(model);
     }
 
     updateAllLayers();

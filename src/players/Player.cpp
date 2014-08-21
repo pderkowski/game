@@ -14,23 +14,13 @@
 #include "Fog.hpp"
 #include "MapModel.hpp"
 #include "Selection.hpp"
-#include "Players.hpp"
+
 
 namespace players {
 
 
-Player::Player(const Players* players, const MapModel* model)
-    : players_(players),
-    model_(model),
-    fog_(model->getRowsNo(), model->getColumnsNo())
-{ }
-
-Player::Player(const Player& other)
-    : players_(other.players_),
-    model_(other.model_),
-    units_(other.units_),
-    fog_(other.fog_),
-    selection_(other.selection_)
+Player::Player(const MapModel* model)
+    : model_(model), fog_(model->getRowsNo(), model->getColumnsNo())
 { }
 
 bool Player::hasUnitAtCoords(const IntRotPoint& coords) const {

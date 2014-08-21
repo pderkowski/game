@@ -15,15 +15,9 @@ class MapModel;
 namespace players {
 
 
-class Players;
-
-
 class Player {
 public:
-    explicit Player(const Players* players, const MapModel* model);
-
-    Player(const Player&);
-    Player& operator =(const Player&) = delete;
+    explicit Player(const MapModel* model);
 
     bool hasUnitAtCoords(const IntRotPoint& coords) const;
 
@@ -54,8 +48,6 @@ private:
     std::vector<const Tile*> getSurroundingTiles(const units::Unit& unit) const;
 
 private:
-    const Players* players_;
-
     const MapModel* model_;
 
     std::vector<units::Unit> units_;
