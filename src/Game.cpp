@@ -27,6 +27,7 @@ Game::Game(int rows, int columns, int numberOfPlayers)
         menu_(window_)
 {
     minimap_.setPosition(interface_.getMinimapSlotPosition());
+    minimap_.updateDisplayedRectangle();
 
     menu_.addItem("Return", [this] () { toggleMenu(); });
     menu_.addItem("New game", [this] () { restart(); });
