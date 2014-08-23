@@ -37,6 +37,9 @@ void Minimap::setModel(const MapModel* model) {
     height_ = IsoPoint(0, model->getRowsNo()).toCartesian().y * verticalPixelsPerTile_;
 
     minimap_.create(width_, height_);
+
+    updateBackground();
+    updateDisplayedRectangle();
 }
 
 void Minimap::updateBackground() {

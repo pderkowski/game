@@ -56,6 +56,8 @@ void Players::setModel(const MapModel* model) {
     for (auto& player : players_) {
         player.setModel(model);
     }
+
+    updateAllLayers();
 }
 
 void Players::draw() const {

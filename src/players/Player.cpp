@@ -92,7 +92,7 @@ void Player::setModel(const MapModel* model) {
 
 void Player::resetMoves() {
     for (auto& unit : units_) {
-        unit.setMovesLeft(2);
+        unit.setMovesLeft(4);
     }
 }
 

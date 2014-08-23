@@ -15,19 +15,18 @@
 
 
 Game::Game(int rows, int columns, int numberOfPlayers)
-        : window_(std::make_shared<sf::RenderWindow>(
-            sf::VideoMode::getFullscreenModes()[0],
-            "",
-            sf::Style::Fullscreen)),
-        renderer_(rows, columns, 96, 48, window_),
-        map_(rows, columns, &renderer_),
-        players_(numberOfPlayers, map_.getModel(), &renderer_),
-        minimap_(map_.getModel(), &players_, &renderer_),
-        interface_(&renderer_, minimap_.getSize()),
-        menu_(window_)
+    : window_(std::make_shared<sf::RenderWindow>(
+        sf::VideoMode::getFullscreenModes()[0],
+        "",
+        sf::Style::Fullscreen)),
+    renderer_(rows, columns, 96, 48, window_),
+    map_(rows, columns, &renderer_),
+    players_(numberOfPlayers, map_.getModel(), &renderer_),
+    minimap_(map_.getModel(), &players_, &renderer_),
+    interface_(&renderer_, minimap_.getSize()),
+    menu_(window_)
 {
     minimap_.setPosition(interface_.getMinimapSlotPosition());
-    minimap_.updateDisplayedRectangle();
 
     menu_.addItem("Return", [this] () { toggleMenu(); });
     menu_.addItem("New game", [this] () { restart(); });
@@ -57,9 +56,6 @@ void Game::restart() {
     map_.generateMap();
     minimap_.setModel(map_.getModel());
     players_.setModel(map_.getModel());
-
-    minimap_.updateBackground();
-    minimap_.updateDisplayedRectangle();
 }
 
 void Game::quit() {
