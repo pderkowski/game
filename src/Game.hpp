@@ -31,6 +31,7 @@ public:
     void switchToNextPlayer();
 
     void scrollView();
+    void zoomView(float delta);
 
 private:
     void handleEvents();
@@ -38,7 +39,6 @@ private:
 
     void handleLeftClick(const sf::Event& event);
     void handleRightClick(const sf::Event& event);
-    void handleMouseWheelMoved(const sf::Event& event);
     void handleMouseMoved(const sf::Event& event);
 
 private:

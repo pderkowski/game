@@ -83,6 +83,13 @@ bool Player::doesKnowTile(const IntRotPoint& coords) const {
         || (fog_(isoCoords.y, isoCoords.x) == TileVisibility::UnvisibleKnown);
 }
 
+void Player::setModel(const MapModel* model) {
+    model_ = model;
+    units_.clear();
+    fog_.clear();
+    selection_.clear();
+}
+
 void Player::resetMoves() {
     for (auto& unit : units_) {
         unit.setMovesLeft(2);

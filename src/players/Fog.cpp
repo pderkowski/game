@@ -41,6 +41,14 @@ void Fog::toggle() {
     isFogToggledOn_ = !isFogToggledOn_;
 }
 
+void Fog::clear() {
+    for (auto& row : tiles_) {
+        for (auto& tile : row) {
+            tile = -1;
+        }
+    }
+}
+
 void Fog::removeVisible(const std::vector<const Tile*>& tiles) {
     for (const Tile* tile : tiles) {
         IntIsoPoint coords(tile->coords.toIsometric());

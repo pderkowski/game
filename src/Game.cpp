@@ -21,8 +21,8 @@ Game::Game(int rows, int columns, int numberOfPlayers)
             sf::Style::Fullscreen)),
         renderer_(rows, columns, 96, 48, window_),
         map_(rows, columns, &renderer_),
-        players_(numberOfPlayers, map_.getModel().get(), &renderer_),
-        minimap_(map_.getModel().get(), &players_, &renderer_),
+        players_(numberOfPlayers, map_.getModel(), &renderer_),
+        minimap_(map_.getModel(), &players_, &renderer_),
         interface_(&renderer_, minimap_.getSize()),
         menu_(window_)
 {
@@ -54,7 +54,9 @@ void Game::start() {
 
 void Game::restart() {
     map_.generateMap();
-    minimap_.setModel(map_.getModel().get());
+    minimap_.setModel(map_.getModel());
+    players_.setModel(map_.getModel());
+
     minimap_.updateBackground();
     minimap_.updateDisplayedRectangle();
 }
@@ -108,7 +110,7 @@ void Game::handleEvents() {
                 break;
             }
         } else if (event.type == sf::Event::MouseWheelMoved) {
-            handleMouseWheelMoved(event);
+            zoomView(event.mouseWheel.delta);
         } else if (event.type == sf::Event::MouseMoved) {
             handleMouseMoved(event);
         }
@@ -135,13 +137,6 @@ void Game::handleRightClick(const sf::Event& event) {
     if (!menu_.isVisible()) {
         players_.handleRightClick(event);
         minimap_.updateBackground();
-    }
-}
-
-void Game::handleMouseWheelMoved(const sf::Event& event) {
-    if (!menu_.isVisible()) {
-        map_.handleMouseWheelMoved(event);
-        minimap_.updateDisplayedRectangle();
     }
 }
 
@@ -184,10 +179,17 @@ void Game::captureScreenToFile() {
 
 void Game::scrollView() {
     if (!menu_.isVisible()) {
-        sf::Vector2f actualShift = map_.scrollView();
+        sf::Vector2f actualShift = renderer_.scrollView(sf::Mouse::getPosition(*window_));
 
         if (actualShift != sf::Vector2f(0, 0)) {
             minimap_.updateDisplayedRectangle();
         }
+    }
+}
+
+void Game::zoomView(float delta) {
+    if (!menu_.isVisible()) {
+        renderer_.zoomView(delta, sf::Mouse::getPosition(*window_));
+        minimap_.updateDisplayedRectangle();
     }
 }

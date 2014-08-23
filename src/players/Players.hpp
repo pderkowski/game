@@ -22,6 +22,8 @@ public:
     Player* getCurrentPlayer();
     const Player* getCurrentPlayer() const;
 
+    void setModel(const MapModel* model);
+
     void draw() const;
 
     void handleLeftClick(const sf::Event& e);

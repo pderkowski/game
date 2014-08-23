@@ -33,6 +33,8 @@ public:
     bool doesSeeTile(const IntRotPoint& coords) const;
     bool doesKnowTile(const IntRotPoint& coords) const;
 
+    void setModel(const MapModel* model);
+
     void resetMoves();
 
     void handleLeftClick(const Tile& clickedTile);

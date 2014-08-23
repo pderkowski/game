@@ -96,6 +96,13 @@ sf::Vector2f Renderer::scrollView(int x, int y) {
     return actualShift;
 }
 
+sf::Vector2f Renderer::scrollView(const sf::Vector2i& mousePosition) {
+    int xShift = calculateHorizontalShift(mousePosition.x);
+    int yShift = calculateVerticalShift(mousePosition.y);
+
+    return scrollView(xShift, yShift);
+}
+
 sf::Vector2f Renderer::boundShift(int x, int y) const {
     sf::Vector2f safeShift;
 
@@ -149,6 +156,30 @@ sf::FloatRect Renderer::getDisplayedRectangle() const {
         leftTopCoords.y / getMapHeight(),
         (rightBottomCoords.x - leftTopCoords.x) / getMapWidth(),
         (rightBottomCoords.y - leftTopCoords.y) / getMapHeight());
+}
+
+int Renderer::calculateHorizontalShift(int mouseXPosition) const {
+    const int scrollMarginSize = 50;
+
+    if (mouseXPosition < scrollMarginSize) {
+        return 2 * (mouseXPosition - scrollMarginSize);
+    } else if (mouseXPosition > static_cast<int>(getSize().x) - scrollMarginSize) {
+        return 2 * (scrollMarginSize - (static_cast<int>(getSize().x) - mouseXPosition));
+    } else {
+        return 0;
+    }
+}
+
+int Renderer::calculateVerticalShift(int mouseYPosition) const {
+    const int scrollMarginSize = 50;
+
+    if (mouseYPosition < scrollMarginSize) {
+        return 2 * (mouseYPosition - scrollMarginSize);
+    } else if (mouseYPosition > static_cast<int>(getSize().y) - scrollMarginSize) {
+        return 2 * (scrollMarginSize - (static_cast<int>(getSize().y) - mouseYPosition));
+    } else {
+        return 0;
+    }
 }
 
 Renderer::TargetProxy::~TargetProxy() {

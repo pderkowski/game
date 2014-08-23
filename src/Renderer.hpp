@@ -29,14 +29,18 @@ public:
 
     IntIsoPoint getMapCoords(const sf::Vector2i& position) const;
 
-    sf::Vector2f scrollView(int x, int y);
+    sf::Vector2f scrollView(const sf::Vector2i& mousePosition);
     void zoomView(int delta, const sf::Vector2i& mousePosition);
 
     sf::FloatRect getDisplayedRectangle() const;
 
 private:
+    sf::Vector2f scrollView(int x, int y);
     bool canZoom(float delta) const;
     sf::Vector2f boundShift(int x, int y) const;
+
+    int calculateHorizontalShift(int mouseXPosition) const;
+    int calculateVerticalShift(int mouseYPosition) const;
 
 private:
     int rows_;

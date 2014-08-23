@@ -31,6 +31,8 @@ public:
 
     void toggle();
 
+    void clear();
+
 private:
     TileVisibility translate(int code) const;
 

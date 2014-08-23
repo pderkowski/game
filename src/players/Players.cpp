@@ -52,6 +52,12 @@ std::vector<units::Unit> Players::getVisibleUnits() const {
     return res;
 }
 
+void Players::setModel(const MapModel* model) {
+    for (auto& player : players_) {
+        player.setModel(model);
+    }
+}
+
 void Players::draw() const {
     drawer_.draw();
 }
