@@ -19,6 +19,9 @@ extern const sf::VertexArray bottom;
 extern const sf::VertexArray bottomLeft;
 extern const sf::VertexArray left;
 extern const sf::VertexArray topLeft;
+extern const sf::VertexArray blueFlag;
+extern const sf::VertexArray redFlag;
+
 
 }  // miscellaneous
 

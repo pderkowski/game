@@ -7,6 +7,7 @@
 #include "PlayersDrawer.hpp"
 #include "MapModel.hpp"
 #include "Renderer.hpp"
+#include "MiscellaneousEnums.hpp"
 
 namespace players {
 
@@ -14,8 +15,10 @@ namespace players {
 Players::Players(int numberOfPlayers, const MapModel* model, const Renderer* renderer)
     : currentPlayer_(0), model_(model), renderer_(renderer), drawer_(renderer)
 {
+    std::vector<miscellaneous::Flag> flags = { miscellaneous::Flag::Blue, miscellaneous::Flag::Red };
+
     for (int i = 1; i <= numberOfPlayers; ++i) {
-        players_.emplace_back(model);
+        players_.emplace_back(flags[i - 1], model);
     }
 
     updateAllLayers();
@@ -81,6 +84,7 @@ void Players::handleRightClick(const sf::Event& e) {
 void Players::handleAPressed() {
     getCurrentPlayer()->handleAPressed();
 
+    drawer_.updateFlagLayer(getVisibleUnits());
     drawer_.updateUnitLayer(getVisibleUnits());
     drawer_.updateFogLayer(getCurrentPlayer()->getFog());
 }
@@ -89,6 +93,7 @@ void Players::handleFPressed() {
     getCurrentPlayer()->handleFPressed();
 
     drawer_.updateFogLayer(getCurrentPlayer()->getFog());
+    drawer_.updateFlagLayer(getVisibleUnits());
     drawer_.updateUnitLayer(getVisibleUnits());
 }
 
@@ -105,6 +110,7 @@ const Tile& Players::getClickedTile(const sf::Vector2i& clickedPoint) const {
 
 void Players::updateAllLayers() {
     drawer_.updateFogLayer(getCurrentPlayer()->getFog());
+    drawer_.updateFlagLayer(getVisibleUnits());
     drawer_.updateUnitLayer(getVisibleUnits());
     drawer_.updateSelectionLayer(getCurrentPlayer()->getSelection());
     drawer_.updatePathLayer(getCurrentPlayer()->getSelection());

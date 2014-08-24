@@ -6,18 +6,19 @@
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
 #include "MapModel.hpp"
+#include "players/Player.hpp"
 
 namespace units {
 
 
 
-Unit::Unit(const IntRotPoint& coords, Type type, const MapModel* model)
-    : coords_(coords), type_(type), movesLeft_(0), model_(model)
+Unit::Unit(const IntRotPoint& coords, Type type, const MapModel* model, const players::Player* owner)
+    : coords_(coords), type_(type), movesLeft_(0), model_(model), owner_(owner)
 { }
 
-void Unit::setModel(const MapModel* model) {
-    model_ = model;
-}
+// void Unit::setModel(const MapModel* model) {
+//     model_ = model;
+// }
 
 void Unit::setMovesLeft(int movesLeft) {
     movesLeft_ = movesLeft;
@@ -36,6 +37,10 @@ Tile Unit::getPosition() const {
 
 IntRotPoint Unit::getCoords() const {
     return coords_;
+}
+
+const players::Player* Unit::getOwner() const {
+    return owner_;
 }
 
 int Unit::getMovesLeft() const {

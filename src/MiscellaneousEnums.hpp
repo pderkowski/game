@@ -14,6 +14,11 @@ enum class Type {
     Destination,
 };
 
+enum class Flag {
+    Blue,
+    Red
+};
+
 }  // namespace miscellaneous
 
 
@@ -24,12 +29,18 @@ struct hash<miscellaneous::Type>
 {
     std::size_t operator()(const miscellaneous::Type& type) const
     {
-        std::size_t seed = 0;
-
         static std::hash<int> typeHasher;
-        boost::hash_combine(seed, typeHasher(static_cast<int>(type)));
+        return typeHasher(static_cast<int>(type));
+    }
+};
 
-        return seed;
+template <>
+struct hash<miscellaneous::Flag>
+{
+    std::size_t operator()(const miscellaneous::Flag& flag) const
+    {
+        static std::hash<int> typeHasher;
+        return typeHasher(static_cast<int>(flag));
     }
 };
 

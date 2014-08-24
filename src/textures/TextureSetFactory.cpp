@@ -636,5 +636,23 @@ TextureSet<players::TileVisibility> TextureSetFactory::getFogTextureSet() {
     return ts;
 }
 
+TextureSet<::miscellaneous::Flag> TextureSetFactory::getFlagTextureSet() {
+    TextureSet<::miscellaneous::Flag> ts(Resources::loadTexture("textures/miscellaneous.png"));
+
+    ts.add(std::shared_ptr<const Matcher<::miscellaneous::Flag>>(
+        new Matcher<::miscellaneous::Flag>([] (const ::miscellaneous::Flag& flag)
+    {
+        return flag == ::miscellaneous::Flag::Blue;
+    })), textures::miscellaneous::blueFlag);
+
+    ts.add(std::shared_ptr<const Matcher<::miscellaneous::Flag>>(
+        new Matcher<::miscellaneous::Flag>([] (const ::miscellaneous::Flag& flag)
+    {
+        return flag == ::miscellaneous::Flag::Red;
+    })), textures::miscellaneous::redFlag);
+
+    return ts;
+}
+
 
 }  // namespace textures

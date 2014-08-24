@@ -14,13 +14,14 @@
 #include "Fog.hpp"
 #include "MapModel.hpp"
 #include "Selection.hpp"
+#include "MiscellaneousEnums.hpp"
 
 
 namespace players {
 
 
-Player::Player(const MapModel* model)
-    : model_(model), fog_(model->getRowsNo(), model->getColumnsNo())
+Player::Player(miscellaneous::Flag flag, const MapModel* model)
+    : flag_(flag), fog_(model->getRowsNo(), model->getColumnsNo()), model_(model)
 { }
 
 bool Player::hasUnitAtCoords(const IntRotPoint& coords) const {
@@ -71,6 +72,10 @@ Selection Player::getSelection() const {
     return selection_;
 }
 
+miscellaneous::Flag Player::getFlag() const {
+    return flag_;
+}
+
 
 bool Player::doesSeeTile(const IntRotPoint& coords) const {
     IntIsoPoint isoCoords(coords.toIsometric());
@@ -109,9 +114,9 @@ void Player::handleLeftClick(const Tile& clickedTile) {
 void Player::handleAPressed() {
     if (selection_.isSourceSelected()) {
         if (selection_.getSource().type == tileenums::Type::Water) {
-            addUnit(units::Unit(selection_.getSource().coords, units::Type::Trireme, model_));
+            addUnit(units::Unit(selection_.getSource().coords, units::Type::Trireme, model_, this));
         } else {
-            addUnit(units::Unit(selection_.getSource().coords, units::Type::Phalanx, model_));
+            addUnit(units::Unit(selection_.getSource().coords, units::Type::Phalanx, model_, this));
         }
     }
 }

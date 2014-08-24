@@ -13,3 +13,5 @@ const sf::VertexArray textures::miscellaneous::top = makeQuad(96, 48, sf::Vector
 const sf::VertexArray textures::miscellaneous::bottom = makeQuad(96, 48, sf::Vector2f(195, 50), sf::Vector2f(24, 12));
 const sf::VertexArray textures::miscellaneous::left = makeQuad(96, 48, sf::Vector2f(292, 50), sf::Vector2f(-24, 12));
 const sf::VertexArray textures::miscellaneous::right = makeQuad(96, 48, sf::Vector2f(292, 50), sf::Vector2f(24, -12));
+const sf::VertexArray textures::miscellaneous::blueFlag = makeQuad(96, 48, sf::Vector2f(195, 1), sf::Vector2f(-20, -20));
+const sf::VertexArray textures::miscellaneous::redFlag = makeQuad(96, 48, sf::Vector2f(292, 1), sf::Vector2f(-20, -20));

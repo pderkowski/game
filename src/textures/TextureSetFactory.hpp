@@ -21,6 +21,7 @@ public:
     static TextureSet<units::Unit> getUnitTextureSet();
 
     static TextureSet<miscellaneous::Type> getSelectionTextureSet();
+    static TextureSet<miscellaneous::Flag> getFlagTextureSet();
     static TextureSet<tileenums::Direction> getPathTextureSet();
 
     static TextureSet<players::TileVisibility> getFogTextureSet();

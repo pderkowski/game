@@ -24,6 +24,7 @@ public:
     void draw() const;
 
     void updateUnitLayer(const std::vector<units::Unit>& visibleUnits);
+    void updateFlagLayer(const std::vector<units::Unit>& visibleUnits);
     void updateSelectionLayer(const Selection& selection);
     void updatePathLayer(const Selection& selection);
     void updateFogLayer(const Fog& fog);
@@ -32,6 +33,7 @@ private:
     Layer<tileenums::Direction> pathLayer_;
     Layer<miscellaneous::Type> selectionLayer_;
     Layer<units::Unit> unitLayer_;
+    Layer<miscellaneous::Flag> flagLayer_;
     Layer<TileVisibility> fogLayer_;
 
     const Renderer* renderer_;

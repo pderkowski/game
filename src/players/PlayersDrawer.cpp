@@ -11,6 +11,7 @@
 #include "Coordinates.hpp"
 #include "Selection.hpp"
 #include "Tile.hpp"
+#include "Player.hpp"
 
 
 namespace players {
@@ -20,6 +21,7 @@ PlayersDrawer::PlayersDrawer(const Renderer* renderer)
     : pathLayer_(textures::TextureSetFactory::getPathTextureSet()),
     selectionLayer_(textures::TextureSetFactory::getSelectionTextureSet()),
     unitLayer_(textures::TextureSetFactory::getUnitTextureSet()),
+    flagLayer_(textures::TextureSetFactory::getFlagTextureSet()),
     fogLayer_(textures::TextureSetFactory::getFogTextureSet()),
     renderer_(renderer)
 { }
@@ -30,6 +32,7 @@ void PlayersDrawer::draw() const {
     target.get()->draw(pathLayer_);
     target.get()->draw(selectionLayer_);
     target.get()->draw(unitLayer_);
+    target.get()->draw(flagLayer_);
     target.get()->draw(fogLayer_);
 }
 
@@ -44,6 +47,20 @@ void PlayersDrawer::updateUnitLayer(const std::vector<units::Unit>& visibleUnits
 
         unitLayer_.add(unit, tilePosition);
         unitLayer_.add(unit, dualTilePosition);
+    }
+}
+
+void PlayersDrawer::updateFlagLayer(const std::vector<units::Unit>& visibleUnits) {
+    flagLayer_.clear();
+
+    for (const units::Unit& unit : visibleUnits) {
+        auto tile = unit.getPosition();
+
+        auto tilePosition = renderer_->getPosition(IntIsoPoint(tile.coords.toIsometric()));
+        auto dualTilePosition = renderer_->getDualPosition(IntIsoPoint(tile.coords.toIsometric()));
+
+        flagLayer_.add(unit.getOwner()->getFlag(), tilePosition);
+        flagLayer_.add(unit.getOwner()->getFlag(), dualTilePosition);
     }
 }
 

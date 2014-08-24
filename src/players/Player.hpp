@@ -10,6 +10,7 @@
 #include "Fog.hpp"
 #include "UnitController.hpp"
 #include "Selection.hpp"
+#include "MiscellaneousEnums.hpp"
 class MapModel;
 
 namespace players {
@@ -17,7 +18,7 @@ namespace players {
 
 class Player {
 public:
-    explicit Player(const MapModel* model);
+    Player(miscellaneous::Flag flag, const MapModel* model);
 
     bool hasUnitAtCoords(const IntRotPoint& coords) const;
 
@@ -27,6 +28,7 @@ public:
     std::vector<units::Unit> getUnits() const;
     Fog getFog() const;
     Selection getSelection() const;
+    miscellaneous::Flag getFlag() const;
 
     void addUnit(const units::Unit& unit);
 
@@ -50,13 +52,15 @@ private:
     std::vector<const Tile*> getSurroundingTiles(const units::Unit& unit) const;
 
 private:
-    const MapModel* model_;
+    miscellaneous::Flag flag_;
 
     std::vector<units::Unit> units_;
 
     Fog fog_;
 
     Selection selection_;
+
+    const MapModel* model_;
 };
 
 
