@@ -9,9 +9,9 @@ class Renderer;
 
 class Interface {
 public:
-    Interface(const Renderer* renderer, const sf::Vector2f& minimapSize);
+    Interface(const Renderer* renderer);
 
-    sf::Vector2f getMinimapSlotPosition() const;
+    sf::Vector2f addSlot(const sf::Vector2f& slotSize);
 
     void draw() const;
 
@@ -28,7 +28,7 @@ private:
 
     std::vector<sf::RectangleShape> components_;
 
-    const sf::Vector2f minimapSize_;
+    sf::Vector2f availableSlotPosition_;
     float thickness_;
 };
 

@@ -23,10 +23,10 @@ Game::Game(int rows, int columns, int numberOfPlayers)
     map_(rows, columns, &renderer_),
     players_(numberOfPlayers, map_.getModel(), &renderer_),
     minimap_(map_.getModel(), &players_, &renderer_),
-    interface_(&renderer_, minimap_.getSize()),
+    interface_(&renderer_),
     menu_(window_)
 {
-    minimap_.setPosition(interface_.getMinimapSlotPosition());
+    minimap_.setPosition(interface_.addSlot(minimap_.getSize()));
 
     menu_.addItem("Return", [this] () { toggleMenu(); });
     menu_.addItem("New game", [this] () { restart(); });

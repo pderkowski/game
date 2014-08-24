@@ -4,16 +4,24 @@
 #include "Renderer.hpp"
 #include "Interface.hpp"
 
-Interface::Interface(const Renderer* renderer, const sf::Vector2f& minimapSize)
+Interface::Interface(const Renderer* renderer)
     : renderer_(renderer),
-    minimapSize_(minimapSize),
+    availableSlotPosition_(renderer_->getSize()),
     thickness_(1.0f)
 {
-    const sf::Vector2f totalShift(8 * thickness_, 8 * thickness_);
-    const sf::Vector2f rendererSize = sf::Vector2f(renderer_->getSize());
-
     addBorders(sf::Vector2f(renderer_->getSize()), sf::Vector2f());
-    addBorders(minimapSize + totalShift, rendererSize - minimapSize - totalShift);
+}
+
+sf::Vector2f Interface::addSlot(const sf::Vector2f& slotSize) {
+    const sf::Vector2f border(4 * thickness_, 4 * thickness_);
+    const sf::Vector2f totalBorder = 2.0f * border;
+
+    const sf::Vector2f position = availableSlotPosition_ - (slotSize + totalBorder);
+    availableSlotPosition_.y -= (slotSize.y + totalBorder.y);
+
+    addBorders(slotSize + totalBorder, position);
+
+    return position + border;
 }
 
 void Interface::addBorders(const sf::Vector2f& size, const sf::Vector2f& position) {
@@ -50,12 +58,3 @@ void Interface::draw() const {
         target.get()->draw(component);
     }
 }
-
-sf::Vector2f Interface::getMinimapSlotPosition() const {
-    const sf::Vector2f border(4 * thickness_, 4 * thickness_);
-    const sf::Vector2f rendererSize = sf::Vector2f(renderer_->getSize());
-
-    return rendererSize - minimapSize_ - border;
-}
-
-
