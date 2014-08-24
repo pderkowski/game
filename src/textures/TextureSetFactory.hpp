@@ -16,6 +16,7 @@ class TextureSetFactory {
 public:
     static TextureSet<Tile> getBaseTextureSet();
     static TextureSet<Tile> getBlendTextureSet();
+    static TextureSet<Tile> getGridTextureSet();
     static TextureSet<Tile> getOverlayTextureSet();
     static TextureSet<Tile> getAttributeTextureSet();
     static TextureSet<units::Unit> getUnitTextureSet();

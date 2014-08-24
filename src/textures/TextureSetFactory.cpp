@@ -247,6 +247,15 @@ TextureSet<Tile> TextureSetFactory::getBlendTextureSet() {
     return ts;
 }
 
+TextureSet<Tile> TextureSetFactory::getGridTextureSet() {
+    TextureSet<Tile> ts(Resources::loadTexture("textures/terrains.png"));
+
+    ts.add(std::shared_ptr<const AlwaysMatcher>(new AlwaysMatcher()),
+        textures::terrains::visibleKnown);
+
+    return ts;
+}
+
 TextureSet<Tile> TextureSetFactory::getOverlayTextureSet() {
     TextureSet<Tile> ts(Resources::loadTexture("textures/landmarks.png"));
 
@@ -614,12 +623,6 @@ TextureSet<tileenums::Direction> TextureSetFactory::getPathTextureSet() {
 
 TextureSet<players::TileVisibility> TextureSetFactory::getFogTextureSet() {
     TextureSet<players::TileVisibility> ts(Resources::loadTexture("textures/terrains.png"));
-
-    ts.add(std::shared_ptr<const Matcher<players::TileVisibility>>(
-        new Matcher<players::TileVisibility>([] (const players::TileVisibility& visibility)
-    {
-        return visibility == players::TileVisibility::VisibleKnown;
-    })), textures::terrains::visibleKnown);
 
     ts.add(std::shared_ptr<const Matcher<players::TileVisibility>>(
         new Matcher<players::TileVisibility>([] (const players::TileVisibility& visibility)

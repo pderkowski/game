@@ -56,4 +56,10 @@ NeighborTypesMatcher::NeighborTypesMatcher(Type type, const NeighborTypes& neigh
 { }
 
 
+AlwaysMatcher::AlwaysMatcher()
+    : Matcher<Tile>([] (__attribute__((unused)) const Tile& tile) {
+        return true;;
+    })
+{ }
+
 }  // namespace textures

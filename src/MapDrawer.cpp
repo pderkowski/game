@@ -19,6 +19,7 @@ void MapDrawer::setModel(const MapModel& model) {
     layers_.clear();
     layers_.push_back(Layer<Tile>(textures::TextureSetFactory::getBaseTextureSet()));
     layers_.push_back(Layer<Tile>(textures::TextureSetFactory::getBlendTextureSet()));
+    layers_.push_back(Layer<Tile>(textures::TextureSetFactory::getGridTextureSet()));
     layers_.push_back(Layer<Tile>(textures::TextureSetFactory::getOverlayTextureSet()));
     layers_.push_back(Layer<Tile>(textures::TextureSetFactory::getAttributeTextureSet()));
 

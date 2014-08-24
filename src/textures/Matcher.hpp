@@ -48,6 +48,12 @@ public:
     virtual ~NeighborTypesMatcher() { }
 };
 
+class AlwaysMatcher : public Matcher<Tile> {
+public:
+    AlwaysMatcher();
+    virtual ~AlwaysMatcher() { }
+};
+
 
 template <class T>
 Matcher<T>::Matcher(Predicate predicate)
