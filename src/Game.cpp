@@ -13,6 +13,7 @@
 #include "Interface.hpp"
 #include "Timer.hpp"
 #include "UnitFrame.hpp"
+#include "SFML/Graphics/Color.hpp"
 
 
 Game::Game(int rows, int columns, int numberOfPlayers)
@@ -29,7 +30,7 @@ Game::Game(int rows, int columns, int numberOfPlayers)
     unitFrame_(&renderer_)
 {
     minimap_.setPosition(interface_.addSlot(minimap_.getSize()));
-    unitFrame_.setPosition(interface_.addSlot(unitFrame_.getSize()));
+    unitFrame_.setPosition(interface_.addSlot(unitFrame_.getSize(), sf::Color(255, 255, 255, 127)));
 
     menu_.addItem("Return", [this] () { toggleMenu(); });
     menu_.addItem("New game", [this] () { restart(); });
@@ -46,12 +47,12 @@ void Game::start() {
         window_->clear();
         map_.draw();
         players_.draw();
-        minimap_.draw();
-        unitFrame_.draw();
         interface_.draw();
         if (menu_.isVisible()) {
             menu_.draw();
         }
+        minimap_.draw();
+        unitFrame_.draw();
         window_->display();
     }
 }

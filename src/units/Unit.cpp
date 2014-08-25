@@ -63,6 +63,14 @@ int Unit::getHpLeft() const {
     return properties_.hpLeft;
 }
 
+int Unit::getBaseHp() const {
+    return properties_.baseHp;
+}
+
+int Unit::getBaseMoves() const {
+    return properties_.baseMoves;
+}
+
 bool Unit::canMoveTo(tileenums::Direction direction) const {
     return getPosition().hasNeighbor(direction);
 }

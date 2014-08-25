@@ -11,14 +11,19 @@
 
 UnitFrame::UnitFrame(const Renderer* renderer)
     : font_(Resources::loadFont("fonts/UbuntuMono.ttf")),
-    characterSize_(20),
+    characterSize_(30),
     horizontalSpacing_(10.0f, 0.0f),
     verticalSpacing_(0.0f, 10.0f),
     unitName_("", font_, characterSize_),
     hpLeft_("", font_, characterSize_),
     movesLeft_("", font_, characterSize_),
     renderer_(renderer)
-{ }
+{
+    unitName_.setColor(sf::Color::Black);
+    unitName_.setStyle(sf::Text::Style::Bold);
+    movesLeft_.setColor(sf::Color::Black);
+    hpLeft_.setColor(sf::Color::Black);
+}
 
 void UnitFrame::draw() const {
     Renderer::TargetProxy target = renderer_->getFixedTarget();
@@ -38,8 +43,8 @@ void UnitFrame::update(const players::Players& players) {
 
 void UnitFrame::setUnitDisplayed(const units::Unit& unit) {
     unitName_.setString(unit.getName());
-    hpLeft_.setString("HP: " + std::to_string(unit.getHpLeft()));
-    movesLeft_.setString("Moves: " + std::to_string(unit.getMovesLeft()));
+    hpLeft_.setString("HP: " + std::to_string(unit.getHpLeft()) + "/" + std::to_string(unit.getBaseHp()));
+    movesLeft_.setString("Moves: " + std::to_string(unit.getMovesLeft()) + "/" + std::to_string(unit.getBaseMoves()));
 }
 
 void UnitFrame::clear() {
@@ -61,7 +66,7 @@ void UnitFrame::setPosition(const sf::Vector2f& basePosition) {
 
 sf::Vector2f UnitFrame::getSize() const {
     return getHeight(unitName_) + getHeight(hpLeft_) + getHeight(movesLeft_)
-        + 4.0f * verticalSpacing_ + sf::Vector2f(200.0f, 0.0f);
+        + 4.0f * verticalSpacing_ + sf::Vector2f(240.0f, 0.0f);
 }
 
 sf::Vector2f UnitFrame::getHeight(const sf::Text& text) const {

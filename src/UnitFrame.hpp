@@ -5,12 +5,8 @@
 
 
 #include "SFML/Graphics.hpp"
-namespace players {
-    class Players;
-}
-namespace units {
-    class Unit;
-}
+namespace players { class Players; }
+namespace units { class Unit; }
 class Renderer;
 
 

@@ -17,7 +17,7 @@ enum class Type {
 struct UnitProperties {
     std::string name;
     Type type;
-    int baseHP;
+    int baseHp;
     int hpLeft;
     int baseMoves;
     int movesLeft;

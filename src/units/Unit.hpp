@@ -11,9 +11,7 @@
 #include "boost/functional/hash.hpp"
 class MapModel;
 class Tile;
-namespace players {
-    class Player;
-}
+namespace players { class Player; }
 
 
 namespace units {
@@ -38,6 +36,8 @@ public:
 
     int getMovesLeft() const;
     int getHpLeft() const;
+    int getBaseHp() const;
+    int getBaseMoves() const;
 
     bool canMoveTo(tileenums::Direction direction) const;
     void moveTo(tileenums::Direction direction);
