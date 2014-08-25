@@ -12,6 +12,7 @@
 #include "Minimap.hpp"
 #include "Interface.hpp"
 #include "Timer.hpp"
+#include "UnitFrame.hpp"
 
 
 Game::Game(int rows, int columns, int numberOfPlayers)
@@ -24,9 +25,11 @@ Game::Game(int rows, int columns, int numberOfPlayers)
     players_(numberOfPlayers, map_.getModel(), &renderer_),
     minimap_(map_.getModel(), &players_, &renderer_),
     interface_(&renderer_),
-    menu_(window_)
+    menu_(window_),
+    unitFrame_(&renderer_)
 {
     minimap_.setPosition(interface_.addSlot(minimap_.getSize()));
+    unitFrame_.setPosition(interface_.addSlot(unitFrame_.getSize()));
 
     menu_.addItem("Return", [this] () { toggleMenu(); });
     menu_.addItem("New game", [this] () { restart(); });
@@ -43,8 +46,9 @@ void Game::start() {
         window_->clear();
         map_.draw();
         players_.draw();
-        interface_.draw();
         minimap_.draw();
+        unitFrame_.draw();
+        interface_.draw();
         if (menu_.isVisible()) {
             menu_.draw();
         }

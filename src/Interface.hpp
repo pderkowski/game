@@ -9,7 +9,7 @@ class Renderer;
 
 class Interface {
 public:
-    Interface(const Renderer* renderer);
+    explicit Interface(const Renderer* renderer);
 
     sf::Vector2f addSlot(const sf::Vector2f& slotSize);
 

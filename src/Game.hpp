@@ -13,6 +13,8 @@
 #include "Interface.hpp"
 #include "Timer.hpp"
 #include "Renderer.hpp"
+#include "UnitFrame.hpp"
+
 
 class Game {
 public:
@@ -50,6 +52,7 @@ private:
     Minimap minimap_;
     Interface interface_;
     menu::Menu menu_;
+    UnitFrame unitFrame_;
 
     std::vector<Timer> timers_;
 };
