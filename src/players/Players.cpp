@@ -39,6 +39,38 @@ const Player* Players::getCurrentPlayer() const {
     return &players_[currentPlayer_];
 }
 
+bool Players::isUnitSelected() const {
+    if (getCurrentPlayer()->getSelection().isSourceSelected()) {
+        const IntRotPoint coords = getCurrentPlayer()->getSelection().getSource().coords;
+
+        std::vector<units::Unit> visibleUnits = getVisibleUnits();
+        return std::any_of(visibleUnits.begin(), visibleUnits.end(),
+            [&coords] (const units::Unit& unit) {
+                return unit.getCoords() == coords;
+            }
+        );
+    } else {
+        return false;
+    }
+}
+
+units::Unit Players::getSelectedUnit() const {
+    const IntRotPoint coords = getCurrentPlayer()->getSelection().getSource().coords;
+
+    std::vector<units::Unit> visibleUnits = getVisibleUnits();
+    auto unitIt = std::find_if(visibleUnits.begin(), visibleUnits.end(),
+        [&coords] (const units::Unit& unit) {
+            return unit.getCoords() == coords;
+        }
+    );
+
+    if (unitIt != visibleUnits.end()) {
+        return *unitIt;
+    } else {
+        throw std::logic_error("There is no unit at the requested coords.");
+    }
+}
+
 std::vector<units::Unit> Players::getVisibleUnits() const {
     std::vector<units::Unit> res;
 

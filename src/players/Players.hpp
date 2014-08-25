@@ -22,6 +22,9 @@ public:
     Player* getCurrentPlayer();
     const Player* getCurrentPlayer() const;
 
+    bool isUnitSelected() const;
+    units::Unit getSelectedUnit() const;
+
     void setModel(const MapModel* model);
 
     void draw() const;

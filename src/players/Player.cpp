@@ -24,10 +24,16 @@ Player::Player(miscellaneous::Flag flag, const MapModel* model)
     : flag_(flag), fog_(model->getRowsNo(), model->getColumnsNo()), model_(model)
 { }
 
-bool Player::hasUnitAtCoords(const IntRotPoint& coords) const {
-    return std::any_of(units_.begin(), units_.end(), [&coords] (const units::Unit& unit) {
-        return unit.getCoords() == coords;
-    });
+bool Player::isUnitSelected() const {
+    if (selection_.isSourceSelected()) {
+        const IntRotPoint coords = selection_.getSource().coords;
+
+        return std::any_of(units_.begin(), units_.end(), [&coords] (const units::Unit& unit) {
+            return unit.getCoords() == coords;
+        });
+    } else {
+        return false;
+    }
 }
 
 void Player::addUnit(const units::Unit& unit) {
@@ -36,7 +42,9 @@ void Player::addUnit(const units::Unit& unit) {
     fog_.addVisible(getSurroundingTiles(unit));
 }
 
-UnitController Player::getUnitAtCoords(const IntRotPoint& coords) {
+UnitController Player::getSelectedUnit() {
+    const IntRotPoint coords = selection_.getSource().coords;
+
     auto unitIt = std::find_if(units_.begin(), units_.end(), [&coords] (const units::Unit& unit) {
         return unit.getCoords() == coords;
     });
@@ -48,7 +56,9 @@ UnitController Player::getUnitAtCoords(const IntRotPoint& coords) {
     }
 }
 
-units::Unit Player::getUnitAtCoords(const IntRotPoint& coords) const {
+units::Unit Player::getSelectedUnit() const {
+    const IntRotPoint coords = selection_.getSource().coords;
+
     auto unitIt = std::find_if(units_.begin(), units_.end(), [&coords] (const units::Unit& unit) {
         return unit.getCoords() == coords;
     });
@@ -122,11 +132,10 @@ void Player::handleAPressed() {
 }
 
 void Player::handleRightClick(const Tile& clickedTile) {
-    if (selection_.isSourceSelected() && hasUnitAtCoords(selection_.getSource().coords)) {
-        auto source = selection_.getSource();
+    if (isUnitSelected()) {
         auto destination = clickedTile;
 
-        UnitController unit = getUnitAtCoords(source.coords);
+        UnitController unit = getSelectedUnit();
         if (unit.canMoveTo(destination)) {
             if (selection_.isDestinationConfirmed(destination)) {
                 unit.moveTo(destination);
@@ -142,10 +151,8 @@ void Player::handleRightClick(const Tile& clickedTile) {
 }
 
 void Player::handleDPressed() {
-    if (selection_.isSourceSelected() && hasUnitAtCoords(selection_.getSource().coords)) {
-        auto source = selection_.getSource();
-
-        UnitController unit = getUnitAtCoords(source.coords);
+    if (isUnitSelected()) {
+        UnitController unit = getSelectedUnit();
         unit.destroyUnit();
 
         selection_.clear();

@@ -20,10 +20,10 @@ class Player {
 public:
     Player(miscellaneous::Flag flag, const MapModel* model);
 
-    bool hasUnitAtCoords(const IntRotPoint& coords) const;
+    bool isUnitSelected() const;
 
-    UnitController getUnitAtCoords(const IntRotPoint& coords);
-    units::Unit getUnitAtCoords(const IntRotPoint& coords) const;
+    UnitController getSelectedUnit();
+    units::Unit getSelectedUnit() const;
 
     std::vector<units::Unit> getUnits() const;
     Fog getFog() const;

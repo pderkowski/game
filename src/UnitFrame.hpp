@@ -5,6 +5,9 @@
 
 
 #include "SFML/Graphics.hpp"
+namespace players {
+    class Players;
+}
 namespace units {
     class Unit;
 }
@@ -19,12 +22,14 @@ public:
 
     sf::Vector2f getSize() const;
 
-    void setUnitDisplayed(const units::Unit& unit);
-    void clear();
+    void update(const players::Players& players);
 
     void draw() const;
 
 private:
+    void setUnitDisplayed(const units::Unit& unit);
+    void clear();
+
     sf::Vector2f getHeight(const sf::Text& text) const;
 
 private:

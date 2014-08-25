@@ -131,6 +131,7 @@ void Game::handleLeftClick(const sf::Event& event) {
         menu_.handleLeftClick(event);
     } else {
         players_.handleLeftClick(event);
+        unitFrame_.update(players_);
     }
 }
 
@@ -138,6 +139,7 @@ void Game::handleRightClick(const sf::Event& event) {
     if (!menu_.isVisible()) {
         players_.handleRightClick(event);
         minimap_.updateBackground();
+        unitFrame_.update(players_);
     }
 }
 
@@ -151,6 +153,7 @@ void Game::addUnit() {
     if (!menu_.isVisible()) {
         players_.handleAPressed();
         minimap_.updateBackground();
+        unitFrame_.update(players_);
     }
 }
 
@@ -164,6 +167,7 @@ void Game::toggleFog() {
 void Game::deleteSelectedUnit() {
     if (!menu_.isVisible()) {
         players_.handleDPressed();
+        unitFrame_.update(players_);
     }
 }
 
@@ -171,6 +175,7 @@ void Game::switchToNextPlayer() {
     if (!menu_.isVisible()) {
         players_.switchToNextPlayer();
         minimap_.updateBackground();
+        unitFrame_.update(players_);
     }
 }
 
