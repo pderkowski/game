@@ -19,6 +19,10 @@ Unit::Unit(const IntRotPoint& coords,
         : coords_(coords), properties_(properties), model_(model), owner_(owner)
 { }
 
+void Unit::resetMoves() {
+    properties_.movesLeft = properties_.baseMoves;
+}
+
 void Unit::setMovesLeft(int movesLeft) {
     properties_.movesLeft = std::max(movesLeft, 0);
 }

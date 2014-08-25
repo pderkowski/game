@@ -25,6 +25,7 @@ public:
         const MapModel* model,
         const players::Player* owner);
 
+    void resetMoves();
     void setMovesLeft(int movesLeft);
     void setHpLeft(int hpLeft);
 
