@@ -4,9 +4,6 @@
 #define MAPCONSTRUCTOR_HPP_
 
 #include <vector>
-#include <memory>
-#include <random>
-#include <map>
 #include "Tile.hpp"
 #include "MapModel.hpp"
 #include "HeightMap.hpp"
@@ -15,8 +12,7 @@
 
 class MapConstructor {
 public:
-    MapConstructor(const HeightMap& heightMap,
-        std::shared_ptr<std::default_random_engine> generator);
+    explicit MapConstructor(const HeightMap& heightMap);
 
     MapConstructor(const MapConstructor&) = delete;
     MapConstructor& operator =(const MapConstructor&) = delete;
@@ -41,7 +37,6 @@ private:
     HeightMap heightMap_;
     MapModel model_;
     std::vector<tileenums::Type> typeMask_;
-    std::shared_ptr<std::default_random_engine> generator_;
 };
 
 #endif  // MAPCONSTRUCTOR_HPP_

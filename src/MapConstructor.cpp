@@ -1,11 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#include <iostream>
 #include <stdexcept>
 #include <vector>
-#include <map>
-#include <memory>
-#include <random>
 #include <algorithm>
 #include <iterator>
 #include "Tile.hpp"
@@ -14,12 +10,10 @@
 #include "MapConstructor.hpp"
 #include "Attributes.hpp"
 #include "units/Unit.hpp"
+#include "Random.hpp"
 
-MapConstructor::MapConstructor(const HeightMap& heightMap,
-    std::shared_ptr<std::default_random_engine> generator)
-        : heightMap_(heightMap),
-        model_(heightMap.getRowsNo(), heightMap.getColumnsNo()),
-        generator_(generator)
+MapConstructor::MapConstructor(const HeightMap& heightMap)
+    : heightMap_(heightMap), model_(heightMap.getRowsNo(), heightMap.getColumnsNo())
 { }
 
 MapConstructor& MapConstructor::setSource(const HeightMap& heightMap) {
@@ -41,7 +35,7 @@ MapConstructor& MapConstructor::setTypeMask(const std::vector<tileenums::Type>& 
 MapConstructor& MapConstructor::spawnRivers(double probability) {
     model_.changeTiles([&] (Tile& tile) {
         if (isTypeModifiable(tile.type)) {
-            if ((((*generator_)() % 1000) / 1000.0 < probability)
+            if (((Random::getNumber() % 1000) / 1000.0 < probability)
                 && isHigherThanNeighbors(tile)
                 && doesNotBorderWater(tile))
             {
@@ -95,7 +89,7 @@ Tile* MapConstructor::findRandomLowerNeighbor(Tile* tile) {
 
     if (lowerNeighbors.size() > 0) {
         lowerNeighbors.push_back(findLowest(lowerNeighbors)); // lowest has 2 times bigger chance
-        return lowerNeighbors[(*generator_)() % lowerNeighbors.size()];
+        return lowerNeighbors[Random::getNumber() % lowerNeighbors.size()];
     } else {
         return nullptr;
     }

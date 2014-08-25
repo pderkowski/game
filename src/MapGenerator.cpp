@@ -1,8 +1,5 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#include <random>
-#include <chrono>
-#include <memory>
 #include <vector>
 #include <cmath>
 #include "MapModel.hpp"
@@ -11,16 +8,14 @@
 #include "MapConstructor.hpp"
 #include "Tile.hpp"
 #include "TileEnums.hpp"
+#include "Random.hpp"
 
 MapModel MapGenerator::generateMap(int rows, int columns) {
-    static auto generator = std::make_shared<std::default_random_engine>(
-        std::chrono::system_clock::now().time_since_epoch().count());
-
-    auto landMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 1, 0.5);
-    auto humidityMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 2, 0.6);
-    auto hillMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 4);
-    auto mountainMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 8, 0.4);
-    auto forestMap = NoiseGenerator::generateHeightMap(rows, columns, (*generator)(), 4, 0.8);
+    auto landMap = NoiseGenerator::generateHeightMap(rows, columns, Random::getNumber(), 1, 0.5);
+    auto humidityMap = NoiseGenerator::generateHeightMap(rows, columns, Random::getNumber(), 2, 0.6);
+    auto hillMap = NoiseGenerator::generateHeightMap(rows, columns, Random::getNumber(), 4);
+    auto mountainMap = NoiseGenerator::generateHeightMap(rows, columns, Random::getNumber(), 8, 0.4);
+    auto forestMap = NoiseGenerator::generateHeightMap(rows, columns, Random::getNumber(), 4, 0.8);
 
     const double waterLevel = landMap.min();
     const double landLevel = landMap.getNth(0.70 * landMap.getSize());
@@ -34,7 +29,7 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
     const std::vector<tileenums::Type> landTypes = { tileenums::Type::Grassland, tileenums::Type::Plains,
         tileenums::Type::Desert, tileenums::Type::Hills, tileenums::Type::Mountains };
 
-    return MapConstructor(landMap, generator)
+    return MapConstructor(landMap)
         .setTypeMask({ tileenums::Type::Empty })
         .setType(tileenums::Type::Water, waterLevel)
         .setTypeMask({ tileenums::Type::Water })
