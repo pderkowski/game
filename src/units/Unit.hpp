@@ -3,6 +3,7 @@
 #ifndef UNITS_UNIT_HPP_
 #define UNITS_UNIT_HPP_
 
+#include <string>
 #include <functional>
 #include "TileEnums.hpp"
 #include "Coordinates.hpp"
@@ -29,6 +30,7 @@ public:
     void setMovesLeft(int movesLeft);
     void setHpLeft(int hpLeft);
 
+    std::string getName() const;
     Type getType() const;
     Tile getPosition() const;
     IntRotPoint getCoords() const;

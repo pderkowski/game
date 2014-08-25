@@ -1,5 +1,6 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <string>
 #include <algorithm>
 #include <stdexcept>
 #include "Unit.hpp"
@@ -29,6 +30,10 @@ void Unit::setMovesLeft(int movesLeft) {
 
 void Unit::setHpLeft(int hpLeft) {
     properties_.hpLeft = std::max(hpLeft, 0);
+}
+
+std::string Unit::getName() const {
+    return properties_.name;
 }
 
 Type Unit::getType() const {

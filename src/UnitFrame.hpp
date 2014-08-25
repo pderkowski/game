@@ -40,8 +40,6 @@ private:
     sf::Vector2f horizontalSpacing_;
     sf::Vector2f verticalSpacing_;
 
-
-    sf::Text unitOwner_;
     sf::Text unitName_;
     sf::Text hpLeft_;
     sf::Text movesLeft_;

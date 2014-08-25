@@ -14,7 +14,6 @@ UnitFrame::UnitFrame(const Renderer* renderer)
     characterSize_(20),
     horizontalSpacing_(10.0f, 0.0f),
     verticalSpacing_(0.0f, 10.0f),
-    unitOwner_("", font_, characterSize_),
     unitName_("", font_, characterSize_),
     hpLeft_("", font_, characterSize_),
     movesLeft_("", font_, characterSize_),
@@ -24,7 +23,6 @@ UnitFrame::UnitFrame(const Renderer* renderer)
 void UnitFrame::draw() const {
     Renderer::TargetProxy target = renderer_->getFixedTarget();
 
-    target.get()->draw(unitOwner_);
     target.get()->draw(unitName_);
     target.get()->draw(hpLeft_);
     target.get()->draw(movesLeft_);
@@ -39,24 +37,19 @@ void UnitFrame::update(const players::Players& players) {
 }
 
 void UnitFrame::setUnitDisplayed(const units::Unit& unit) {
-    unitOwner_.setString("Selected!");
-    unitName_.setString("Selected!");
+    unitName_.setString(unit.getName());
     hpLeft_.setString("HP: " + std::to_string(unit.getHpLeft()));
     movesLeft_.setString("Moves: " + std::to_string(unit.getMovesLeft()));
 }
 
 void UnitFrame::clear() {
-    unitOwner_.setString("");
     unitName_.setString("");
     hpLeft_.setString("");
     movesLeft_.setString("");
 }
 
 void UnitFrame::setPosition(const sf::Vector2f& basePosition) {
-    sf::Vector2f unitOwnerPosition = basePosition + horizontalSpacing_ + verticalSpacing_;
-    unitOwner_.setPosition(unitOwnerPosition);
-
-    sf::Vector2f unitNamePosition = unitOwnerPosition + verticalSpacing_ + getHeight(unitOwner_);
+    sf::Vector2f unitNamePosition = basePosition + horizontalSpacing_ + verticalSpacing_;
     unitName_.setPosition(unitNamePosition);
 
     sf::Vector2f hpLeftPosition = unitNamePosition + verticalSpacing_ + getHeight(unitName_);
@@ -67,8 +60,8 @@ void UnitFrame::setPosition(const sf::Vector2f& basePosition) {
 }
 
 sf::Vector2f UnitFrame::getSize() const {
-    return getHeight(unitOwner_) + getHeight(unitName_) + getHeight(hpLeft_) + getHeight(movesLeft_)
-        + 5.0f * verticalSpacing_ + sf::Vector2f(200.0f, 0.0f);
+    return getHeight(unitName_) + getHeight(hpLeft_) + getHeight(movesLeft_)
+        + 4.0f * verticalSpacing_ + sf::Vector2f(200.0f, 0.0f);
 }
 
 sf::Vector2f UnitFrame::getHeight(const sf::Text& text) const {
