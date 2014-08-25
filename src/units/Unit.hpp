@@ -6,10 +6,10 @@
 #include <functional>
 #include "TileEnums.hpp"
 #include "Coordinates.hpp"
+#include "UnitProperties.hpp"
 #include "boost/functional/hash.hpp"
 class MapModel;
 class Tile;
-
 namespace players {
     class Player;
 }
@@ -17,23 +17,24 @@ namespace players {
 
 namespace units {
 
-enum class Type {
-    Phalanx,
-    Trireme
-};
 
 class Unit {
 public:
-    Unit(const IntRotPoint& coords, Type type, const MapModel* model, const players::Player* owner);
+    Unit(const IntRotPoint& coords,
+        const UnitProperties& properties,
+        const MapModel* model,
+        const players::Player* owner);
 
-    // void setModel(const MapModel* model);
     void setMovesLeft(int movesLeft);
+    void setHpLeft(int hpLeft);
 
     Type getType() const;
     Tile getPosition() const;
     IntRotPoint getCoords() const;
     const players::Player* getOwner() const;
+
     int getMovesLeft() const;
+    int getHpLeft() const;
 
     bool canMoveTo(tileenums::Direction direction) const;
     void moveTo(tileenums::Direction direction);
@@ -44,9 +45,8 @@ private:
 
 private:
     IntRotPoint coords_;
-    Type type_;
 
-    int movesLeft_;
+    UnitProperties properties_;
 
     const MapModel* model_;
 
@@ -66,19 +66,8 @@ struct hash<units::Unit>
 {
     std::size_t operator()(const units::Unit& unit) const
     {
-        std::size_t seed = 0;
-
         static std::hash<IntRotPoint> coordsHasher;
-        static std::hash<int> typeHasher;
-        static std::hash<const MapModel*> modelHasher;
-        static std::hash<const players::Player*> playerHasher;
-
-        boost::hash_combine(seed, coordsHasher(unit.coords_));
-        boost::hash_combine(seed, typeHasher(static_cast<int>(unit.type_)));
-        boost::hash_combine(seed, modelHasher(unit.model_));
-        boost::hash_combine(seed, playerHasher(unit.owner_));
-
-        return seed;
+        return coordsHasher(unit.coords_);
     }
 };
 

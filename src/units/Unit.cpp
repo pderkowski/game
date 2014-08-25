@@ -1,5 +1,6 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <algorithm>
 #include <stdexcept>
 #include "Unit.hpp"
 #include "Tile.hpp"
@@ -11,21 +12,23 @@
 namespace units {
 
 
-
-Unit::Unit(const IntRotPoint& coords, Type type, const MapModel* model, const players::Player* owner)
-    : coords_(coords), type_(type), movesLeft_(0), model_(model), owner_(owner)
+Unit::Unit(const IntRotPoint& coords,
+    const UnitProperties& properties,
+    const MapModel* model,
+    const players::Player* owner)
+        : coords_(coords), properties_(properties), model_(model), owner_(owner)
 { }
 
-// void Unit::setModel(const MapModel* model) {
-//     model_ = model;
-// }
-
 void Unit::setMovesLeft(int movesLeft) {
-    movesLeft_ = movesLeft;
+    properties_.movesLeft = std::max(movesLeft, 0);
+}
+
+void Unit::setHpLeft(int hpLeft) {
+    properties_.hpLeft = std::max(hpLeft, 0);
 }
 
 Type Unit::getType() const {
-    return type_;
+    return properties_.type;
 }
 
 Tile Unit::getPosition() const {
@@ -44,7 +47,11 @@ const players::Player* Unit::getOwner() const {
 }
 
 int Unit::getMovesLeft() const {
-    return movesLeft_;
+    return properties_.movesLeft;
+}
+
+int Unit::getHpLeft() const {
+    return properties_.hpLeft;
 }
 
 bool Unit::canMoveTo(tileenums::Direction direction) const {
@@ -56,7 +63,8 @@ void Unit::moveTo(tileenums::Direction direction) {
 }
 
 bool operator == (const Unit& lhs, const Unit& rhs) {
-    return (lhs.coords_ == rhs.coords_) && (lhs.type_ == rhs.type_) && (lhs.model_ == rhs.model_);
+    return (lhs.coords_ == rhs.coords_) && (lhs.properties_ == rhs.properties_)
+        && (lhs.model_ == rhs.model_) && (lhs.owner_ == rhs.owner_);
 }
 
 

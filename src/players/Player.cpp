@@ -9,6 +9,7 @@
 #include <vector>
 #include "Player.hpp"
 #include "units/Unit.hpp"
+#include "units/UnitFactory.hpp"
 #include "Coordinates.hpp"
 #include "Tile.hpp"
 #include "Fog.hpp"
@@ -124,9 +125,9 @@ void Player::handleLeftClick(const Tile& clickedTile) {
 void Player::handleAPressed() {
     if (selection_.isSourceSelected()) {
         if (selection_.getSource().type == tileenums::Type::Water) {
-            addUnit(units::Unit(selection_.getSource().coords, units::Type::Trireme, model_, this));
+            addUnit(units::UnitFactory::createTrireme(selection_.getSource().coords, model_, this));
         } else {
-            addUnit(units::Unit(selection_.getSource().coords, units::Type::Phalanx, model_, this));
+            addUnit(units::UnitFactory::createPhalanx(selection_.getSource().coords, model_, this));
         }
     }
 }

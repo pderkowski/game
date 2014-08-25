@@ -1,5 +1,6 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
+#include <string>
 #include "SFML/Graphics.hpp"
 #include "units/Unit.hpp"
 #include "Renderer.hpp"
@@ -37,11 +38,11 @@ void UnitFrame::update(const players::Players& players) {
     }
 }
 
-void UnitFrame::setUnitDisplayed(__attribute__((unused)) const units::Unit& unit) {
+void UnitFrame::setUnitDisplayed(const units::Unit& unit) {
     unitOwner_.setString("Selected!");
     unitName_.setString("Selected!");
-    hpLeft_.setString("Selected!");
-    movesLeft_.setString("Selected!");
+    hpLeft_.setString("HP: " + std::to_string(unit.getHpLeft()));
+    movesLeft_.setString("Moves: " + std::to_string(unit.getMovesLeft()));
 }
 
 void UnitFrame::clear() {
