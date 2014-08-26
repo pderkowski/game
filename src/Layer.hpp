@@ -30,6 +30,8 @@ private:
     struct VertexPosition {
         size_t start;
         size_t size;
+
+        unsigned occurences;
     };
 
     struct Key {
@@ -76,10 +78,10 @@ void Layer<T>::add(const T& t, const sf::Vector2f& center)
 
         if (sizeAfter > sizeBefore) {
 
-            positions_.insert(std::make_pair(key, VertexPosition{ sizeBefore, sizeAfter - sizeBefore }));
+            positions_.insert(std::make_pair(key, VertexPosition{ sizeBefore, sizeAfter - sizeBefore, 1 }));
         }
     } else {
-        throw std::runtime_error("Trying to add an item that has already been inserted.");
+        ++positions_.at(key).occurences;
     }
 }
 
@@ -88,9 +90,14 @@ void Layer<T>::remove(const T& t, const sf::Vector2f& center) {
     const auto key = Key(t, center);
     if (positions_.find(key) != positions_.end()) {
         auto position = positions_.at(key);
-        removeVertices(position);
-        positions_.erase(key);
-        updatePositions(position);
+
+        if (position.occurences > 1) {
+            --position.occurences;
+        } else {
+            removeVertices(position);
+            positions_.erase(key);
+            updatePositions(position);
+        }
     }
 }
 
