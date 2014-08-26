@@ -25,6 +25,9 @@ public:
     UnitController getSelectedUnit();
     units::Unit getSelectedUnit() const;
 
+    bool hasUnitAtCoords(const IntRotPoint& coords) const;
+    UnitController getUnitAtCoords(const IntRotPoint& coords);
+
     std::vector<units::Unit> getUnits() const;
     Fog getFog() const;
     Selection getSelection() const;

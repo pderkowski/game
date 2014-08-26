@@ -8,6 +8,7 @@
 #include "MapModel.hpp"
 #include "Renderer.hpp"
 #include "MiscellaneousEnums.hpp"
+#include "Combat.hpp"
 
 namespace players {
 
@@ -33,6 +34,10 @@ void Players::switchToNextPlayer() {
 
 Player* Players::getCurrentPlayer() {
     return &players_[currentPlayer_];
+}
+
+Player* Players::getOtherPlayer() {
+    return &players_[(currentPlayer_ + 1) % 2];
 }
 
 const Player* Players::getCurrentPlayer() const {
@@ -109,6 +114,28 @@ void Players::handleLeftClick(const sf::Event& e) {
 
 void Players::handleRightClick(const sf::Event& e) {
     getCurrentPlayer()->handleRightClick(getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)));
+
+    if (getCurrentPlayer()->isUnitSelected()) {
+        IntRotPoint selectedCoords = getCurrentPlayer()->getSelectedUnit().get()->getCoords();
+
+        if (getOtherPlayer()->hasUnitAtCoords(selectedCoords)) {
+            UnitController attacker = getCurrentPlayer()->getSelectedUnit();
+            UnitController defender = getOtherPlayer()->getUnitAtCoords(selectedCoords);
+
+            int outcome = Combat::simulate(attacker.get()->getHpLeft(), defender.get()->getHpLeft());
+
+            if (outcome > 0) {
+                defender.destroyUnit();
+                attacker.get()->setHpLeft(outcome);
+            } else if (outcome == 0) {
+                attacker.destroyUnit();
+                defender.get()->setHpLeft(1);
+            } else {
+                attacker.destroyUnit();
+                defender.get()->setHpLeft(-outcome);
+            }
+        }
+    }
 
     updateAllLayers();
 }

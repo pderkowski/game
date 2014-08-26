@@ -7,6 +7,7 @@
 #include "units/Unit.hpp"
 #include "Player.hpp"
 #include "PlayersDrawer.hpp"
+#include "UnitController.hpp"
 class MapModel;
 class Renderer;
 
@@ -36,6 +37,8 @@ public:
     void handleDPressed();
 
 private:
+    Player* getOtherPlayer();
+
     void updateAllLayers();
 
     std::vector<units::Unit> getVisibleUnits() const;

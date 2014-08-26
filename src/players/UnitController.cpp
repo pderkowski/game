@@ -17,8 +17,8 @@ UnitController::UnitController(units::Unit* unit, Player* player)
     : unit_(unit), player_(player)
 { }
 
-units::Unit UnitController::get() const {
-    return *unit_;
+units::Unit* UnitController::get() {
+    return unit_;
 }
 
 bool UnitController::canMoveTo(const Tile& destination) const {

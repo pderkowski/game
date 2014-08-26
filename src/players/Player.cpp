@@ -71,6 +71,24 @@ units::Unit Player::getSelectedUnit() const {
     }
 }
 
+bool Player::hasUnitAtCoords(const IntRotPoint& coords) const {
+    return std::any_of(units_.begin(), units_.end(), [&coords] (const units::Unit& unit) {
+        return unit.getCoords() == coords;
+    });
+}
+
+UnitController Player::getUnitAtCoords(const IntRotPoint& coords) {
+    auto unitIt = std::find_if(units_.begin(), units_.end(), [&coords] (const units::Unit& unit) {
+        return unit.getCoords() == coords;
+    });
+
+    if (unitIt != units_.end()) {
+        return UnitController(&(*unitIt), this);
+    } else {
+        throw std::logic_error("There is no unit at the requested coords.");
+    }
+}
+
 std::vector<units::Unit> Player::getUnits() const {
     return units_;
 }
@@ -141,7 +159,7 @@ void Player::handleRightClick(const Tile& clickedTile) {
             if (selection_.isDestinationConfirmed(destination)) {
                 unit.moveTo(destination);
 
-                selection_.setSource(unit.get().getPosition());
+                selection_.setSource(unit.get()->getPosition());
                 selection_.setPath(unit.getPathTo(destination));
             } else {
                 selection_.setDestination(destination);

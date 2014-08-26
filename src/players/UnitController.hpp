@@ -18,7 +18,7 @@ class UnitController {
 public:
     UnitController(units::Unit* unit, Player* player);
 
-    units::Unit get() const;
+    units::Unit* get();
 
     bool canMoveTo(const Tile& destination) const;
     std::vector<Tile> getPathTo(const Tile& destination) const;
