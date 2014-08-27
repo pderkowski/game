@@ -4,6 +4,10 @@
 #include "Renderer.hpp"
 #include "Interface.hpp"
 
+
+namespace interface {
+
+
 Interface::Interface(const Renderer* renderer)
     : renderer_(renderer),
     availableSlotPosition_(renderer_->getSize()),
@@ -57,4 +61,7 @@ void Interface::draw() const {
     for (const auto& component : components_) {
         target.get()->draw(component);
     }
+}
+
+
 }

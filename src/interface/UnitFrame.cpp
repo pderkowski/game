@@ -9,6 +9,9 @@
 #include "players/Players.hpp"
 
 
+namespace interface {
+
+
 UnitFrame::UnitFrame(const Renderer* renderer)
     : font_(Resources::loadFont("fonts/UbuntuMono.ttf")),
     characterSize_(30),
@@ -71,4 +74,7 @@ sf::Vector2f UnitFrame::getSize() const {
 
 sf::Vector2f UnitFrame::getHeight(const sf::Text& text) const {
     return sf::Vector2f(0.0f, static_cast<float>(text.getCharacterSize()));
+}
+
+
 }

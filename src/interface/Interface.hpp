@@ -1,11 +1,15 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef INTERFACE_HPP_
-#define INTERFACE_HPP_
+#ifndef INTERFACE_INTERFACE_HPP_
+#define INTERFACE_INTERFACE_HPP_
 
 #include <vector>
 #include "SFML/Graphics.hpp"
 class Renderer;
+
+
+namespace interface {
+
 
 class Interface {
 public:
@@ -34,4 +38,7 @@ private:
     float thickness_;
 };
 
-#endif  // INTERFACE_HPP_
+
+}
+
+#endif  // INTERFACE_INTERFACE_HPP_

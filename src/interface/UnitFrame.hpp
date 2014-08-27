@@ -3,11 +3,13 @@
 #ifndef UNITFRAME_HPP_
 #define UNITFRAME_HPP_
 
-
 #include "SFML/Graphics.hpp"
 namespace players { class Players; }
 namespace units { class Unit; }
 class Renderer;
+
+
+namespace interface {
 
 
 class UnitFrame {
@@ -42,6 +44,9 @@ private:
 
     const Renderer* renderer_;
 };
+
+
+}
 
 
 #endif  // UNITFRAME_HPP_

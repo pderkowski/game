@@ -10,10 +10,10 @@
 #include "menu/Menu.hpp"
 #include "players/Players.hpp"
 #include "Minimap.hpp"
-#include "Interface.hpp"
+#include "interface/Interface.hpp"
 #include "Timer.hpp"
 #include "Renderer.hpp"
-#include "UnitFrame.hpp"
+#include "interface/UnitFrame.hpp"
 
 
 class Game {
@@ -50,9 +50,9 @@ private:
     Map map_;
     players::Players players_;
     Minimap minimap_;
-    Interface interface_;
+    interface::Interface interface_;
     menu::Menu menu_;
-    UnitFrame unitFrame_;
+    interface::UnitFrame unitFrame_;
 
     std::vector<Timer> timers_;
 };

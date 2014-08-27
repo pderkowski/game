@@ -10,9 +10,9 @@
 #include "players/Players.hpp"
 #include "Renderer.hpp"
 #include "Minimap.hpp"
-#include "Interface.hpp"
+#include "interface/Interface.hpp"
 #include "Timer.hpp"
-#include "UnitFrame.hpp"
+#include "interface/UnitFrame.hpp"
 #include "SFML/Graphics/Color.hpp"
 
 
