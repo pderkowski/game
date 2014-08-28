@@ -9,29 +9,23 @@
 #include "TileEnums.hpp"
 #include "players/Players.hpp"
 #include "Renderer.hpp"
-#include "Minimap.hpp"
 #include "interface/Interface.hpp"
 #include "Timer.hpp"
-#include "interface/UnitFrame.hpp"
 #include "SFML/Graphics/Color.hpp"
 
 
-Game::Game(int rows, int columns, int numberOfPlayers)
-    : window_(std::make_shared<sf::RenderWindow>(
+Game::Game(int rows, int columns)
+    : numberOfPlayers_(2),
+    window_(std::make_shared<sf::RenderWindow>(
         sf::VideoMode::getFullscreenModes()[0],
         "",
         sf::Style::Fullscreen)),
     renderer_(rows, columns, 96, 48, window_),
     map_(rows, columns, &renderer_),
-    players_(numberOfPlayers, map_.getModel(), &renderer_),
-    minimap_(map_.getModel(), &players_, &renderer_),
-    interface_(&renderer_),
-    menu_(window_),
-    unitFrame_(&renderer_)
+    players_(numberOfPlayers_, map_.getModel(), &renderer_),
+    interface_(map_.getModel(), &players_, &renderer_),
+    menu_(window_)
 {
-    minimap_.setPosition(interface_.addSlot(minimap_.getSize()));
-    unitFrame_.setPosition(interface_.addSlot(unitFrame_.getSize(), sf::Color(255, 255, 255, 127)));
-
     menu_.addItem("Return", [this] () { toggleMenu(); });
     menu_.addItem("New game", [this] () { restart(); });
     menu_.addItem("Quit game", [this] () { quit(); });
@@ -51,16 +45,14 @@ void Game::start() {
         if (menu_.isVisible()) {
             menu_.draw();
         }
-        minimap_.draw();
-        unitFrame_.draw();
         window_->display();
     }
 }
 
 void Game::restart() {
     map_.generateMap();
-    minimap_.setModel(map_.getModel());
     players_.setModel(map_.getModel());
+    interface_.setModel(map_.getModel());
 }
 
 void Game::quit() {
@@ -132,15 +124,15 @@ void Game::handleLeftClick(const sf::Event& event) {
         menu_.handleLeftClick(event);
     } else {
         players_.handleLeftClick(event);
-        unitFrame_.update(players_);
+        interface_.updateSelectedUnitFrame();
     }
 }
 
 void Game::handleRightClick(const sf::Event& event) {
     if (!menu_.isVisible()) {
         players_.handleRightClick(event);
-        minimap_.updateBackground();
-        unitFrame_.update(players_);
+        interface_.updateMinimapBackground();
+        interface_.updateSelectedUnitFrame();
     }
 }
 
@@ -153,30 +145,30 @@ void Game::handleMouseMoved(const sf::Event& event) {
 void Game::addUnit() {
     if (!menu_.isVisible()) {
         players_.handleAPressed();
-        minimap_.updateBackground();
-        unitFrame_.update(players_);
+        interface_.updateMinimapBackground();
+        interface_.updateSelectedUnitFrame();
     }
 }
 
 void Game::toggleFog() {
     if (!menu_.isVisible()) {
         players_.handleFPressed();
-        minimap_.updateBackground();
+        interface_.updateMinimapBackground();
     }
 }
 
 void Game::deleteSelectedUnit() {
     if (!menu_.isVisible()) {
         players_.handleDPressed();
-        unitFrame_.update(players_);
+        interface_.updateSelectedUnitFrame();
     }
 }
 
 void Game::switchToNextPlayer() {
     if (!menu_.isVisible()) {
         players_.switchToNextPlayer();
-        minimap_.updateBackground();
-        unitFrame_.update(players_);
+        interface_.updateMinimapBackground();
+        interface_.updateSelectedUnitFrame();
     }
 }
 
@@ -189,7 +181,7 @@ void Game::scrollView() {
         sf::Vector2f actualShift = renderer_.scrollView(sf::Mouse::getPosition(*window_));
 
         if (actualShift != sf::Vector2f(0, 0)) {
-            minimap_.updateDisplayedRectangle();
+            interface_.updateMinimapDisplayedRectangle();
         }
     }
 }
@@ -197,6 +189,6 @@ void Game::scrollView() {
 void Game::zoomView(float delta) {
     if (!menu_.isVisible()) {
         renderer_.zoomView(delta, sf::Mouse::getPosition(*window_));
-        minimap_.updateDisplayedRectangle();
+        interface_.updateMinimapDisplayedRectangle();
     }
 }

@@ -1,7 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef UNITFRAME_HPP_
-#define UNITFRAME_HPP_
+#ifndef INTERFACE_UNITFRAME_HPP_
+#define INTERFACE_UNITFRAME_HPP_
 
 #include "SFML/Graphics.hpp"
 namespace players { class Players; }
@@ -20,14 +20,12 @@ public:
 
     sf::Vector2f getSize() const;
 
-    void update(const players::Players& players);
+    void setUnitDisplayed(const units::Unit& unit);
+    void clear();
 
     void draw() const;
 
 private:
-    void setUnitDisplayed(const units::Unit& unit);
-    void clear();
-
     sf::Vector2f getHeight(const sf::Text& text) const;
 
 private:
@@ -49,4 +47,4 @@ private:
 }
 
 
-#endif  // UNITFRAME_HPP_
+#endif  // INTERFACE_UNITFRAME_HPP_

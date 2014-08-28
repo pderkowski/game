@@ -36,14 +36,6 @@ void UnitFrame::draw() const {
     target.get()->draw(movesLeft_);
 }
 
-void UnitFrame::update(const players::Players& players) {
-    if (players.isUnitSelected()) {
-        setUnitDisplayed(players.getSelectedUnit());
-    } else {
-        clear();
-    }
-}
-
 void UnitFrame::setUnitDisplayed(const units::Unit& unit) {
     unitName_.setString(unit.getName());
     hpLeft_.setString("HP: " + std::to_string(unit.getHpLeft()) + "/" + std::to_string(unit.getBaseHp()));

@@ -11,7 +11,7 @@ int main(__attribute__((unused)) int argc, char* argv[]) {
     Resources::initialize(Paths{argv[0]});
     Random::initialize(std::chrono::system_clock::now().time_since_epoch().count());
 
-    Game game(160, 80, 2);
+    Game game(160, 80);
     game.start();
 
     return 0;

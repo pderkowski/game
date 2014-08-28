@@ -3,9 +3,12 @@
 #ifndef INTERFACE_INTERFACE_HPP_
 #define INTERFACE_INTERFACE_HPP_
 
-#include <vector>
-#include "SFML/Graphics.hpp"
+#include "Layout.hpp"
+#include "UnitFrame.hpp"
+#include "MinimapFrame.hpp"
 class Renderer;
+class MapModel;
+namespace players { class Players; }
 
 
 namespace interface {
@@ -13,32 +16,31 @@ namespace interface {
 
 class Interface {
 public:
-    explicit Interface(const Renderer* renderer);
+    explicit Interface(const MapModel* model, const players::Players* players,
+        const Renderer* renderer);
 
-    sf::Vector2f addSlot(const sf::Vector2f& slotSize,
-        const sf::Color& fillColor = sf::Color::Transparent);
+    void setModel(const MapModel* model);
+
     void draw() const;
 
-private:
-    void addBorders(const sf::Vector2f& size, const sf::Vector2f& position,
-        const sf::Color& fillColor);
+    void updateEverything();
 
-    sf::RectangleShape createRectangle(const sf::Vector2f& size,
-        const sf::Vector2f& position,
-        const sf::Color& outlineColor,
-        const sf::Color& fillColor,
-        float thickness) const;
+    void updateMinimapBackground();
+    void updateMinimapDisplayedRectangle();
+
+    void updateSelectedUnitFrame();
 
 private:
-    const Renderer* renderer_;
+    const MapModel* model_;
 
-    std::vector<sf::RectangleShape> components_;
+    const players::Players* players_;
 
-    sf::Vector2f availableSlotPosition_;
-    float thickness_;
+    Layout layout_;
+    MinimapFrame minimapFrame_;
+    UnitFrame unitFrame_;
 };
 
 
-}
+}  // namespace interface
 
 #endif  // INTERFACE_INTERFACE_HPP_

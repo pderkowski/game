@@ -9,16 +9,14 @@
 #include "Map.hpp"
 #include "menu/Menu.hpp"
 #include "players/Players.hpp"
-#include "Minimap.hpp"
 #include "interface/Interface.hpp"
 #include "Timer.hpp"
 #include "Renderer.hpp"
-#include "interface/UnitFrame.hpp"
 
 
 class Game {
 public:
-    Game(int rows, int columns, int numberOfPlayers);
+    Game(int rows, int columns);
 
     void start();
 
@@ -44,15 +42,15 @@ private:
     void handleMouseMoved(const sf::Event& event);
 
 private:
+    unsigned numberOfPlayers_;
+
     std::shared_ptr<sf::RenderWindow> window_;
     Renderer renderer_;
 
     Map map_;
     players::Players players_;
-    Minimap minimap_;
     interface::Interface interface_;
     menu::Menu menu_;
-    interface::UnitFrame unitFrame_;
 
     std::vector<Timer> timers_;
 };
