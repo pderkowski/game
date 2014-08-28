@@ -8,14 +8,14 @@
 #include "MapConstructor.hpp"
 #include "Tile.hpp"
 #include "TileEnums.hpp"
-#include "Random.hpp"
+#include "global/Random.hpp"
 
 MapModel MapGenerator::generateMap(int rows, int columns) {
-    auto landMap = NoiseGenerator::generateHeightMap(rows, columns, Random::getNumber(), 1, 0.5);
-    auto humidityMap = NoiseGenerator::generateHeightMap(rows, columns, Random::getNumber(), 2, 0.6);
-    auto hillMap = NoiseGenerator::generateHeightMap(rows, columns, Random::getNumber(), 4);
-    auto mountainMap = NoiseGenerator::generateHeightMap(rows, columns, Random::getNumber(), 8, 0.4);
-    auto forestMap = NoiseGenerator::generateHeightMap(rows, columns, Random::getNumber(), 4, 0.8);
+    auto landMap = NoiseGenerator::generateHeightMap(rows, columns, global::Random::getNumber(), 1, 0.5);
+    auto humidityMap = NoiseGenerator::generateHeightMap(rows, columns, global::Random::getNumber(), 2, 0.6);
+    auto hillMap = NoiseGenerator::generateHeightMap(rows, columns, global::Random::getNumber(), 4);
+    auto mountainMap = NoiseGenerator::generateHeightMap(rows, columns, global::Random::getNumber(), 8, 0.4);
+    auto forestMap = NoiseGenerator::generateHeightMap(rows, columns, global::Random::getNumber(), 4, 0.8);
 
     const double waterLevel = landMap.min();
     const double landLevel = landMap.getNth(0.70 * landMap.getSize());

@@ -7,7 +7,7 @@
 #include "Tile.hpp"
 #include "Attributes.hpp"
 #include "TextureSetFactory.hpp"
-#include "Resources.hpp"
+#include "global/Resources.hpp"
 #include "Matcher.hpp"
 #include "textures/blends.hpp"
 #include "textures/terrains.hpp"
@@ -34,7 +34,7 @@ namespace textures {
 
 
 TextureSet<Tile> TextureSetFactory::getBaseTextureSet() {
-    TextureSet<Tile> ts(Resources::loadTexture("textures/terrains.png"));
+    TextureSet<Tile> ts(global::Resources::loadTexture("textures/terrains.png"));
 
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Water,
             { SAME, SAME, SAME, ANY, ANY, ANY, ANY, ANY })),
@@ -151,7 +151,7 @@ TextureSet<Tile> TextureSetFactory::getBaseTextureSet() {
 }
 
 TextureSet<Tile> TextureSetFactory::getBlendTextureSet() {
-    TextureSet<Tile> ts(Resources::loadTexture("textures/blends.png"));
+    TextureSet<Tile> ts(global::Resources::loadTexture("textures/blends.png"));
 
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Water,
             { DIFF, ANY, ANY, ANY, ANY, ANY, ANY, ANY })),
@@ -248,7 +248,7 @@ TextureSet<Tile> TextureSetFactory::getBlendTextureSet() {
 }
 
 TextureSet<Tile> TextureSetFactory::getGridTextureSet() {
-    TextureSet<Tile> ts(Resources::loadTexture("textures/terrains.png"));
+    TextureSet<Tile> ts(global::Resources::loadTexture("textures/terrains.png"));
 
     ts.add(std::shared_ptr<const AlwaysMatcher>(new AlwaysMatcher()),
         textures::terrains::visibleKnown);
@@ -257,7 +257,7 @@ TextureSet<Tile> TextureSetFactory::getGridTextureSet() {
 }
 
 TextureSet<Tile> TextureSetFactory::getOverlayTextureSet() {
-    TextureSet<Tile> ts(Resources::loadTexture("textures/landmarks.png"));
+    TextureSet<Tile> ts(global::Resources::loadTexture("textures/landmarks.png"));
 
     ts.add(std::shared_ptr<const NeighborTypesMatcher>(new NeighborTypesMatcher(Type::Forest,
             { DIFF, ANY, DIFF, ANY, DIFF, ANY, DIFF, ANY })),
@@ -410,7 +410,7 @@ TextureSet<Tile> TextureSetFactory::getOverlayTextureSet() {
 }
 
 TextureSet<Tile> TextureSetFactory::getAttributeTextureSet() {
-    TextureSet<Tile> ts(Resources::loadTexture("textures/landmarks.png"));
+    TextureSet<Tile> ts(global::Resources::loadTexture("textures/landmarks.png"));
 
     ts.add(std::shared_ptr<const Matcher<Tile>>(new Matcher<Tile>([] (const Tile& tile) {
         const auto river = tile.attributes.river;
@@ -535,7 +535,7 @@ TextureSet<Tile> TextureSetFactory::getAttributeTextureSet() {
 TextureSet<::units::Unit> TextureSetFactory::getUnitTextureSet() {
     using namespace ::units;
 
-    TextureSet<Unit> ts(Resources::loadTexture("textures/units.png"));
+    TextureSet<Unit> ts(global::Resources::loadTexture("textures/units.png"));
 
     ts.add(std::shared_ptr<const Matcher<Unit>>(new Matcher<Unit>([] (const Unit& unit) {
         return unit.getType() == ::units::Type::Phalanx;
@@ -549,7 +549,7 @@ TextureSet<::units::Unit> TextureSetFactory::getUnitTextureSet() {
 }
 
 TextureSet<::miscellaneous::Type> TextureSetFactory::getSelectionTextureSet() {
-    TextureSet<::miscellaneous::Type> ts(Resources::loadTexture("textures/miscellaneous.png"));
+    TextureSet<::miscellaneous::Type> ts(global::Resources::loadTexture("textures/miscellaneous.png"));
 
     ts.add(std::shared_ptr<const Matcher<::miscellaneous::Type>>(
         new Matcher<::miscellaneous::Type>([] (const ::miscellaneous::Type& type)
@@ -568,7 +568,7 @@ TextureSet<::miscellaneous::Type> TextureSetFactory::getSelectionTextureSet() {
 
 
 TextureSet<tileenums::Direction> TextureSetFactory::getPathTextureSet() {
-    TextureSet<tileenums::Direction> ts(Resources::loadTexture("textures/miscellaneous.png"));
+    TextureSet<tileenums::Direction> ts(global::Resources::loadTexture("textures/miscellaneous.png"));
 
     ts.add(std::shared_ptr<const Matcher<tileenums::Direction>>(
         new Matcher<tileenums::Direction>([] (const tileenums::Direction& direction)
@@ -622,7 +622,7 @@ TextureSet<tileenums::Direction> TextureSetFactory::getPathTextureSet() {
 }
 
 TextureSet<players::TileVisibility> TextureSetFactory::getFogTextureSet() {
-    TextureSet<players::TileVisibility> ts(Resources::loadTexture("textures/terrains.png"));
+    TextureSet<players::TileVisibility> ts(global::Resources::loadTexture("textures/terrains.png"));
 
     ts.add(std::shared_ptr<const Matcher<players::TileVisibility>>(
         new Matcher<players::TileVisibility>([] (const players::TileVisibility& visibility)
@@ -640,7 +640,7 @@ TextureSet<players::TileVisibility> TextureSetFactory::getFogTextureSet() {
 }
 
 TextureSet<::miscellaneous::Flag> TextureSetFactory::getFlagTextureSet() {
-    TextureSet<::miscellaneous::Flag> ts(Resources::loadTexture("textures/miscellaneous.png"));
+    TextureSet<::miscellaneous::Flag> ts(global::Resources::loadTexture("textures/miscellaneous.png"));
 
     ts.add(std::shared_ptr<const Matcher<::miscellaneous::Flag>>(
         new Matcher<::miscellaneous::Flag>([] (const ::miscellaneous::Flag& flag)

@@ -1,10 +1,13 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef RANDOM_HPP_
-#define RANDOM_HPP_
+#ifndef GLOBAL_RANDOM_HPP_
+#define GLOBAL_RANDOM_HPP_
 
 
 #include <random>
+
+
+namespace global {
 
 
 class Random {
@@ -22,4 +25,7 @@ private:
 };
 
 
-#endif  // RANDOM_HPP_
+}  // namespace global
+
+
+#endif  // GLOBAL_RANDOM_HPP_

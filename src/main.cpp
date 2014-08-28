@@ -2,14 +2,15 @@
 
 #include <chrono>
 #include "SFML/Graphics.hpp"
-#include "Paths.hpp"
+#include "global/Paths.hpp"
+#include "global/Resources.hpp"
+#include "global/Random.hpp"
 #include "Game.hpp"
-#include "Resources.hpp"
-#include "Random.hpp"
 
 int main(__attribute__((unused)) int argc, char* argv[]) {
-    Resources::initialize(Paths{argv[0]});
-    Random::initialize(std::chrono::system_clock::now().time_since_epoch().count());
+    global::Paths::initialize(argv[0]);
+    global::Resources::initialize();
+    global::Random::initialize(std::chrono::system_clock::now().time_since_epoch().count());
 
     Game game(160, 80);
     game.start();

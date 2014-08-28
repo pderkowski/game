@@ -10,7 +10,7 @@
 #include "MapConstructor.hpp"
 #include "Attributes.hpp"
 #include "units/Unit.hpp"
-#include "Random.hpp"
+#include "global/Random.hpp"
 
 MapConstructor::MapConstructor(const HeightMap& heightMap)
     : heightMap_(heightMap), model_(heightMap.getRowsNo(), heightMap.getColumnsNo())
@@ -35,7 +35,7 @@ MapConstructor& MapConstructor::setTypeMask(const std::vector<tileenums::Type>& 
 MapConstructor& MapConstructor::spawnRivers(double probability) {
     model_.changeTiles([&] (Tile& tile) {
         if (isTypeModifiable(tile.type)) {
-            if (((Random::getNumber() % 1000) / 1000.0 < probability)
+            if (((global::Random::getNumber() % 1000) / 1000.0 < probability)
                 && isHigherThanNeighbors(tile)
                 && doesNotBorderWater(tile))
             {
@@ -89,7 +89,7 @@ Tile* MapConstructor::findRandomLowerNeighbor(Tile* tile) {
 
     if (lowerNeighbors.size() > 0) {
         lowerNeighbors.push_back(findLowest(lowerNeighbors)); // lowest has 2 times bigger chance
-        return lowerNeighbors[Random::getNumber() % lowerNeighbors.size()];
+        return lowerNeighbors[global::Random::getNumber() % lowerNeighbors.size()];
     } else {
         return nullptr;
     }

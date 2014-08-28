@@ -5,6 +5,9 @@
 #include "Random.hpp"
 
 
+namespace global {
+
+
 std::default_random_engine Random::generator;
 
 void Random::initialize(unsigned seed) {
@@ -14,3 +17,6 @@ void Random::initialize(unsigned seed) {
 unsigned Random::getNumber() {
     return generator();
 }
+
+
+}  // namespace global

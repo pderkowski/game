@@ -8,7 +8,16 @@
 
 namespace fs = boost::filesystem;
 
-Paths::Paths(const std::string& relativePathToExec) {
+
+namespace global {
+
+
+boost::filesystem::path Paths::executablePath_;
+boost::filesystem::path Paths::basePath_;
+boost::filesystem::path Paths::binariesPath_;
+boost::filesystem::path Paths::resourcesPath_;
+
+void Paths::initialize(const std::string& relativePathToExec) {
     fs::path initialPath(fs::initial_path<fs::path>());
     initialPath = fs::canonical(fs::system_complete(fs::path(relativePathToExec)));
     executablePath_ = initialPath;
@@ -36,3 +45,6 @@ fs::path Paths::getResourcesPath() {
 fs::path Paths::getResourcePath(const std::string& resource) {
     return getResourcesPath()/resource;
 }
+
+
+}  // namespace global

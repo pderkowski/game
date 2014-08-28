@@ -8,20 +8,21 @@
 #include "SFML/Graphics.hpp"
 #include "Resources.hpp"
 
+
+namespace global {
+
+
 // Static variables
-Paths Resources::paths_;
 std::map<boost::filesystem::path, std::shared_ptr<sf::Texture>> Resources::loadedTextures_;
 std::map<boost::filesystem::path, sf::Font> Resources::loadedFonts_;
 std::map<boost::filesystem::path, sf::Image> Resources::loadedImages_;
 
 
-void Resources::initialize(const Paths& paths)
-{
-    paths_ = paths;
-}
+void Resources::initialize()
+{ }
 
 std::shared_ptr<const sf::Texture> Resources::loadTexture(const std::string& relativePath) {
-    boost::filesystem::path pathToTexture = paths_.getResourcePath(relativePath);
+    boost::filesystem::path pathToTexture = global::Paths::getResourcePath(relativePath);
 
     if (loadedTextures_.find(pathToTexture) == loadedTextures_.end()) {
         std::shared_ptr<sf::Texture> texture(new sf::Texture);
@@ -37,7 +38,7 @@ std::shared_ptr<const sf::Texture> Resources::loadTexture(const std::string& rel
 }
 
 sf::Font Resources::loadFont(const std::string& relativePath) {
-    boost::filesystem::path pathToFont = paths_.getResourcePath(relativePath);
+    boost::filesystem::path pathToFont = global::Paths::getResourcePath(relativePath);
 
     if (loadedFonts_.find(pathToFont) == loadedFonts_.end()) {
         sf::Font font;
@@ -52,7 +53,7 @@ sf::Font Resources::loadFont(const std::string& relativePath) {
 }
 
 sf::Image Resources::loadImage(const std::string& relativePath) {
-    boost::filesystem::path pathToImage = paths_.getResourcePath(relativePath);
+    boost::filesystem::path pathToImage = global::Paths::getResourcePath(relativePath);
 
     if (loadedImages_.find(pathToImage) == loadedImages_.end()) {
         sf::Image image;
@@ -65,3 +66,6 @@ sf::Image Resources::loadImage(const std::string& relativePath) {
 
     return loadedImages_.at(pathToImage);
 }
+
+
+}  // namespace global

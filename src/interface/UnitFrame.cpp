@@ -5,7 +5,7 @@
 #include "units/Unit.hpp"
 #include "Renderer.hpp"
 #include "UnitFrame.hpp"
-#include "Resources.hpp"
+#include "global/Resources.hpp"
 #include "players/Players.hpp"
 
 
@@ -13,7 +13,7 @@ namespace interface {
 
 
 UnitFrame::UnitFrame(const Renderer* renderer)
-    : font_(Resources::loadFont("fonts/UbuntuMono.ttf")),
+    : font_(global::Resources::loadFont("fonts/UbuntuMono.ttf")),
     characterSize_(30),
     horizontalSpacing_(10.0f, 0.0f),
     verticalSpacing_(0.0f, 10.0f),
