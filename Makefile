@@ -13,7 +13,7 @@ SFML_LIBS=-lsfml-graphics -lsfml-window -lsfml-system
 BOOST_LIBS=-lboost_filesystem -lboost_system
 OTHER_LIBS=-lnoise
 LDLIBS=$(SFML_LIBS) $(BOOST_LIBS) $(OTHER_LIBS)
-LDFLAGS=-Wl,-R$(shell pwd)/$(LIB_DIR)
+LDFLAGS=-Wl,-rpath=$(shell pwd)/$(LIB_DIR)
 
 SRCS=$(shell find $(SRC_DIR) -type f -name '*.cpp')
 OBJS=$(subst .cpp,.o,$(SRCS))
