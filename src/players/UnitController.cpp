@@ -8,6 +8,7 @@
 #include "Player.hpp"
 #include "Pathfinder.hpp"
 #include "UnitController.hpp"
+#include "units/Units.hpp"
 
 
 namespace players {
@@ -52,7 +53,7 @@ void UnitController::moveTo(const Tile& destination) {
 void UnitController::destroyUnit() {
     player_->fog_.removeVisible(player_->getSurroundingTiles(*unit_));
 
-    player_->units_.erase(std::find(player_->units_.begin(), player_->units_.end(), *unit_));
+    player_->units_->remove(*unit_);
 
     unit_ = nullptr;
 }

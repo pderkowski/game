@@ -5,11 +5,14 @@
 
 #include <vector>
 #include "units/Unit.hpp"
+#include "units/Units.hpp"
 #include "Player.hpp"
 #include "PlayersDrawer.hpp"
 #include "UnitController.hpp"
 class MapModel;
 class Renderer;
+namespace units { class Units; }
+
 
 namespace players {
 
@@ -47,6 +50,8 @@ private:
 private:
     unsigned currentPlayer_;
     std::vector<Player> players_;
+
+    units::Units units_;
 
     const MapModel* model_;
 

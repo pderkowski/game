@@ -16,81 +16,53 @@
 #include "MapModel.hpp"
 #include "Selection.hpp"
 #include "MiscellaneousEnums.hpp"
+#include "units/Units.hpp"
 
 
 namespace players {
 
 
-Player::Player(miscellaneous::Flag flag, const MapModel* model)
-    : flag_(flag), fog_(model->getRowsNo(), model->getColumnsNo()), model_(model)
+Player::Player(miscellaneous::Flag flag, const MapModel* model, units::Units* units)
+    : flag_(flag), fog_(model->getRowsNo(), model->getColumnsNo()), model_(model), units_(units)
 { }
 
 bool Player::isUnitSelected() const {
     if (selection_.isSourceSelected()) {
-        const IntRotPoint coords = selection_.getSource().coords;
-
-        return std::any_of(units_.begin(), units_.end(), [&coords] (const units::Unit& unit) {
-            return unit.getCoords() == coords;
-        });
+        return !units_->select().playerEqual(this).tileEqual(selection_.getSource()).empty();
     } else {
         return false;
     }
 }
 
 void Player::addUnit(const units::Unit& unit) {
-    units_.push_back(unit);
+    units_->add(unit);
 
     fog_.addVisible(getSurroundingTiles(unit));
 }
 
 UnitController Player::getSelectedUnit() {
-    const IntRotPoint coords = selection_.getSource().coords;
-
-    auto unitIt = std::find_if(units_.begin(), units_.end(), [&coords] (const units::Unit& unit) {
-        return unit.getCoords() == coords;
-    });
-
-    if (unitIt != units_.end()) {
-        return UnitController(&(*unitIt), this);
+    if (isUnitSelected()) {
+        units::Unit* unit = &units_->select().playerEqual(this).tileEqual(selection_.getSource())[0];
+        return UnitController(unit, this);
     } else {
         throw std::logic_error("There is no unit at the requested coords.");
     }
 }
 
 units::Unit Player::getSelectedUnit() const {
-    const IntRotPoint coords = selection_.getSource().coords;
-
-    auto unitIt = std::find_if(units_.begin(), units_.end(), [&coords] (const units::Unit& unit) {
-        return unit.getCoords() == coords;
-    });
-
-    if (unitIt != units_.end()) {
-        return *unitIt;
+    if (isUnitSelected()) {
+        return units_->select().playerEqual(this).tileEqual(selection_.getSource())[0];
     } else {
         throw std::logic_error("There is no unit at the requested coords.");
     }
 }
 
-bool Player::hasUnitAtCoords(const IntRotPoint& coords) const {
-    return std::any_of(units_.begin(), units_.end(), [&coords] (const units::Unit& unit) {
-        return unit.getCoords() == coords;
-    });
+bool Player::hasUnitAtTile(const Tile& tile) const {
+    return !units_->select().playerEqual(this).tileEqual(tile).empty();
 }
 
-UnitController Player::getUnitAtCoords(const IntRotPoint& coords) {
-    auto unitIt = std::find_if(units_.begin(), units_.end(), [&coords] (const units::Unit& unit) {
-        return unit.getCoords() == coords;
-    });
-
-    if (unitIt != units_.end()) {
-        return UnitController(&(*unitIt), this);
-    } else {
-        throw std::logic_error("There is no unit at the requested coords.");
-    }
-}
-
-std::vector<units::Unit> Player::getUnits() const {
-    return units_;
+UnitController Player::getUnitAtTile(const Tile& tile) {
+    return UnitController(&units_->select().playerEqual(this).tileEqual(tile)[0], this);
 }
 
 Fog Player::getFog() const {
@@ -119,13 +91,12 @@ bool Player::doesKnowTile(const IntRotPoint& coords) const {
 
 void Player::setModel(const MapModel* model) {
     model_ = model;
-    units_.clear();
     fog_.clear();
     selection_.clear();
 }
 
 void Player::resetMoves() {
-    for (auto& unit : units_) {
+    for (units::Unit& unit : units_->select().playerEqual(this)) {
         unit.resetMoves();
     }
 }

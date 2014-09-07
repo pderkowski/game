@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "units/Unit.hpp"
+#include "units/Units.hpp"
 #include "Player.hpp"
 #include "Players.hpp"
 #include "PlayersDrawer.hpp"
@@ -19,7 +20,7 @@ Players::Players(int numberOfPlayers, const MapModel* model, const Renderer* ren
     std::vector<miscellaneous::Flag> flags = { miscellaneous::Flag::Blue, miscellaneous::Flag::Red };
 
     for (int i = 1; i <= numberOfPlayers; ++i) {
-        players_.emplace_back(flags[i - 1], model);
+        players_.emplace_back(flags[i - 1], model, &units_);
     }
 
     updateAllLayers();
@@ -80,9 +81,9 @@ std::vector<units::Unit> Players::getVisibleUnits() const {
     std::vector<units::Unit> res;
 
     for (const Player& player : players_) {
-        std::vector<units::Unit> units = player.getUnits();
+        auto playerUnits = units_.select().playerEqual(&player);
 
-        for (const auto& unit : units) {
+        for (auto& unit : playerUnits) {
             if (getCurrentPlayer()->doesSeeTile(unit.getPosition().coords)) {
                 res.push_back(unit);
             }
@@ -96,6 +97,8 @@ void Players::setModel(const MapModel* model) {
     for (auto& player : players_) {
         player.setModel(model);
     }
+
+    units_.clear();
 
     updateAllLayers();
 }
@@ -116,11 +119,11 @@ void Players::handleRightClick(const sf::Event& e) {
     getCurrentPlayer()->handleRightClick(getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)));
 
     if (getCurrentPlayer()->isUnitSelected()) {
-        IntRotPoint selectedCoords = getCurrentPlayer()->getSelectedUnit().get()->getCoords();
+        Tile selectedTile = getCurrentPlayer()->getSelectedUnit().get()->getPosition();
 
-        if (getOtherPlayer()->hasUnitAtCoords(selectedCoords)) {
+        if (getOtherPlayer()->hasUnitAtTile(selectedTile)) {
             UnitController attacker = getCurrentPlayer()->getSelectedUnit();
-            UnitController defender = getOtherPlayer()->getUnitAtCoords(selectedCoords);
+            UnitController defender = getOtherPlayer()->getUnitAtTile(selectedTile);
 
             int outcome = Combat::simulate(attacker.get()->getHpLeft(), defender.get()->getHpLeft());
 

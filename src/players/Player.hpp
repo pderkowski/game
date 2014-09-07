@@ -12,23 +12,25 @@
 #include "Selection.hpp"
 #include "MiscellaneousEnums.hpp"
 class MapModel;
+namespace units { class Units; }
+
+
 
 namespace players {
 
 
 class Player {
 public:
-    Player(miscellaneous::Flag flag, const MapModel* model);
+    Player(miscellaneous::Flag flag, const MapModel* model, units::Units* units);
 
     bool isUnitSelected() const;
 
     UnitController getSelectedUnit();
     units::Unit getSelectedUnit() const;
 
-    bool hasUnitAtCoords(const IntRotPoint& coords) const;
-    UnitController getUnitAtCoords(const IntRotPoint& coords);
+    bool hasUnitAtTile(const Tile& tile) const;
+    UnitController getUnitAtTile(const Tile& tile);
 
-    std::vector<units::Unit> getUnits() const;
     Fog getFog() const;
     Selection getSelection() const;
     miscellaneous::Flag getFlag() const;
@@ -57,13 +59,13 @@ private:
 private:
     miscellaneous::Flag flag_;
 
-    std::vector<units::Unit> units_;
-
     Fog fog_;
 
     Selection selection_;
 
     const MapModel* model_;
+
+    units::Units* units_;
 };
 
 
