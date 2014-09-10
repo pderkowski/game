@@ -1,10 +1,14 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef ATTRIBUTES_HPP_
-#define ATTRIBUTES_HPP_
+#ifndef MAP_ATTRIBUTES_HPP_
+#define MAP_ATTRIBUTES_HPP_
 
 #include "Attribute.hpp"
 #include "TileEnums.hpp"
+
+
+namespace map {
+
 
 class Attributes {
 private:
@@ -28,4 +32,7 @@ public:
     Attribute<River> river;
 };
 
-#endif  // ATTRIBUTES_HPP_
+
+}  // namespace map
+
+#endif  // MAP_ATTRIBUTES_HPP_

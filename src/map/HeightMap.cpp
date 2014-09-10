@@ -7,6 +7,10 @@
 #include <algorithm>
 #include "HeightMap.hpp"
 
+
+namespace map {
+
+
 HeightMap::HeightMap(unsigned rowsNo, unsigned columnsNo)
     : rowsNo_(rowsNo), columnsNo_(columnsNo), map_(rowsNo, std::vector<double>(columnsNo))
 { }
@@ -81,3 +85,6 @@ double HeightMap::getNth(unsigned n) const {
         return heights[n];
     }
 }
+
+
+}  // namespace map

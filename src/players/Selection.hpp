@@ -4,7 +4,7 @@
 #define PLAYERS_SELECTION_HPP_
 
 #include <vector>
-#include "Tile.hpp"
+#include "map/Tile.hpp"
 
 
 namespace players {
@@ -12,27 +12,27 @@ namespace players {
 
 class Selection {
 public:
-    explicit Selection(const Tile& source = Tile(), const Tile& destination = Tile());
+    explicit Selection(const map::Tile& source = map::Tile(), const map::Tile& destination = map::Tile());
 
-    void setSource(const Tile& source);
-    void setDestination(const Tile& destination);
-    void setPath(const std::vector<Tile>& path);
+    void setSource(const map::Tile& source);
+    void setDestination(const map::Tile& destination);
+    void setPath(const std::vector<map::Tile>& path);
     void clear();
 
     bool isSourceSelected() const;
     bool isDestinationSelected() const;
-    bool isDestinationConfirmed(const Tile& destination) const;
+    bool isDestinationConfirmed(const map::Tile& destination) const;
     bool isPathSelected() const;
 
-    Tile getSource() const;
-    Tile getDestination() const;
-    std::vector<Tile> getPath() const;
+    map::Tile getSource() const;
+    map::Tile getDestination() const;
+    std::vector<map::Tile> getPath() const;
 
 private:
-    Tile source_;
-    Tile destination_;
+    map::Tile source_;
+    map::Tile destination_;
 
-    std::vector<Tile> path_;
+    std::vector<map::Tile> path_;
 };
 
 

@@ -10,7 +10,6 @@
 #include "MiscellaneousEnums.hpp"
 #include "Renderer.hpp"
 #include "Selection.hpp"
-#include "Tile.hpp"
 #include "Fog.hpp"
 
 

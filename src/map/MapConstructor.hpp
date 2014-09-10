@@ -1,7 +1,7 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MAPCONSTRUCTOR_HPP_
-#define MAPCONSTRUCTOR_HPP_
+#ifndef MAP_MAPCONSTRUCTOR_HPP_
+#define MAP_MAPCONSTRUCTOR_HPP_
 
 #include <vector>
 #include "Tile.hpp"
@@ -9,6 +9,10 @@
 #include "HeightMap.hpp"
 #include "Attributes.hpp"
 #include "TileEnums.hpp"
+
+
+namespace map {
+
 
 class MapConstructor {
 public:
@@ -39,4 +43,8 @@ private:
     std::vector<tileenums::Type> typeMask_;
 };
 
-#endif  // MAPCONSTRUCTOR_HPP_
+
+}  // namespace map
+
+
+#endif  // MAP_MAPCONSTRUCTOR_HPP_

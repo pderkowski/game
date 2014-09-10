@@ -9,6 +9,10 @@
 
 using namespace tileenums;
 
+
+namespace map {
+
+
 Tile::Tile(const IntRotPoint& coords, Type type, MapModel* model)
     : coords(coords), type(type), model_(model)
 { }
@@ -162,3 +166,6 @@ bool operator != (const Tile& lhs, const Tile& rhs) {
 bool operator < (const Tile& lhs, const Tile& rhs) {
     return lhs.coords < rhs.coords;
 }
+
+
+}  // namespace map

@@ -4,7 +4,7 @@
 #include <vector>
 #include "units/Unit.hpp"
 #include "units/MovingCosts.hpp"
-#include "Tile.hpp"
+#include "map/Tile.hpp"
 #include "Player.hpp"
 #include "Pathfinder.hpp"
 #include "UnitController.hpp"
@@ -22,17 +22,17 @@ units::Unit* UnitController::get() {
     return unit_;
 }
 
-bool UnitController::canMoveTo(const Tile& destination) const {
+bool UnitController::canMoveTo(const map::Tile& destination) const {
     Pathfinder pathfinder(units::getMovingCosts(unit_->getType()), player_->fog_);
     return pathfinder.doesPathExist(unit_->getPosition(), destination);
 }
 
-std::vector<Tile> UnitController::getPathTo(const Tile& destination) const {
+std::vector<map::Tile> UnitController::getPathTo(const map::Tile& destination) const {
     Pathfinder pathfinder(units::getMovingCosts(unit_->getType()), player_->fog_);
     return pathfinder.findPath(unit_->getPosition(), destination);
 }
 
-void UnitController::moveTo(const Tile& destination) {
+void UnitController::moveTo(const map::Tile& destination) {
     auto path = getPathTo(destination);
 
     for (size_t i = 0; i + 1 < path.size() && unit_->getMovesLeft() > 0; ++i) {

@@ -1,6 +1,12 @@
 /* Copyright 2014 <Piotr Derkowski> */
+#ifndef MAP_ATTRIBUTE_HPP_
+#define MAP_ATTRIBUTE_HPP_
 
 #include "boost/optional.hpp"
+
+
+namespace map {
+
 
 template<class T>
 class Attribute;
@@ -67,3 +73,7 @@ T* Attribute<T>::operator ->() {
     return data_.get_ptr();
 }
 
+
+}  // namespace map
+
+#endif  // MAP_ATTRIBUTE_HPP_

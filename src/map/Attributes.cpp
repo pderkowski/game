@@ -5,6 +5,10 @@
 
 using namespace tileenums;
 
+
+namespace map {
+
+
 Attributes::River::River()
     : directions_(0)
 { }
@@ -28,3 +32,6 @@ bool Attributes::operator == (const Attributes& rhs) const {
 bool Attributes::River::operator == (const Attributes::River& rhs) const {
     return directions_ == rhs.directions_;
 }
+
+
+}  // namespace map

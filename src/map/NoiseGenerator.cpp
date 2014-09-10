@@ -8,6 +8,10 @@
 #include "Coordinates.hpp"
 #include "Utils.hpp"
 
+
+namespace map {
+
+
 HeightMap NoiseGenerator::generateHeightMap(unsigned rows, unsigned columns, unsigned seed,
     double frequency, double persistence)
 {
@@ -33,3 +37,6 @@ HeightMap NoiseGenerator::generateHeightMap(unsigned rows, unsigned columns, uns
 
     return result;
 }
+
+
+}  // namespace map

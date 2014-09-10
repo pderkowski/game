@@ -11,7 +11,7 @@
 namespace interface {
 
 
-Interface::Interface(const MapModel* model, const players::Players* players,
+Interface::Interface(const map::MapModel* model, const players::Players* players,
     const Renderer* renderer)
         : model_(model),
         players_(players),
@@ -25,7 +25,7 @@ Interface::Interface(const MapModel* model, const players::Players* players,
     updateEverything();
 }
 
-void Interface::setModel(const MapModel* model) {
+void Interface::setModel(const map::MapModel* model) {
     model_ = model;
 
     updateEverything();

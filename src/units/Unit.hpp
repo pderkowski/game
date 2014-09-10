@@ -9,8 +9,8 @@
 #include "Coordinates.hpp"
 #include "UnitProperties.hpp"
 #include "boost/functional/hash.hpp"
-class MapModel;
-class Tile;
+namespace map { class MapModel; }
+namespace map { class Tile; }
 namespace players { class Player; }
 
 
@@ -21,7 +21,7 @@ class Unit {
 public:
     Unit(const IntRotPoint& coords,
         const UnitProperties& properties,
-        const MapModel* model,
+        const map::MapModel* model,
         const players::Player* owner);
 
     void resetMoves();
@@ -30,7 +30,7 @@ public:
 
     std::string getName() const;
     Type getType() const;
-    Tile getPosition() const;
+    map::Tile getPosition() const;
     IntRotPoint getCoords() const;
     const players::Player* getOwner() const;
 
@@ -51,7 +51,7 @@ private:
 
     UnitProperties properties_;
 
-    const MapModel* model_;
+    const map::MapModel* model_;
 
     const players::Player* owner_;
 };

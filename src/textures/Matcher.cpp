@@ -3,7 +3,7 @@
 #include <functional>
 #include <vector>
 #include <memory>
-#include "Tile.hpp"
+#include "map/Tile.hpp"
 #include "Matcher.hpp"
 #include "TileEnums.hpp"
 
@@ -14,13 +14,13 @@ namespace textures {
 
 
 TileTypeMatcher::TileTypeMatcher(Type type)
-    : Matcher<Tile>([type] (const Tile& tile) {
+    : Matcher<map::Tile>([type] (const map::Tile& tile) {
         return tile.type == type;
     })
 { }
 
 NeighborTypesMatcher::NeighborTypesMatcher(Type type, const NeighborTypes& neighborTypes)
-    : Matcher<Tile>([type, neighborTypes] (const Tile& tile) {
+    : Matcher<map::Tile>([type, neighborTypes] (const map::Tile& tile) {
         if (tile.type != type)
             return false;
 
@@ -57,7 +57,7 @@ NeighborTypesMatcher::NeighborTypesMatcher(Type type, const NeighborTypes& neigh
 
 
 AlwaysMatcher::AlwaysMatcher()
-    : Matcher<Tile>([] (__attribute__((unused)) const Tile& tile) {
+    : Matcher<map::Tile>([] (__attribute__((unused)) const map::Tile& tile) {
         return true;;
     })
 { }

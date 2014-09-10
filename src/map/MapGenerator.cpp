@@ -10,6 +10,10 @@
 #include "TileEnums.hpp"
 #include "global/Random.hpp"
 
+
+namespace map {
+
+
 MapModel MapGenerator::generateMap(int rows, int columns) {
     auto landMap = NoiseGenerator::generateHeightMap(rows, columns, global::Random::getNumber(), 1, 0.5);
     auto humidityMap = NoiseGenerator::generateHeightMap(rows, columns, global::Random::getNumber(), 2, 0.6);
@@ -53,3 +57,6 @@ MapModel MapGenerator::generateMap(int rows, int columns) {
         .setType(tileenums::Type::Forest, forestLevel)
         .construct();
 }
+
+
+}  // namespace map

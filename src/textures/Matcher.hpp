@@ -6,7 +6,7 @@
 #include <functional>
 #include <vector>
 #include <memory>
-#include "Tile.hpp"
+#include "map/Tile.hpp"
 #include "TileEnums.hpp"
 
 
@@ -27,14 +27,14 @@ protected:
     Predicate predicate_;
 };
 
-class TileTypeMatcher : public Matcher<Tile> {
+class TileTypeMatcher : public Matcher<map::Tile> {
 public:
     TileTypeMatcher(tileenums::Type type);
     virtual ~TileTypeMatcher() { }
 };
 
 
-class NeighborTypesMatcher : public Matcher<Tile> {
+class NeighborTypesMatcher : public Matcher<map::Tile> {
 public:
     enum NeighborType {
         Any,
@@ -48,7 +48,7 @@ public:
     virtual ~NeighborTypesMatcher() { }
 };
 
-class AlwaysMatcher : public Matcher<Tile> {
+class AlwaysMatcher : public Matcher<map::Tile> {
 public:
     AlwaysMatcher();
     virtual ~AlwaysMatcher() { }

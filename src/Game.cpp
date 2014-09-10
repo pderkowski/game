@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <memory>
 #include <string>
-#include "Map.hpp"
+#include "map/Map.hpp"
 #include "menu/Menu.hpp"
 #include "Game.hpp"
 #include "TileEnums.hpp"

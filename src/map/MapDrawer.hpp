@@ -1,7 +1,8 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MAPDRAWER_HPP_
-#define MAPDRAWER_HPP_
+#ifndef MAP_MAPDRAWER_HPP_
+#define MAP_MAPDRAWER_HPP_
+
 
 #include <vector>
 #include "SFML/Graphics.hpp"
@@ -9,6 +10,10 @@
 #include "Tile.hpp"
 #include "Layer.hpp"
 #include "Renderer.hpp"
+
+
+namespace map {
+
 
 class MapDrawer {
 public:
@@ -27,4 +32,7 @@ private:
     const Renderer* renderer_;
 };
 
-#endif  // MAPDRAWER_HPP_
+
+}  // namespace map
+
+#endif  // MAP_MAPDRAWER_HPP_

@@ -5,7 +5,7 @@
 
 #include <functional>
 #include <vector>
-#include "Tile.hpp"
+#include "map/Tile.hpp"
 
 namespace players {
 
@@ -26,8 +26,8 @@ public:
     size_t getRowsNo() const;
     size_t getColumnsNo() const;
 
-    void addVisible(const std::vector<const Tile*>& tiles);
-    void removeVisible(const std::vector<const Tile*>& tiles);
+    void addVisible(const std::vector<const map::Tile*>& tiles);
+    void removeVisible(const std::vector<const map::Tile*>& tiles);
 
     void toggle();
 

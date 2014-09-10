@@ -2,7 +2,7 @@
 
 #include "MinimapFrame.hpp"
 #include "Renderer.hpp"
-#include "MapModel.hpp"
+#include "map/MapModel.hpp"
 #include "players/Players.hpp"
 #include "MinimapRenderer.hpp"
 
@@ -10,7 +10,7 @@
 namespace interface {
 
 
-MinimapFrame::MinimapFrame(const MapModel& model, const Renderer* renderer)
+MinimapFrame::MinimapFrame(const map::MapModel& model, const Renderer* renderer)
     : renderer_(renderer), minimapRenderer_(model.getRowsNo(), model.getColumnsNo())
 { }
 
@@ -22,7 +22,7 @@ sf::Vector2f MinimapFrame::getSize() const {
     return minimapRenderer_.getTextureSize();
 }
 
-void MinimapFrame::updateBackground(const MapModel& model, const players::Player& player) {
+void MinimapFrame::updateBackground(const map::MapModel& model, const players::Player& player) {
     minimapRenderer_.updateBackground(model, player);
 }
 

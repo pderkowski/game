@@ -8,7 +8,7 @@
 #include <vector>
 #include <string>
 #include "Unit.hpp"
-#include "Tile.hpp"
+#include "map/Tile.hpp"
 #include "players/Player.hpp"
 namespace units { template <class T> class UnitSelectionIterator; }
 
@@ -44,7 +44,7 @@ public:
 
     UnitSelectionImpl nameEqual(const std::string& queriedName) const;
     UnitSelectionImpl typeEqual(Type queriedType) const;
-    UnitSelectionImpl tileEqual(const Tile& queriedType) const;
+    UnitSelectionImpl tileEqual(const map::Tile& queriedType) const;
     UnitSelectionImpl playerEqual(const players::Player* queriedPlayer) const;
     UnitSelectionImpl playerNotEqual(const players::Player* queriedPlayer) const;
 
@@ -118,7 +118,7 @@ UnitSelectionImpl<T> UnitSelectionImpl<T>::typeEqual(Type queriedType) const {
 }
 
 template <class T>
-UnitSelectionImpl<T> UnitSelectionImpl<T>::tileEqual(const Tile& queriedTile) const {
+UnitSelectionImpl<T> UnitSelectionImpl<T>::tileEqual(const map::Tile& queriedTile) const {
     std::vector<T*> newSelection;
     std::copy_if(selection_.begin(), selection_.end(), std::back_inserter(newSelection),
         [&queriedTile] (T* unit) { return unit->getPosition() == queriedTile; });

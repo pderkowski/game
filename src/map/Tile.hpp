@@ -1,14 +1,18 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef TILE_HPP_
-#define TILE_HPP_
+#ifndef MAP_TILE_HPP_
+#define MAP_TILE_HPP_
 
 #include "Attributes.hpp"
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
-class MapModel;
+namespace map { class MapModel; }
 
 using namespace tileenums;
+
+
+namespace map {
+
 
 class Tile {
 public:
@@ -52,19 +56,22 @@ bool operator != (const Tile& lhs, const Tile& rhs);
 bool operator < (const Tile& lhs, const Tile& rhs);
 
 
+}  // namespace map
+
+
 namespace std {
 
 
 template <>
-struct hash<Tile>
+struct hash<::map::Tile>
 {
-    std::size_t operator()(const Tile& tile) const
+    std::size_t operator()(const ::map::Tile& tile) const
     {
         std::size_t seed = 0;
 
         static std::hash<IntRotPoint> coordsHasher;
         static std::hash<int> typeHasher;
-        static std::hash<MapModel*> modelHasher;
+        static std::hash<::map::MapModel*> modelHasher;
 
         boost::hash_combine(seed, coordsHasher(tile.coords));
         boost::hash_combine(seed, typeHasher(static_cast<int>(tile.type)));
@@ -77,4 +84,4 @@ struct hash<Tile>
 
 }  // namespace std
 
-#endif  // TILE_HPP_
+#endif  // MAP_TILE_HPP_

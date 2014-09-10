@@ -12,6 +12,10 @@
 #include "units/Unit.hpp"
 #include "global/Random.hpp"
 
+
+namespace map {
+
+
 MapConstructor::MapConstructor(const HeightMap& heightMap)
     : heightMap_(heightMap), model_(heightMap.getRowsNo(), heightMap.getColumnsNo())
 { }
@@ -158,3 +162,6 @@ bool MapConstructor::doesNotBorderWater(const Tile& tile) const {
 
     return true;
 }
+
+
+}  // namespace map

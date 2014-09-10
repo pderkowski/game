@@ -1,9 +1,13 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef NOISEGENERATOR_HPP_
-#define NOISEGENERATOR_HPP_
+#ifndef MAP_NOISEGENERATOR_HPP_
+#define MAP_NOISEGENERATOR_HPP_
 
 #include "HeightMap.hpp"
+
+
+namespace map {
+
 
 class NoiseGenerator {
 public:
@@ -11,4 +15,7 @@ public:
         double frequency = 1.0, double persistence = 0.5);
 };
 
-#endif  // NOISEGENERATOR_HPP_
+
+}  // namespace map
+
+#endif  // MAP_NOISEGENERATOR_HPP_

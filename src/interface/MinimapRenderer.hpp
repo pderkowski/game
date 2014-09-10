@@ -6,7 +6,7 @@
 #include <map>
 #include "SFML/Graphics.hpp"
 #include "TileEnums.hpp"
-class MapModel;
+namespace map { class MapModel; }
 namespace players { class Player; }
 
 
@@ -21,16 +21,16 @@ public:
 
     sf::Vector2f getTextureSize() const;
 
-    void updateBackground(const MapModel& model, const players::Player& player);
+    void updateBackground(const map::MapModel& model, const players::Player& player);
     void updateDisplayedRectangle(const sf::FloatRect& bounds);
 
 private:
     sf::RectangleShape createDisplayedRectangle();
-    sf::Texture createTexture(const MapModel& model, const players::Player& player);
+    sf::Texture createTexture(const map::MapModel& model, const players::Player& player);
     sf::Image createImageFromPixels(sf::Uint8* pixels);
-    sf::Uint8* createPixels(const MapModel& model, const players::Player& player);
+    sf::Uint8* createPixels(const map::MapModel& model, const players::Player& player);
 
-    sf::Color getPixel(const MapModel& model, const players::Player& player, int row,
+    sf::Color getPixel(const map::MapModel& model, const players::Player& player, int row,
         int column) const;
 
     void render();

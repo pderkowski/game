@@ -6,7 +6,7 @@
 #include <vector>
 #include <map>
 #include <unordered_map>
-#include "Tile.hpp"
+#include "map/Tile.hpp"
 #include "TileEnums.hpp"
 #include "Fog.hpp"
 
@@ -18,22 +18,22 @@ class Pathfinder {
 public:
     Pathfinder(const std::map<tileenums::Type, unsigned>& cost, const Fog& fog);
 
-    bool doesPathExist(const Tile& source, const Tile& goal) const;
-    std::vector<Tile> findPath(const Tile& source, const Tile& goal) const;
+    bool doesPathExist(const map::Tile& source, const map::Tile& goal) const;
+    std::vector<map::Tile> findPath(const map::Tile& source, const map::Tile& goal) const;
 
 private:
     struct Node {
 
-        Tile tile;
+        map::Tile tile;
         unsigned distance;
 
         bool operator > (const Node& rhs) const;
     };
 
 private:
-    std::vector<Tile> readPath(const Tile& source, const Tile& goal,
-        const std::unordered_map<Tile, Tile>& previous) const;
-    bool isPassable(const Tile& tile) const;
+    std::vector<map::Tile> readPath(const map::Tile& source, const map::Tile& goal,
+        const std::unordered_map<map::Tile, map::Tile>& previous) const;
+    bool isPassable(const map::Tile& tile) const;
 
 private:
     std::map<tileenums::Type, unsigned> cost_;

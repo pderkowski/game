@@ -4,7 +4,7 @@
 #define TEXTURES_TEXTURESETFACTORY_HPP_
 
 #include "TextureSet.hpp"
-#include "Tile.hpp"
+#include "map/Tile.hpp"
 #include "units/Unit.hpp"
 #include "MiscellaneousEnums.hpp"
 #include "players/Fog.hpp"
@@ -14,11 +14,11 @@ namespace textures {
 
 class TextureSetFactory {
 public:
-    static TextureSet<Tile> getBaseTextureSet();
-    static TextureSet<Tile> getBlendTextureSet();
-    static TextureSet<Tile> getGridTextureSet();
-    static TextureSet<Tile> getOverlayTextureSet();
-    static TextureSet<Tile> getAttributeTextureSet();
+    static TextureSet<map::Tile> getBaseTextureSet();
+    static TextureSet<map::Tile> getBlendTextureSet();
+    static TextureSet<map::Tile> getGridTextureSet();
+    static TextureSet<map::Tile> getOverlayTextureSet();
+    static TextureSet<map::Tile> getAttributeTextureSet();
     static TextureSet<units::Unit> getUnitTextureSet();
 
     static TextureSet<miscellaneous::Type> getSelectionTextureSet();

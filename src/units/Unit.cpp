@@ -5,10 +5,10 @@
 #include <algorithm>
 #include <stdexcept>
 #include "Unit.hpp"
-#include "Tile.hpp"
+#include "map/Tile.hpp"
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
-#include "MapModel.hpp"
+#include "map/MapModel.hpp"
 #include "players/Player.hpp"
 
 namespace units {
@@ -16,7 +16,7 @@ namespace units {
 
 Unit::Unit(const IntRotPoint& coords,
     const UnitProperties& properties,
-    const MapModel* model,
+    const map::MapModel* model,
     const players::Player* owner)
         : coords_(coords), properties_(properties), model_(model), owner_(owner)
 { }
@@ -41,7 +41,7 @@ Type Unit::getType() const {
     return properties_.type;
 }
 
-Tile Unit::getPosition() const {
+map::Tile Unit::getPosition() const {
     if (model_ != nullptr)
         return model_->getTile(IntIsoPoint(coords_.toIsometric()));
     else

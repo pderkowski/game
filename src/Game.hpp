@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 #include "SFML/Graphics.hpp"
-#include "Map.hpp"
+#include "map/Map.hpp"
 #include "menu/Menu.hpp"
 #include "players/Players.hpp"
 #include "interface/Interface.hpp"
@@ -47,7 +47,7 @@ private:
     std::shared_ptr<sf::RenderWindow> window_;
     Renderer renderer_;
 
-    Map map_;
+    map::Map map_;
     players::Players players_;
     interface::Interface interface_;
     menu::Menu menu_;

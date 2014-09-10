@@ -6,7 +6,7 @@
 #include "Player.hpp"
 #include "Players.hpp"
 #include "PlayersDrawer.hpp"
-#include "MapModel.hpp"
+#include "map/MapModel.hpp"
 #include "Renderer.hpp"
 #include "MiscellaneousEnums.hpp"
 #include "Combat.hpp"
@@ -14,7 +14,7 @@
 namespace players {
 
 
-Players::Players(int numberOfPlayers, const MapModel* model, const Renderer* renderer)
+Players::Players(int numberOfPlayers, const map::MapModel* model, const Renderer* renderer)
     : currentPlayer_(0), model_(model), renderer_(renderer), drawer_(renderer)
 {
     std::vector<miscellaneous::Flag> flags = { miscellaneous::Flag::Blue, miscellaneous::Flag::Red };
@@ -93,7 +93,7 @@ std::vector<units::Unit> Players::getVisibleUnits() const {
     return res;
 }
 
-void Players::setModel(const MapModel* model) {
+void Players::setModel(const map::MapModel* model) {
     for (auto& player : players_) {
         player.setModel(model);
     }
@@ -119,7 +119,7 @@ void Players::handleRightClick(const sf::Event& e) {
     getCurrentPlayer()->handleRightClick(getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)));
 
     if (getCurrentPlayer()->isUnitSelected()) {
-        Tile selectedTile = getCurrentPlayer()->getSelectedUnit().get()->getPosition();
+        map::Tile selectedTile = getCurrentPlayer()->getSelectedUnit().get()->getPosition();
 
         if (getOtherPlayer()->hasUnitAtTile(selectedTile)) {
             UnitController attacker = getCurrentPlayer()->getSelectedUnit();
@@ -165,7 +165,7 @@ void Players::handleDPressed() {
     updateAllLayers();
 }
 
-const Tile& Players::getClickedTile(const sf::Vector2i& clickedPoint) const {
+const map::Tile& Players::getClickedTile(const sf::Vector2i& clickedPoint) const {
     IntIsoPoint clickedCoords = renderer_->getMapCoords(clickedPoint);
     return model_->getTile(clickedCoords);
 }

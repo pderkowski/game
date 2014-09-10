@@ -5,7 +5,7 @@
 
 #include <vector>
 #include "units/Unit.hpp"
-#include "Tile.hpp"
+#include "map/Tile.hpp"
 
 
 namespace players {
@@ -20,9 +20,9 @@ public:
 
     units::Unit* get();
 
-    bool canMoveTo(const Tile& destination) const;
-    std::vector<Tile> getPathTo(const Tile& destination) const;
-    void moveTo(const Tile& destination);
+    bool canMoveTo(const map::Tile& destination) const;
+    std::vector<map::Tile> getPathTo(const map::Tile& destination) const;
+    void moveTo(const map::Tile& destination);
 
     void destroyUnit();
 

@@ -7,7 +7,7 @@
 #include "UnitFrame.hpp"
 #include "MinimapFrame.hpp"
 class Renderer;
-class MapModel;
+namespace map { class MapModel; }
 namespace players { class Players; }
 
 
@@ -16,10 +16,10 @@ namespace interface {
 
 class Interface {
 public:
-    explicit Interface(const MapModel* model, const players::Players* players,
+    explicit Interface(const map::MapModel* model, const players::Players* players,
         const Renderer* renderer);
 
-    void setModel(const MapModel* model);
+    void setModel(const map::MapModel* model);
 
     void draw() const;
 
@@ -31,7 +31,7 @@ public:
     void updateSelectedUnitFrame();
 
 private:
-    const MapModel* model_;
+    const map::MapModel* model_;
 
     const players::Players* players_;
 

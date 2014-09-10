@@ -1,10 +1,14 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef HEIGHTMAP_HPP_
-#define HEIGHTMAP_HPP_
+#ifndef MAP_HEIGHTMAP_HPP_
+#define MAP_HEIGHTMAP_HPP_
 
 #include <functional>
 #include <vector>
+
+
+namespace map {
+
 
 class HeightMap {
 public:
@@ -29,4 +33,8 @@ private:
     std::vector<std::vector<double>> map_;
 };
 
-#endif  // HEIGHTMAP_HPP_
+
+}  // namespace map
+
+
+#endif  // MAP_HEIGHTMAP_HPP_

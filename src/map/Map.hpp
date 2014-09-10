@@ -1,11 +1,14 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MAP_HPP_
-#define MAP_HPP_
+#ifndef MAP_MAP_HPP_
+#define MAP_MAP_HPP_
 
 #include "MapModel.hpp"
 #include "MapDrawer.hpp"
 class Renderer;
+
+
+namespace map {
 
 
 class Map {
@@ -25,5 +28,8 @@ private:
 
 };
 
-#endif  // MAP_HPP_
+
+}  // namespace map
+
+#endif  // MAP_MAP_HPP_
 

@@ -1,13 +1,17 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#ifndef MAPMODEL_HPP_
-#define MAPMODEL_HPP_
+#ifndef MAP_MAPMODEL_HPP_
+#define MAP_MAPMODEL_HPP_
 
 #include <vector>
 #include <functional>
 #include "Tile.hpp"
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
+
+
+namespace map {
+
 
 class MapModel {
 public:
@@ -39,4 +43,7 @@ private:
 
 };
 
-#endif  // MAPMODEL_HPP_
+
+}  // namespace map
+
+#endif  // MAP_MAPMODEL_HPP_

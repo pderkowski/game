@@ -9,6 +9,10 @@
 #include "Layer.hpp"
 #include "Renderer.hpp"
 
+
+namespace map {
+
+
 MapDrawer::MapDrawer(const MapModel& model, const Renderer* renderer)
     : renderer_(renderer)
 {
@@ -48,3 +52,6 @@ void MapDrawer::draw() const {
         target.get()->draw(layer);
     }
 }
+
+
+}  // namespace map

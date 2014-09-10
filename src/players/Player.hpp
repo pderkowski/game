@@ -6,12 +6,12 @@
 #include <vector>
 #include "units/Unit.hpp"
 #include "Coordinates.hpp"
-#include "Tile.hpp"
+#include "map/Tile.hpp"
 #include "Fog.hpp"
 #include "UnitController.hpp"
 #include "Selection.hpp"
 #include "MiscellaneousEnums.hpp"
-class MapModel;
+namespace map { class MapModel; }
 namespace units { class Units; }
 
 
@@ -21,15 +21,15 @@ namespace players {
 
 class Player {
 public:
-    Player(miscellaneous::Flag flag, const MapModel* model, units::Units* units);
+    Player(miscellaneous::Flag flag, const map::MapModel* model, units::Units* units);
 
     bool isUnitSelected() const;
 
     UnitController getSelectedUnit();
     units::Unit getSelectedUnit() const;
 
-    bool hasUnitAtTile(const Tile& tile) const;
-    UnitController getUnitAtTile(const Tile& tile);
+    bool hasUnitAtTile(const map::Tile& tile) const;
+    UnitController getUnitAtTile(const map::Tile& tile);
 
     Fog getFog() const;
     Selection getSelection() const;
@@ -40,12 +40,12 @@ public:
     bool doesSeeTile(const IntRotPoint& coords) const;
     bool doesKnowTile(const IntRotPoint& coords) const;
 
-    void setModel(const MapModel* model);
+    void setModel(const map::MapModel* model);
 
     void resetMoves();
 
-    void handleLeftClick(const Tile& clickedTile);
-    void handleRightClick(const Tile& clickedTile);
+    void handleLeftClick(const map::Tile& clickedTile);
+    void handleRightClick(const map::Tile& clickedTile);
     void handleAPressed();
     void handleDPressed();
     void handleFPressed();
@@ -54,7 +54,7 @@ public:
     friend class UnitController;
 
 private:
-    std::vector<const Tile*> getSurroundingTiles(const units::Unit& unit) const;
+    std::vector<const map::Tile*> getSurroundingTiles(const units::Unit& unit) const;
 
 private:
     miscellaneous::Flag flag_;
@@ -63,7 +63,7 @@ private:
 
     Selection selection_;
 
-    const MapModel* model_;
+    const map::MapModel* model_;
 
     units::Units* units_;
 };

@@ -9,7 +9,8 @@
 #include "Player.hpp"
 #include "PlayersDrawer.hpp"
 #include "UnitController.hpp"
-class MapModel;
+namespace map { class MapModel; }
+namespace map { class Tile; }
 class Renderer;
 namespace units { class Units; }
 
@@ -19,7 +20,7 @@ namespace players {
 
 class Players {
 public:
-    Players(int numberOfPlayers, const MapModel* model, const Renderer* renderer);
+    Players(int numberOfPlayers, const map::MapModel* model, const Renderer* renderer);
 
     void switchToNextPlayer();
 
@@ -29,7 +30,7 @@ public:
     bool isUnitSelected() const;
     units::Unit getSelectedUnit() const;
 
-    void setModel(const MapModel* model);
+    void setModel(const map::MapModel* model);
 
     void draw() const;
 
@@ -45,7 +46,7 @@ private:
     void updateAllLayers();
 
     std::vector<units::Unit> getVisibleUnits() const;
-    const Tile& getClickedTile(const sf::Vector2i& clickedPoint) const;
+    const map::Tile& getClickedTile(const sf::Vector2i& clickedPoint) const;
 
 private:
     unsigned currentPlayer_;
@@ -53,7 +54,7 @@ private:
 
     units::Units units_;
 
-    const MapModel* model_;
+    const map::MapModel* model_;
 
     const Renderer* renderer_;
 

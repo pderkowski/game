@@ -10,6 +10,10 @@
 #include "Utils.hpp"
 #include "TileEnums.hpp"
 
+
+namespace map {
+
+
 MapModel::MapModel(int rowsNo, int columnsNo)
     : rowsNo_(rowsNo), columnsNo_(columnsNo), tiles_(rowsNo, std::vector<Tile>(columnsNo))
 {
@@ -104,3 +108,6 @@ void swap(MapModel& first, MapModel& other) {
     first.setModelInTiles(&first);
     other.setModelInTiles(&other);
 }
+
+
+}  // namespace map

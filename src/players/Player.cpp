@@ -11,9 +11,9 @@
 #include "units/Unit.hpp"
 #include "units/UnitFactory.hpp"
 #include "Coordinates.hpp"
-#include "Tile.hpp"
+#include "map/Tile.hpp"
 #include "Fog.hpp"
-#include "MapModel.hpp"
+#include "map/MapModel.hpp"
 #include "Selection.hpp"
 #include "MiscellaneousEnums.hpp"
 #include "units/Units.hpp"
@@ -22,7 +22,7 @@
 namespace players {
 
 
-Player::Player(miscellaneous::Flag flag, const MapModel* model, units::Units* units)
+Player::Player(miscellaneous::Flag flag, const map::MapModel* model, units::Units* units)
     : flag_(flag), fog_(model->getRowsNo(), model->getColumnsNo()), model_(model), units_(units)
 { }
 
@@ -57,11 +57,11 @@ units::Unit Player::getSelectedUnit() const {
     }
 }
 
-bool Player::hasUnitAtTile(const Tile& tile) const {
+bool Player::hasUnitAtTile(const map::Tile& tile) const {
     return !units_->select().playerEqual(this).tileEqual(tile).empty();
 }
 
-UnitController Player::getUnitAtTile(const Tile& tile) {
+UnitController Player::getUnitAtTile(const map::Tile& tile) {
     return UnitController(&units_->select().playerEqual(this).tileEqual(tile)[0], this);
 }
 
@@ -89,7 +89,7 @@ bool Player::doesKnowTile(const IntRotPoint& coords) const {
         || (fog_(isoCoords.y, isoCoords.x) == TileVisibility::UnvisibleKnown);
 }
 
-void Player::setModel(const MapModel* model) {
+void Player::setModel(const map::MapModel* model) {
     model_ = model;
     fog_.clear();
     selection_.clear();
@@ -101,12 +101,12 @@ void Player::resetMoves() {
     }
 }
 
-std::vector<const Tile*> Player::getSurroundingTiles(const units::Unit& unit) const {
-    Tile position = unit.getPosition();
+std::vector<const map::Tile*> Player::getSurroundingTiles(const units::Unit& unit) const {
+    map::Tile position = unit.getPosition();
     return position.getTilesInRadius(2);
 }
 
-void Player::handleLeftClick(const Tile& clickedTile) {
+void Player::handleLeftClick(const map::Tile& clickedTile) {
     selection_.clear();
     selection_.setSource(clickedTile);
 }
@@ -121,7 +121,7 @@ void Player::handleAPressed() {
     }
 }
 
-void Player::handleRightClick(const Tile& clickedTile) {
+void Player::handleRightClick(const map::Tile& clickedTile) {
     if (isUnitSelected()) {
         auto destination = clickedTile;
 

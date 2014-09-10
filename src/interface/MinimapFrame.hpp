@@ -5,7 +5,7 @@
 
 #include "SFML/Graphics.hpp"
 #include "MinimapRenderer.hpp"
-class MapModel;
+namespace map { class MapModel; }
 class Renderer;
 namespace players { class Players; }
 
@@ -15,13 +15,13 @@ namespace interface {
 
 class MinimapFrame {
 public:
-    explicit MinimapFrame(const MapModel& model, const Renderer* renderer);
+    explicit MinimapFrame(const map::MapModel& model, const Renderer* renderer);
 
     void setPosition(const sf::Vector2f& position);
 
     sf::Vector2f getSize() const;
 
-    void updateBackground(const MapModel& model, const players::Player& player);
+    void updateBackground(const map::MapModel& model, const players::Player& player);
     void updateDisplayedRectangle();
 
     void draw() const;

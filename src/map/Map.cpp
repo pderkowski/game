@@ -4,6 +4,10 @@
 #include "Renderer.hpp"
 #include "MapGenerator.hpp"
 
+
+namespace map {
+
+
 Map::Map(int rows, int columns, const Renderer* renderer)
     : model_(MapGenerator::generateMap(rows, columns)),
     mapDrawer_(model_, renderer)
@@ -20,3 +24,6 @@ void Map::generateMap() {
     model_ = MapGenerator::generateMap(model_.getRowsNo(), model_.getColumnsNo());
     mapDrawer_.setModel(model_);
 }
+
+
+}  // namespace map

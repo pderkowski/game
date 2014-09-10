@@ -10,7 +10,7 @@
 #include "Renderer.hpp"
 #include "Coordinates.hpp"
 #include "Selection.hpp"
-#include "Tile.hpp"
+#include "map/Tile.hpp"
 #include "Player.hpp"
 
 
@@ -93,8 +93,8 @@ void PlayersDrawer::updatePathLayer(const Selection& selection) {
 
     auto path = selection.getPath();
     for (size_t i = 0; i + 1 < path.size(); ++i) {
-        const Tile& currentTile = path[i];
-        const Tile& nextTile = path[i + 1];
+        const map::Tile& currentTile = path[i];
+        const map::Tile& nextTile = path[i + 1];
 
         auto tilePosition = renderer_->getPosition(IntIsoPoint(currentTile.coords.toIsometric()));
         auto tileDualPosition = renderer_->getDualPosition(IntIsoPoint(currentTile.coords.toIsometric()));

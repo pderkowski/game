@@ -3,11 +3,10 @@
 #include <map>
 #include "SFML/Graphics.hpp"
 #include "MinimapRenderer.hpp"
-#include "Tile.hpp"
 #include "Coordinates.hpp"
 #include "TileEnums.hpp"
 #include "players/Player.hpp"
-#include "MapModel.hpp"
+#include "map/MapModel.hpp"
 
 namespace interface {
 
@@ -40,13 +39,13 @@ sf::Vector2f MinimapRenderer::getTextureSize() const {
     return sf::Vector2f(width_, height_);
 }
 
-void MinimapRenderer::updateBackground(const MapModel& model, const players::Player& player) {
+void MinimapRenderer::updateBackground(const map::MapModel& model, const players::Player& player) {
     background_ = createTexture(model, player);
 
     render();
 }
 
-sf::Texture MinimapRenderer::createTexture(const MapModel& model, const players::Player& player) {
+sf::Texture MinimapRenderer::createTexture(const map::MapModel& model, const players::Player& player) {
     sf::Texture texture;
     texture.loadFromImage(createImageFromPixels(createPixels(model, player)));
     return texture;
@@ -64,7 +63,7 @@ sf::Image MinimapRenderer::createImageFromPixels(sf::Uint8* pixels) {
     }
 }
 
-sf::Uint8* MinimapRenderer::createPixels(const MapModel& model, const players::Player& player) {
+sf::Uint8* MinimapRenderer::createPixels(const map::MapModel& model, const players::Player& player) {
     sf::Uint8* pixels = new sf::Uint8[4 * width_ * height_];
 
     for (int r = 0; r < height_; ++r) {
@@ -84,7 +83,7 @@ sf::Uint8* MinimapRenderer::createPixels(const MapModel& model, const players::P
     return pixels;
 }
 
-sf::Color MinimapRenderer::getPixel(const MapModel& model, const players::Player& player,
+sf::Color MinimapRenderer::getPixel(const map::MapModel& model, const players::Player& player,
     int row, int column) const
 {
     IntIsoPoint pixelIsoCoords(CartPoint(column, row).toIsometric());
