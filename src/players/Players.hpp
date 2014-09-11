@@ -34,8 +34,8 @@ public:
 
     void draw() const;
 
-    void handleLeftClick(const sf::Event& e);
-    void handleRightClick(const sf::Event& e);
+    void handleLeftClick(const map::Tile& clickedTile);
+    void handleRightClick(const map::Tile& clickedTile);
     void handleAPressed();
     void handleFPressed();
     void handleDPressed();
@@ -46,7 +46,6 @@ private:
     void updateAllLayers();
 
     std::vector<units::Unit> getVisibleUnits() const;
-    const map::Tile& getClickedTile(const sf::Vector2i& clickedPoint) const;
 
 private:
     unsigned currentPlayer_;

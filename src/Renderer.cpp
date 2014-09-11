@@ -9,15 +9,16 @@
 #include "Coordinates.hpp"
 #include "SFML/Graphics.hpp"
 #include "Renderer.hpp"
+#include "Settings.hpp"
 
-Renderer::Renderer(int rows, int columns, int tileWidth, int tileHeight,
-    std::shared_ptr<sf::RenderTarget> target)
-        : rows_(rows),
-        columns_(columns),
-        tileWidth_(tileWidth),
-        tileHeight_(tileHeight),
-        target_(target),
-        mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y))
+
+Renderer::Renderer(const Settings& settings, std::shared_ptr<sf::RenderTarget> target)
+    : rows_(settings.rows),
+    columns_(settings.columns),
+    tileWidth_(settings.tileWidth),
+    tileHeight_(settings.tileHeight),
+    target_(target),
+    mapView_(sf::FloatRect(0, 0, target->getSize().x, target->getSize().y))
 { }
 
 sf::Vector2f Renderer::getPosition(const IntIsoPoint& coords) const {

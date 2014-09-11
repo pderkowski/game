@@ -108,15 +108,15 @@ void Players::draw() const {
 }
 
 
-void Players::handleLeftClick(const sf::Event& e) {
-    getCurrentPlayer()->handleLeftClick(getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)));
+void Players::handleLeftClick(const map::Tile& clickedTile) {
+    getCurrentPlayer()->handleLeftClick(clickedTile);
 
     drawer_.updatePathLayer(getCurrentPlayer()->getSelection());
     drawer_.updateSelectionLayer(getCurrentPlayer()->getSelection());
 }
 
-void Players::handleRightClick(const sf::Event& e) {
-    getCurrentPlayer()->handleRightClick(getClickedTile(sf::Vector2i(e.mouseButton.x, e.mouseButton.y)));
+void Players::handleRightClick(const map::Tile& clickedTile) {
+    getCurrentPlayer()->handleRightClick(clickedTile);
 
     if (getCurrentPlayer()->isUnitSelected()) {
         map::Tile selectedTile = getCurrentPlayer()->getSelectedUnit().get()->getPosition();
@@ -163,11 +163,6 @@ void Players::handleDPressed() {
     getCurrentPlayer()->handleDPressed();
 
     updateAllLayers();
-}
-
-const map::Tile& Players::getClickedTile(const sf::Vector2i& clickedPoint) const {
-    IntIsoPoint clickedCoords = renderer_->getMapCoords(clickedPoint);
-    return model_->getTile(clickedCoords);
 }
 
 void Players::updateAllLayers() {

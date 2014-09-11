@@ -7,14 +7,15 @@
 #include <memory>
 #include "Coordinates.hpp"
 #include "SFML/Graphics.hpp"
+class Settings;
+
 
 class Renderer {
 public:
     class TargetProxy;
 
 public:
-    Renderer(int rows, int columns, int tileWidth, int tileHeight,
-        std::shared_ptr<sf::RenderTarget> target);
+    Renderer(const Settings& settings, std::shared_ptr<sf::RenderTarget> target);
 
     sf::Vector2f getPosition(const IntIsoPoint& coords) const;
     sf::Vector2f getDualPosition(const IntIsoPoint& coords) const;
