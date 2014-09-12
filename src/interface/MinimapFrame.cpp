@@ -26,9 +26,8 @@ void MinimapFrame::updateBackground(const map::MapModel& model, const players::P
     minimapRenderer_.updateBackground(model, player);
 }
 
-void MinimapFrame::updateDisplayedRectangle() {
-    sf::FloatRect bounds = renderer_->getDisplayedRectangle();
-    minimapRenderer_.updateDisplayedRectangle(bounds);
+void MinimapFrame::updateDisplayedRectangle(const sf::FloatRect& displayedRectangle) {
+    minimapRenderer_.updateDisplayedRectangle(displayedRectangle);
 }
 
 void MinimapFrame::draw() const {

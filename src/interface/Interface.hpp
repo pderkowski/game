@@ -6,6 +6,8 @@
 #include "Layout.hpp"
 #include "UnitFrame.hpp"
 #include "MinimapFrame.hpp"
+#include "Observer.hpp"
+#include "RendererNotification.hpp"
 class Renderer;
 namespace map { class MapModel; }
 namespace players { class Players; }
@@ -14,10 +16,11 @@ namespace players { class Players; }
 namespace interface {
 
 
-class Interface {
+class Interface : public Observer<RendererNotification> {
 public:
     explicit Interface(const map::MapModel* model, const players::Players* players,
         const Renderer* renderer);
+    virtual ~Interface() { }
 
     void setModel(const map::MapModel* model);
 
@@ -26,9 +29,11 @@ public:
     void updateEverything();
 
     void updateMinimapBackground();
-    void updateMinimapDisplayedRectangle();
 
     void updateSelectedUnitFrame();
+
+private:
+    virtual void onNotify(const RendererNotification& notification);
 
 private:
     const map::MapModel* model_;

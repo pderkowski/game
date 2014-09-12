@@ -25,6 +25,8 @@ Application::Application(const Settings& settings)
     menu_.addItem("Quit game", [this] () { quit(); });
 
     timers_.push_back(Timer(50, [this] () { scrollView(); }));
+
+    renderer_.addObserver(&interface_);
 }
 
 void Application::run() {
@@ -56,18 +58,13 @@ void Application::captureScreenToFile() {
 
 void Application::scrollView() {
     if (!menu_.isVisible()) {
-        sf::Vector2f actualShift = renderer_.scrollView(sf::Mouse::getPosition(*window_));
-
-        if (actualShift != sf::Vector2f(0, 0)) {
-            interface_.updateMinimapDisplayedRectangle();
-        }
+        renderer_.scrollView(sf::Mouse::getPosition(*window_));
     }
 }
 
 void Application::zoomView(float delta) {
     if (!menu_.isVisible()) {
         renderer_.zoomView(delta, sf::Mouse::getPosition(*window_));
-        interface_.updateMinimapDisplayedRectangle();
     }
 }
 

@@ -22,7 +22,7 @@ public:
     sf::Vector2f getSize() const;
 
     void updateBackground(const map::MapModel& model, const players::Player& player);
-    void updateDisplayedRectangle();
+    void updateDisplayedRectangle(const sf::FloatRect& displayedRectangle);
 
     void draw() const;
 

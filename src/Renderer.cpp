@@ -88,20 +88,22 @@ IntIsoPoint Renderer::getMapCoords(const sf::Vector2i& position) const {
     return isometric;
 }
 
-sf::Vector2f Renderer::scrollView(int x, int y) {
+void Renderer::scrollView(int x, int y) {
     sf::Vector2f actualShift = boundShift(x, y);
 
     mapView_.move(actualShift);
     target_->setView(mapView_);
 
-    return actualShift;
+    if (actualShift != sf::Vector2f(0.0f, 0.0f)) {
+        notify(RendererNotification{ getDisplayedRectangle() });
+    }
 }
 
-sf::Vector2f Renderer::scrollView(const sf::Vector2i& mousePosition) {
+void Renderer::scrollView(const sf::Vector2i& mousePosition) {
     int xShift = calculateHorizontalShift(mousePosition.x);
     int yShift = calculateVerticalShift(mousePosition.y);
 
-    return scrollView(xShift, yShift);
+    scrollView(xShift, yShift);
 }
 
 sf::Vector2f Renderer::boundShift(int x, int y) const {
@@ -136,6 +138,8 @@ void Renderer::zoomView(int delta, const sf::Vector2i& mousePosition) {
 
         sf::Vector2f newCoords = target_->mapPixelToCoords(mousePosition);
         scrollView(oldCoords.x - newCoords.x, oldCoords.y - newCoords.y);
+
+        notify(RendererNotification{ getDisplayedRectangle() });
     }
 }
 

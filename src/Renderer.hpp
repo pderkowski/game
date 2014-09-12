@@ -7,15 +7,18 @@
 #include <memory>
 #include "Coordinates.hpp"
 #include "SFML/Graphics.hpp"
+#include "Subject.hpp"
+#include "RendererNotification.hpp"
 class Settings;
 
 
-class Renderer {
+class Renderer : public Subject<RendererNotification> {
 public:
     class TargetProxy;
 
 public:
     Renderer(const Settings& settings, std::shared_ptr<sf::RenderTarget> target);
+    virtual ~Renderer() { }
 
     sf::Vector2f getPosition(const IntIsoPoint& coords) const;
     sf::Vector2f getDualPosition(const IntIsoPoint& coords) const;
@@ -30,13 +33,13 @@ public:
 
     IntIsoPoint getMapCoords(const sf::Vector2i& position) const;
 
-    sf::Vector2f scrollView(const sf::Vector2i& mousePosition);
+    void scrollView(const sf::Vector2i& mousePosition);
     void zoomView(int delta, const sf::Vector2i& mousePosition);
 
     sf::FloatRect getDisplayedRectangle() const;
 
 private:
-    sf::Vector2f scrollView(int x, int y);
+    void scrollView(int x, int y);
     bool canZoom(float delta) const;
     sf::Vector2f boundShift(int x, int y) const;
 

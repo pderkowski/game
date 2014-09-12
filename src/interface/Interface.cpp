@@ -39,16 +39,11 @@ void Interface::draw() const {
 
 void Interface::updateEverything() {
     updateMinimapBackground();
-    updateMinimapDisplayedRectangle();
     updateSelectedUnitFrame();
 }
 
 void Interface::updateMinimapBackground() {
     minimapFrame_.updateBackground(*model_, *(players_->getCurrentPlayer()));
-}
-
-void Interface::updateMinimapDisplayedRectangle() {
-    minimapFrame_.updateDisplayedRectangle();
 }
 
 void Interface::updateSelectedUnitFrame() {
@@ -58,6 +53,11 @@ void Interface::updateSelectedUnitFrame() {
         unitFrame_.clear();
     }
 }
+
+void Interface::onNotify(const RendererNotification& ntion) {
+    minimapFrame_.updateDisplayedRectangle(ntion.displayedRectangle);
+}
+
 
 
 }  // namespace interface
