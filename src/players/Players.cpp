@@ -10,35 +10,35 @@
 #include "Renderer.hpp"
 #include "MiscellaneousEnums.hpp"
 #include "Combat.hpp"
+#include "Action.hpp"
+
 
 namespace players {
 
 
 Players::Players(int numberOfPlayers, const map::MapModel* model, const Renderer* renderer)
-    : currentPlayer_(0), model_(model), renderer_(renderer), drawer_(renderer)
+    : currentPlayer_(0), drawer_(renderer)
 {
     std::vector<miscellaneous::Flag> flags = { miscellaneous::Flag::Blue, miscellaneous::Flag::Red };
 
-    for (int i = 1; i <= numberOfPlayers; ++i) {
-        players_.emplace_back(flags[i - 1], model, &units_);
+    for (int i = 0; i < numberOfPlayers; ++i) {
+        players_.emplace_back(flags[i], model, &units_);
+        players_[i].addObserver(this);
     }
 
-    updateAllLayers();
+    addObserver(&drawer_);
+    notify(PlayerSwitched);
 }
 
 void Players::switchToNextPlayer() {
     currentPlayer_ = (currentPlayer_ + 1) % players_.size();
     getCurrentPlayer()->resetMoves();
 
-    updateAllLayers();
+    notify(PlayerSwitched);
 }
 
 Player* Players::getCurrentPlayer() {
     return &players_[currentPlayer_];
-}
-
-Player* Players::getOtherPlayer() {
-    return &players_[(currentPlayer_ + 1) % 2];
 }
 
 const Player* Players::getCurrentPlayer() const {
@@ -100,7 +100,7 @@ void Players::setModel(const map::MapModel* model) {
 
     units_.clear();
 
-    updateAllLayers();
+    notify(NewMapCreated);
 }
 
 void Players::draw() const {
@@ -109,68 +109,33 @@ void Players::draw() const {
 
 
 void Players::handleLeftClick(const map::Tile& clickedTile) {
-    getCurrentPlayer()->handleLeftClick(clickedTile);
-
-    drawer_.updatePathLayer(getCurrentPlayer()->getSelection());
-    drawer_.updateSelectionLayer(getCurrentPlayer()->getSelection());
+    getCurrentPlayer()->setPrimarySelection(clickedTile);
 }
 
 void Players::handleRightClick(const map::Tile& clickedTile) {
     getCurrentPlayer()->handleRightClick(clickedTile);
-
-    if (getCurrentPlayer()->isUnitSelected()) {
-        map::Tile selectedTile = getCurrentPlayer()->getSelectedUnit().get()->getPosition();
-
-        if (getOtherPlayer()->hasUnitAtTile(selectedTile)) {
-            UnitController attacker = getCurrentPlayer()->getSelectedUnit();
-            UnitController defender = getOtherPlayer()->getUnitAtTile(selectedTile);
-
-            int outcome = Combat::simulate(attacker.get()->getHpLeft(), defender.get()->getHpLeft());
-
-            if (outcome > 0) {
-                defender.destroyUnit();
-                attacker.get()->setHpLeft(outcome);
-            } else if (outcome == 0) {
-                attacker.destroyUnit();
-                defender.get()->setHpLeft(1);
-            } else {
-                attacker.destroyUnit();
-                defender.get()->setHpLeft(-outcome);
-            }
-        }
-    }
-
-    updateAllLayers();
 }
 
 void Players::handleAPressed() {
     getCurrentPlayer()->handleAPressed();
-
-    drawer_.updateFlagLayer(getVisibleUnits());
-    drawer_.updateUnitLayer(getVisibleUnits());
-    drawer_.updateFogLayer(getCurrentPlayer()->getFog());
 }
 
 void Players::handleFPressed() {
-    getCurrentPlayer()->handleFPressed();
-
-    drawer_.updateFogLayer(getCurrentPlayer()->getFog());
-    drawer_.updateFlagLayer(getVisibleUnits());
-    drawer_.updateUnitLayer(getVisibleUnits());
+    getCurrentPlayer()->toggleFog();
 }
 
 void Players::handleDPressed() {
     getCurrentPlayer()->handleDPressed();
-
-    updateAllLayers();
 }
 
-void Players::updateAllLayers() {
-    drawer_.updateFogLayer(getCurrentPlayer()->getFog());
-    drawer_.updateFlagLayer(getVisibleUnits());
-    drawer_.updateUnitLayer(getVisibleUnits());
-    drawer_.updateSelectionLayer(getCurrentPlayer()->getSelection());
-    drawer_.updatePathLayer(getCurrentPlayer()->getSelection());
+void Players::notify(ActionType action) const {
+    Subject::notify(ActionNotification{ action, getVisibleUnits(),
+        getCurrentPlayer()->getSelection(),
+        getCurrentPlayer()->getFog() });
+}
+
+void Players::onNotify(const ActionType& ntion) {
+    notify(ntion);
 }
 
 

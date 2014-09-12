@@ -15,9 +15,9 @@ public:
     void addObserver(Observer<NotificationType>* observer);
 
 protected:
-    void notify(const NotificationType& notification) const;
+    virtual void notify(const NotificationType& notification) const;
 
-private:
+protected:
     std::vector<Observer<NotificationType>*> observers_;
 };
 

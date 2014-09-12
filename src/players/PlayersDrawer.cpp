@@ -118,4 +118,33 @@ void PlayersDrawer::updateFogLayer(const Fog& fog) {
     }
 }
 
+void PlayersDrawer::updateAllLayers(const std::vector<units::Unit>& visibleUnits,
+    const Selection& selection,
+    const Fog& fog)
+{
+    updateUnitLayer(visibleUnits);
+    updateFlagLayer(visibleUnits);
+    updateSelectionLayer(selection);
+    updatePathLayer(selection);
+    updateFogLayer(fog);
+}
+
+void PlayersDrawer::onNotify(const ActionNotification& ntion) {
+    switch (ntion.type) {
+    case PlayerSwitched: case NewMapCreated: case UnitMoved: case UnitAdded: case UnitRemoved:
+        updateAllLayers(ntion.units, ntion.selection, ntion.fog);
+        break;
+    case PrimarySelectionSet: case SecondarySelectionSet:
+        updateSelectionLayer(ntion.selection);
+        updatePathLayer(ntion.selection);
+        break;
+    case FogToggled:
+        updateAllLayers(ntion.units, ntion.selection, ntion.fog);
+        break;
+    default:
+        break;
+    }
+}
+
+
 }  // namespace players

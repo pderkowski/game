@@ -17,6 +17,7 @@
 #include "Selection.hpp"
 #include "MiscellaneousEnums.hpp"
 #include "units/Units.hpp"
+#include "Action.hpp"
 
 
 namespace players {
@@ -38,6 +39,8 @@ void Player::addUnit(const units::Unit& unit) {
     units_->add(unit);
 
     fog_.addVisible(getSurroundingTiles(unit));
+
+    notify(UnitAdded);
 }
 
 UnitController Player::getSelectedUnit() {
@@ -106,9 +109,17 @@ std::vector<const map::Tile*> Player::getSurroundingTiles(const units::Unit& uni
     return position.getTilesInRadius(2);
 }
 
-void Player::handleLeftClick(const map::Tile& clickedTile) {
+void Player::setPrimarySelection(const map::Tile& clickedTile) {
     selection_.clear();
     selection_.setSource(clickedTile);
+    notify(PrimarySelectionSet);
+}
+
+void Player::setSecondarySelection(const map::Tile& clickedTile) {
+    selection_.setDestination(clickedTile);
+    UnitController unit = getSelectedUnit();
+    selection_.setPath(unit.getPathTo(clickedTile));
+    notify(SecondarySelectionSet);
 }
 
 void Player::handleAPressed() {
@@ -123,18 +134,17 @@ void Player::handleAPressed() {
 
 void Player::handleRightClick(const map::Tile& clickedTile) {
     if (isUnitSelected()) {
-        auto destination = clickedTile;
-
         UnitController unit = getSelectedUnit();
-        if (unit.canMoveTo(destination)) {
-            if (selection_.isDestinationConfirmed(destination)) {
-                unit.moveTo(destination);
+        if (unit.canMoveTo(clickedTile)) {
+            if (selection_.isDestinationConfirmed(clickedTile)) {
+                unit.moveTo(clickedTile);
 
                 selection_.setSource(unit.get()->getPosition());
-                selection_.setPath(unit.getPathTo(destination));
+                selection_.setPath(unit.getPathTo(clickedTile));
+
+                notify(UnitMoved);
             } else {
-                selection_.setDestination(destination);
-                selection_.setPath(unit.getPathTo(destination));
+                setSecondarySelection(clickedTile);
             }
         }
     }
@@ -146,11 +156,14 @@ void Player::handleDPressed() {
         unit.destroyUnit();
 
         selection_.clear();
+
+        notify(UnitRemoved);
     }
 }
 
-void Player::handleFPressed() {
+void Player::toggleFog() {
     fog_.toggle();
+    notify(FogToggled);
 }
 
 

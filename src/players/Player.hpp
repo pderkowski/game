@@ -11,17 +11,19 @@
 #include "UnitController.hpp"
 #include "Selection.hpp"
 #include "MiscellaneousEnums.hpp"
+#include "Action.hpp"
+#include "Subject.hpp"
 namespace map { class MapModel; }
 namespace units { class Units; }
-
 
 
 namespace players {
 
 
-class Player {
+class Player : public Subject<ActionType> {
 public:
     Player(miscellaneous::Flag flag, const map::MapModel* model, units::Units* units);
+    virtual ~Player() { }
 
     bool isUnitSelected() const;
 
@@ -44,11 +46,13 @@ public:
 
     void resetMoves();
 
-    void handleLeftClick(const map::Tile& clickedTile);
+    void setPrimarySelection(const map::Tile& clickedTile);
+    void setSecondarySelection(const map::Tile& clickedTile);
+
     void handleRightClick(const map::Tile& clickedTile);
     void handleAPressed();
     void handleDPressed();
-    void handleFPressed();
+    void toggleFog();
 
 public:
     friend class UnitController;

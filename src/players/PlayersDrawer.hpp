@@ -11,22 +11,31 @@
 #include "Renderer.hpp"
 #include "Selection.hpp"
 #include "Fog.hpp"
+#include "Action.hpp"
+#include "Observer.hpp"
 
 
 namespace players {
 
 
-class PlayersDrawer {
+class PlayersDrawer : public Observer<ActionNotification> {
 public:
     PlayersDrawer(const Renderer* renderer);
+    virtual ~PlayersDrawer() { }
 
     void draw() const;
 
+private:
     void updateUnitLayer(const std::vector<units::Unit>& visibleUnits);
     void updateFlagLayer(const std::vector<units::Unit>& visibleUnits);
     void updateSelectionLayer(const Selection& selection);
     void updatePathLayer(const Selection& selection);
     void updateFogLayer(const Fog& fog);
+
+    void updateAllLayers(const std::vector<units::Unit>& visibleUnits, const Selection& selection,
+        const Fog& fog);
+
+    virtual void onNotify(const ActionNotification& notification);
 
 private:
     Layer<tileenums::Direction> pathLayer_;

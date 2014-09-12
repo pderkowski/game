@@ -9,18 +9,20 @@
 #include "Player.hpp"
 #include "PlayersDrawer.hpp"
 #include "UnitController.hpp"
+#include "Subject.hpp"
+#include "Action.hpp"
 namespace map { class MapModel; }
 namespace map { class Tile; }
 class Renderer;
-namespace units { class Units; }
 
 
 namespace players {
 
 
-class Players {
+class Players : public Subject<ActionNotification>, public Observer<ActionType> {
 public:
     Players(int numberOfPlayers, const map::MapModel* model, const Renderer* renderer);
+    virtual ~Players() { }
 
     void switchToNextPlayer();
 
@@ -41,21 +43,16 @@ public:
     void handleDPressed();
 
 private:
-    Player* getOtherPlayer();
-
-    void updateAllLayers();
-
     std::vector<units::Unit> getVisibleUnits() const;
+
+    virtual void notify(ActionType action) const;
+    virtual void onNotify(const ActionType& ntion);
 
 private:
     unsigned currentPlayer_;
     std::vector<Player> players_;
 
     units::Units units_;
-
-    const map::MapModel* model_;
-
-    const Renderer* renderer_;
 
     PlayersDrawer drawer_;
 };
