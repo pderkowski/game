@@ -29,7 +29,7 @@ public:
 
 private:
     void addUnit();
-    void deleteSelectedUnit();
+    void removeSelectedUnit();
 
     void switchToNextPlayer();
 

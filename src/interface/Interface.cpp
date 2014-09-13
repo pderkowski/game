@@ -1,34 +1,24 @@
 /* Copyright 2014 <Piotr Derkowski> */
 
-#include "SFML/Graphics.hpp"
+#include "SFML/Graphics/Color.hpp"
 #include "Renderer.hpp"
 #include "Interface.hpp"
 #include "Layout.hpp"
 #include "UnitFrame.hpp"
-#include "players/Players.hpp"
+#include "players/Player.hpp"
+#include "GameNotification.hpp"
+class Settings;
+namespace map { class MapModel; }
 
 
 namespace interface {
 
 
-Interface::Interface(const map::MapModel* model, const players::Players* players,
-    const Renderer* renderer)
-        : model_(model),
-        players_(players),
-        layout_(renderer),
-        minimapFrame_(*model, renderer),
-        unitFrame_(renderer)
+Interface::Interface(const Settings& settings, const Renderer* renderer)
+    : layout_(renderer), minimapFrame_(settings, renderer), unitFrame_(renderer)
 {
     minimapFrame_.setPosition(layout_.addSlot(minimapFrame_.getSize()));
     unitFrame_.setPosition(layout_.addSlot(unitFrame_.getSize(), sf::Color(255, 255, 255, 127)));
-
-    updateEverything();
-}
-
-void Interface::setModel(const map::MapModel* model) {
-    model_ = model;
-
-    updateEverything();
 }
 
 void Interface::draw() const {
@@ -37,18 +27,13 @@ void Interface::draw() const {
     unitFrame_.draw();
 }
 
-void Interface::updateEverything() {
-    updateMinimapBackground();
-    updateSelectedUnitFrame();
+void Interface::updateMinimapBackground(const map::MapModel* map, const players::Player* player) {
+    minimapFrame_.updateBackground(*map, *player);
 }
 
-void Interface::updateMinimapBackground() {
-    minimapFrame_.updateBackground(*model_, *(players_->getCurrentPlayer()));
-}
-
-void Interface::updateSelectedUnitFrame() {
-    if (players_->isUnitSelected()) {
-        unitFrame_.setUnitDisplayed(players_->getSelectedUnit());
+void Interface::updateSelectedUnitFrame(const players::Player* player) {
+    if (player->isUnitSelected()) {
+        unitFrame_.setUnitDisplayed(player->getSelectedUnit());
     } else {
         unitFrame_.clear();
     }
@@ -58,6 +43,25 @@ void Interface::onNotify(const RendererNotification& ntion) {
     minimapFrame_.updateDisplayedRectangle(ntion.displayedRectangle);
 }
 
+void Interface::onNotify(const GameNotification& ntion) {
+    typedef GameNotification GN;
+
+    switch (ntion.type) {
+    case GN::NewMapGenerated: case GN::PlayerSwitched: case GN::UnitAdded:
+    case GN::SecondarySelectionSet:
+        updateMinimapBackground(ntion.map, ntion.player);
+        updateSelectedUnitFrame(ntion.player);
+        break;
+    case GN::FogToggled:
+        updateMinimapBackground(ntion.map, ntion.player);
+        break;
+    case GN::UnitRemoved: case GN::PrimarySelectionSet:
+        updateSelectedUnitFrame(ntion.player);
+        break;
+    default:
+        break;
+    }
+}
 
 
 }  // namespace interface

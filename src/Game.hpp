@@ -5,31 +5,34 @@
 
 #include "map/Map.hpp"
 #include "players/Players.hpp"
+#include "Subject.hpp"
+#include "GameNotification.hpp"
 class Settings;
 class Renderer;
-namespace map { class MapModel; }
-class IntIsoPoint;
 
-class Game {
+
+class Game : public Subject<GameNotification> {
 public:
     explicit Game(const Settings& settings, const Renderer* renderer);
+    virtual ~Game() { }
 
     void draw() const;
+
 
     void generateNewMap();
 
     void toggleFog();
 
     void addUnit();
-    void deleteSelectedUnit();
+    void removeSelectedUnit();
 
     void switchToNextPlayer();
 
     void setPrimarySelection(const IntIsoPoint& selectedPoint);
     void setSecondarySelection(const IntIsoPoint& selectedPoint);
 
-    const map::MapModel* getMapModel() const;
-    const players::Players* getPlayers() const;
+private:
+    virtual void notify(GameNotification::Type notificationType) const;
 
 private:
     map::Map map_;

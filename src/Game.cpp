@@ -22,36 +22,39 @@ void Game::draw() const {
 void Game::generateNewMap() {
     map_.generateMap();
     players_.setModel(map_.getModel());
+    notify(GameNotification::NewMapGenerated);
 }
 
 void Game::addUnit() {
     players_.handleAPressed();
+    notify(GameNotification::UnitAdded);
 }
 
 void Game::toggleFog() {
     players_.handleFPressed();
+    notify(GameNotification::FogToggled);
 }
 
-void Game::deleteSelectedUnit() {
+void Game::removeSelectedUnit() {
     players_.handleDPressed();
+    notify(GameNotification::UnitRemoved);
 }
 
 void Game::switchToNextPlayer() {
     players_.switchToNextPlayer();
-}
-
-const map::MapModel* Game::getMapModel() const {
-    return map_.getModel();
-}
-
-const players::Players* Game::getPlayers() const {
-    return &players_;
+    notify(GameNotification::PlayerSwitched);
 }
 
 void Game::setPrimarySelection(const IntIsoPoint& selectedPoint) {
-    players_.handleLeftClick(getMapModel()->getTile(selectedPoint));
+    players_.handleLeftClick(map_.getModel()->getTile(selectedPoint));
+    notify(GameNotification::PrimarySelectionSet);
 }
 
 void Game::setSecondarySelection(const IntIsoPoint& selectedPoint) {
-    players_.handleRightClick(getMapModel()->getTile(selectedPoint));
+    players_.handleRightClick(map_.getModel()->getTile(selectedPoint));
+    notify(GameNotification::SecondarySelectionSet);
+}
+
+void Game::notify(GameNotification::Type ntionType) const {
+    Subject::notify(GameNotification{ ntionType, map_.getModel(), players_.getCurrentPlayer() });
 }

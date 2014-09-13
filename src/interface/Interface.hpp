@@ -8,38 +8,31 @@
 #include "MinimapFrame.hpp"
 #include "Observer.hpp"
 #include "RendererNotification.hpp"
+class GameNotification;
 class Renderer;
+class Settings;
 namespace map { class MapModel; }
-namespace players { class Players; }
+namespace players { class Player; }
 
 
 namespace interface {
 
 
-class Interface : public Observer<RendererNotification> {
+class Interface : public Observer<RendererNotification>, public Observer<GameNotification> {
 public:
-    explicit Interface(const map::MapModel* model, const players::Players* players,
-        const Renderer* renderer);
+    explicit Interface(const Settings& settings, const Renderer* renderer);
     virtual ~Interface() { }
-
-    void setModel(const map::MapModel* model);
 
     void draw() const;
 
-    void updateEverything();
-
-    void updateMinimapBackground();
-
-    void updateSelectedUnitFrame();
-
 private:
+    void updateMinimapBackground(const map::MapModel* map, const players::Player* player);
+    void updateSelectedUnitFrame(const players::Player* player);
+
     virtual void onNotify(const RendererNotification& notification);
+    virtual void onNotify(const GameNotification& notification);
 
 private:
-    const map::MapModel* model_;
-
-    const players::Players* players_;
-
     Layout layout_;
     MinimapFrame minimapFrame_;
     UnitFrame unitFrame_;

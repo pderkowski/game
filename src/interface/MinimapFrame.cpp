@@ -5,13 +5,14 @@
 #include "map/MapModel.hpp"
 #include "players/Players.hpp"
 #include "MinimapRenderer.hpp"
+#include "Settings.hpp"
 
 
 namespace interface {
 
 
-MinimapFrame::MinimapFrame(const map::MapModel& model, const Renderer* renderer)
-    : renderer_(renderer), minimapRenderer_(model.getRowsNo(), model.getColumnsNo())
+MinimapFrame::MinimapFrame(const Settings& settings, const Renderer* renderer)
+    : renderer_(renderer), minimapRenderer_(settings.rows, settings.columns)
 { }
 
 void MinimapFrame::setPosition(const sf::Vector2f& position) {

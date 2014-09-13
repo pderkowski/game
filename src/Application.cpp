@@ -17,7 +17,7 @@ Application::Application(const Settings& settings)
         sf::Style::Fullscreen)),
     renderer_(settings, window_),
     game_(settings, &renderer_),
-    interface_(game_.getMapModel(), game_.getPlayers(), &renderer_),
+    interface_(settings, &renderer_),
     menu_(window_)
 {
     menu_.addItem("Return", [this] () { toggleMenu(); });
@@ -27,6 +27,7 @@ Application::Application(const Settings& settings)
     timers_.push_back(Timer(50, [this] () { scrollView(); }));
 
     renderer_.addObserver(&interface_);
+    game_.addObserver(&interface_);
 }
 
 void Application::run() {
@@ -103,7 +104,7 @@ void Application::handleEvents() {
                 toggleFog();
                 break;
             case sf::Keyboard::Key::D:
-                deleteSelectedUnit();
+                removeSelectedUnit();
                 break;
             case sf::Keyboard::Key::Return:
                 switchToNextPlayer();
@@ -135,15 +136,12 @@ void Application::handleLeftClick(const sf::Event& event) {
         menu_.handleLeftClick(event);
     } else {
         game_.setPrimarySelection(getClickedMapCoords(event));
-        interface_.updateSelectedUnitFrame();
     }
 }
 
 void Application::handleRightClick(const sf::Event& event) {
     if (!menu_.isVisible()) {
         game_.setSecondarySelection(getClickedMapCoords(event));
-        interface_.updateMinimapBackground();
-        interface_.updateSelectedUnitFrame();
     }
 }
 
@@ -153,36 +151,29 @@ IntIsoPoint Application::getClickedMapCoords(const sf::Event& event) const {
 
 void Application::restart() {
     game_.generateNewMap();
-    interface_.setModel(game_.getMapModel());
 }
 
 void Application::addUnit() {
     if (!menu_.isVisible()) {
         game_.addUnit();
-        interface_.updateMinimapBackground();
-        interface_.updateSelectedUnitFrame();
     }
 }
 
 void Application::toggleFog() {
     if (!menu_.isVisible()) {
         game_.toggleFog();
-        interface_.updateMinimapBackground();
     }
 }
 
-void Application::deleteSelectedUnit() {
+void Application::removeSelectedUnit() {
     if (!menu_.isVisible()) {
-        game_.deleteSelectedUnit();
-        interface_.updateSelectedUnitFrame();
+        game_.removeSelectedUnit();
     }
 }
 
 void Application::switchToNextPlayer() {
     if (!menu_.isVisible()) {
         game_.switchToNextPlayer();
-        interface_.updateMinimapBackground();
-        interface_.updateSelectedUnitFrame();
     }
 }
 
