@@ -1,5 +1,3 @@
-This repository contains a little side project of mine. It's meant to be a Freeciv-like game,
-although no meaningful gameplay is available as of yet.
+This repository contains a little side project of mine. It's meant to be a Freeciv-like game, although no meaningful gameplay is available as of yet.
 
-It uses modified Freeciv's Amplio texture sets, SFML for graphics and libnoise for coherent noise
-generation.
+It uses modified Freeciv's Amplio texture sets, SFML for graphics and libnoise for coherent noise generation.
